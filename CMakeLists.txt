@@ -6,6 +6,16 @@ SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 ADD_COMPILE_OPTIONS(-Wall -Wextra -Wpedantic -Werror)
 
+# Add check for Graphviz for nice graph visualization support
+FIND_PROGRAM(GRAPHVIZ_EXEC dot OPTIONAL)
+if (NOT GRAPHVIZ_EXEC)
+    MESSAGE(STATUS "Graphviz 'dot' executable not found. Graph visualization will be disabled.")
+    ADD_DEFINITIONS(-DGRAPHVIZ_SUPPORT=0)
+else()
+    MESSAGE(STATUS "Graphviz 'dot' executable found at: ${GRAPHVIZ_EXEC}")
+    ADD_DEFINITIONS(-DGRAPHVIZ_SUPPORT=1)
+endif()
+
 # Default to Debug build type if not specified
 if (NOT CMAKE_BUILD_TYPE)
     SET(CMAKE_BUILD_TYPE Debug)
