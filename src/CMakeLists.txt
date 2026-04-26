@@ -1,5 +1,6 @@
 SET(PROJECT_SOURCES
     ${PROJECT_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repr/IncidenceMatrix.cpp
     PARENT_SCOPE
 )

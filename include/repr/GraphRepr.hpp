@@ -1,6 +1,11 @@
 #ifndef GRAPH_REPR_HPP
 #define GRAPH_REPR_HPP
 
+#include <cstddef>
+#include <cstdint>
+
+#define GRAPHVIZ_SUPPORT 1 // for testing purposes
+
 class GraphRepr {
     protected:
         GraphRepr() = default;
@@ -8,7 +13,11 @@ class GraphRepr {
     public:
         virtual ~GraphRepr() = default;
 
-        virtual void addEdge(int startVertex, int endVertex, int weight) = 0;
+        virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) = 0;
+
+        #if GRAPHVIZ_SUPPORT
+            virtual void exportToGraphviz(const char* filename) const = 0;
+        #endif
 };
 
 #endif // GRAPH_REPR_HPP
