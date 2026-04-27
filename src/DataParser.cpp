@@ -29,6 +29,7 @@ bool DataParser::loadGraph(const std::filesystem::path& filename, GraphRepr& gra
     dataFile >> numVertices >> numEdges;
 
     // For each edge read the start, end end weight of the edge and add it to the graph representation
+    size_t lastStartVertex = 0;
     for (size_t i = 0; i < numEdges; ++i) {
         size_t start, end;
         intmax_t weight;
@@ -37,9 +38,16 @@ bool DataParser::loadGraph(const std::filesystem::path& filename, GraphRepr& gra
         // Check for any errors when reading indicating we don't have
         // enough edges specified
         if (dataFile.fail()) {
-            std::cerr << "Error: Wrong data format.\n";
+            std::cerr << "Error: Wrong data size.\n";
             return false;
         }
+
+        // Validate if the vertices are in order as specified in the instruction
+        if ((start < lastStartVertex) || (start > lastStartVertex + 1)) {
+            std::cerr << "Error: Edges are not in the correct order.\n";
+            return false;
+        }
+        lastStartVertex = start;
 
         // Add the edge
         graph.addEdge(start, end, weight);
