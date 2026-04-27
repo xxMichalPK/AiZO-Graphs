@@ -68,7 +68,7 @@ bool DataParser::loadGraph(const std::filesystem::path& filename, GraphRepr& gra
         graph.addEdge(start, end, weight);
     }
 
-    return true;
+    return validateAllRead(dataFile);
 }
 
 /**
@@ -95,6 +95,20 @@ bool DataParser::fileExists(const std::filesystem::path& filename) {
 bool DataParser::validateOpen(std::ifstream& dataFile) {
     if (!dataFile.is_open()) {
         std::cerr << "Error: Could not open file.\n";
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Simple function that checks if the file has been read completely, if not it displays an error
+ * 
+ * @param dataFile The file stream to check
+ * @return true if the file has been read completely, false otherwise
+ */
+bool DataParser::validateAllRead(std::ifstream& dataFile) {
+    if (dataFile >> std::ws && !dataFile.eof()) {
+        std::cerr << "Error: Too much data in file.\n";
         return false;
     }
     return true;

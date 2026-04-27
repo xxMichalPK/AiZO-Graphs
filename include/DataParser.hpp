@@ -18,6 +18,7 @@ class DataParser {
 
     private:
         static bool validateOpen(std::ifstream& dataFile);
+        static bool validateAllRead(std::ifstream& dataFile);
         static bool fileExists(const std::filesystem::path& filename);
 };
 
