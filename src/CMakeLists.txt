@@ -2,6 +2,8 @@ SET(PROJECT_SOURCES
     ${PROJECT_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DataParser.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Timer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Logger.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/repr/IncidenceMatrix.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/repr/AdjacencyList.cpp
     PARENT_SCOPE
