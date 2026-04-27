@@ -28,5 +28,5 @@ This time make it look professional at least when it comes to the API and try to
 
 - [✅] Implement the incidence matrix representation
 - [✅] Implement the adjacency list representation
-- [⚙️] Implement a file parser (better than last time)
-- [⚙️] Maybe implement a unified logging system? (Singleton class?? - last time it was a mess)
+- [✅] Implement a file parser (better than last time)
+- [⚙️] Maybe implement a unified logging system? (Singleton class?? - last time it was a mess) (ref: [Singleton design patterns](https://www.geeksforgeeks.org/system-design/singleton-pattern-c-design-patterns/))
