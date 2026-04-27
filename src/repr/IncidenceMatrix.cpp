@@ -1,5 +1,7 @@
 #include "IncidenceMatrix.hpp"
 
+constexpr int directed = 1; // 0 - undirected, 1 - directed (later changed by the parameters library)
+
 IncidenceMatrix::IncidenceMatrix(size_t vertexCount, size_t edgeCount) : 
     m_numVertices(vertexCount), m_numEdges(edgeCount) {
 
@@ -22,7 +24,6 @@ void IncidenceMatrix::addEdge(size_t startVertex, size_t endVertex, intmax_t wei
     // The weights are in range rand(1,k*4/5) so we can use 0 as the indicator of no edge
     // Now the case of undirected or directed graph... If it's undirected, just use the same weight
     // else the negative weight will be used as the end of the edge
-    int directed = 0; // 0 - undirected, 1 - directed (later probably changed by the parameters library)
     switch (directed) {
         case 0: // undirected
             m_matrix[startVertex][m_currentEdgeIndex] = weight;
@@ -46,7 +47,7 @@ void IncidenceMatrix::exportToGraphviz(const char* filename) const {
         throw std::runtime_error("Could not open graph file for exporting.");
     }
 
-    outFile << "graph G {\n";
+    outFile << (directed ? "digraph" : "graph") << " G {\n";
     for (size_t edge = 0; edge < m_numEdges; edge++) {
         bool startFound = false;
         size_t startVertex = 0;
@@ -66,19 +67,22 @@ void IncidenceMatrix::exportToGraphviz(const char* filename) const {
                 // which means this must be the end and it's an undirected graph
                 endVertex = vertex;
                 endWeight = m_matrix[vertex][edge];
-                break; // we can break here because we only have one edge per column
+
+                // Remember to check if we have the start index
+                if (startFound)
+                    break; // we can break here because we only have one edge per column
             }
         }
 
         if (startWeight == 0 || endWeight == 0) continue; // invalid edge, skip
         
         // Write the endge based on the direction of the graph
-        if (startWeight == endWeight) {
-            // Undirected graph
-            outFile << "    " << startVertex << " -- " << endVertex << " [label=\"" << startWeight << "\"];\n";
-        } else {
+        if (directed) {
             // Directed graph
             outFile << "    " << startVertex << " -> " << endVertex << " [label=\"" << startWeight << "\"];\n";
+        } else {
+            // Undirected graph
+            outFile << "    " << startVertex << " -- " << endVertex << " [label=\"" << startWeight << "\"];\n";
         }
 
     }
