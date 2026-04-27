@@ -1,18 +1,19 @@
 #include <iostream>
+#include "DataParser.hpp"
 #include "IncidenceMatrix.hpp"
 #include "AdjacencyList.hpp"
 
 int main() {
-    std::cout << "Hello, AiZO-Graphs!\n";
+    // Get the size and check if it is valid
+    DataParser::graphSize_t graphSize = DataParser::getGraphSize("graph_data.csv");
+    if (graphSize.vertices == 0 && graphSize.edges == 0) return 1;
+
+    // Create and load the graph
+    AdjacencyList graph(graphSize.vertices, graphSize.edges);
+    if (!DataParser::loadGraph("graph_data.csv", graph)) return 1;
+    
     #if GRAPHVIZ_SUPPORT
         std::cout << "Graphviz support is enabled.\n";
-        AdjacencyList graph(4, 6);
-        graph.addEdge(0, 1, 10);
-        graph.addEdge(0, 2, 10);
-        graph.addEdge(1, 3, 5);
-        graph.addEdge(2, 3, 12);
-        graph.addEdge(3, 0, 1);
-        graph.addEdge(3, 2, 7);
         graph.exportToGraphviz("graph_output.dot");
     #else
         std::cout << "Graphviz support is disabled.\n";
