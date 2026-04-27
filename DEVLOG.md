@@ -1,8 +1,8 @@
-# Development Log - AiZO-Sort
+# Development Log - AiZO-Graphs
 
 ## About the project
 
-**Topic:** Sorting algorithms
+**Topic:** Graph algorithms
 
 **Start date:** 2026-04-24
 
