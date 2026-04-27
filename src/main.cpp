@@ -1,11 +1,12 @@
 #include <iostream>
 #include "IncidenceMatrix.hpp"
+#include "AdjacencyList.hpp"
 
 int main() {
     std::cout << "Hello, AiZO-Graphs!\n";
     #if GRAPHVIZ_SUPPORT
         std::cout << "Graphviz support is enabled.\n";
-        IncidenceMatrix graph(4, 6);
+        AdjacencyList graph(4, 6);
         graph.addEdge(0, 1, 10);
         graph.addEdge(0, 2, 10);
         graph.addEdge(1, 3, 5);
