@@ -1,4 +1,5 @@
 #include "DataParser.hpp"
+#include "Logger.hpp"
 #include <iostream>
 #include <fstream>
 
@@ -53,13 +54,13 @@ bool DataParser::loadGraph(const std::filesystem::path& filename, GraphRepr& gra
         // Check for any errors when reading indicating we don't have
         // enough edges specified
         if (dataFile.fail()) {
-            std::cerr << "Error: Wrong data size.\n";
+            Logger::getInstance()->log(Logger::logType_t::ERROR, "Wrong data size.\n");
             return false;
         }
 
         // Validate if the vertices are in order as specified in the instruction
         if ((start < lastStartVertex) || (start > lastStartVertex + 1)) {
-            std::cerr << "Error: Edges are not in the correct order.\n";
+            Logger::getInstance()->log(Logger::logType_t::ERROR, "Edges are not in the correct order.\n");
             return false;
         }
         lastStartVertex = start;
@@ -80,7 +81,7 @@ bool DataParser::loadGraph(const std::filesystem::path& filename, GraphRepr& gra
 bool DataParser::fileExists(const std::filesystem::path& filename) {
     // Check if the file exists
     if (!std::filesystem::exists(filename)) {
-        std::cerr << "Error: Input file "<< filename << " does not exist.\n";
+        Logger::getInstance()->log(Logger::logType_t::ERROR, "Input file ", filename, " does not exist.\n");
         return false;
     }
     return true;
@@ -94,7 +95,7 @@ bool DataParser::fileExists(const std::filesystem::path& filename) {
  */
 bool DataParser::validateOpen(std::ifstream& dataFile) {
     if (!dataFile.is_open()) {
-        std::cerr << "Error: Could not open file.\n";
+        Logger::getInstance()->log(Logger::logType_t::ERROR, "Could not open file.\n");
         return false;
     }
     return true;
@@ -108,7 +109,7 @@ bool DataParser::validateOpen(std::ifstream& dataFile) {
  */
 bool DataParser::validateAllRead(std::ifstream& dataFile) {
     if (dataFile >> std::ws && !dataFile.eof()) {
-        std::cerr << "Error: Too much data in file.\n";
+        Logger::getInstance()->log(Logger::logType_t::ERROR, "Too much data in file.\n");
         return false;
     }
     return true;

@@ -1,5 +1,6 @@
-#include <iostream>
 #include "AdjacencyList.hpp"
+#include "Logger.hpp"
+#include <iostream>
 
 constexpr int directed = 1; // 0 - undirected, 1 - directed (later changed by the parameters library)
 
@@ -21,7 +22,7 @@ AdjacencyList::~AdjacencyList() {
 
 void AdjacencyList::addEdge(size_t startVertex, size_t endVertex, intmax_t weight) {
     if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
-        std::cerr << "Error: Vertex out of bounds.\n";
+        Logger::getInstance()->log(Logger::logType_t::ERROR, "Vertex out of bounds.\n");
         return;
     }
 

@@ -6,14 +6,10 @@
 #include "AdjacencyList.hpp"
 
 int main(int argc, char* argv[]) {
-    std::cout << "Starting at: " << Timer::getCurrentDate() << " " << Timer::getCurrentTime() << "\n";
-
     Logger::initialize(argc, argv);
     Logger* logger = Logger::getInstance();
 
-    logger->logBenchmark(100); // Example benchmark log
-    logger->logBenchmark(300); // Example benchmark log
-    logger->logBenchmark(600, 100, 1200); // Example benchmark log
+    logger->log(Logger::logType_t::INFO, "Start: ", Timer::getCurrentDate(), " ", Timer::getCurrentTime(), "\n");
 
     // Get the size and check if it is valid
     DataParser::graphSize_t graphSize = DataParser::getGraphSize("graph_data.csv");
@@ -24,10 +20,10 @@ int main(int argc, char* argv[]) {
     if (!DataParser::loadGraph("graph_data.csv", graph)) return 1;
     
     #if GRAPHVIZ_SUPPORT
-        std::cout << "Graphviz support is enabled.\n";
+        logger->log(Logger::logType_t::INFO, "Graphviz support is enabled.\n");
         graph.exportToGraphviz("graph_output.dot");
     #else
-        std::cout << "Graphviz support is disabled.\n";
+        logger->log(Logger::logType_t::WARNING, "Graphviz support is disabled.\n");
     #endif
     return 0;
 }

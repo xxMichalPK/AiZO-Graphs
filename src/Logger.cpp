@@ -30,11 +30,6 @@ Logger* Logger::getInstance() {
     return m_instance;
 }
 
-void Logger::log(logType_t type, const char* format, ...) {
-    (void)type;
-    (void)format;
-}
-
 /**
  * Log a single benchmark execution time to the log file
  * 
