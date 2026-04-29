@@ -1,4 +1,5 @@
 #include "IncidenceMatrix.hpp"
+#include "Logger.hpp"
 
 constexpr int directed = 1; // 0 - undirected, 1 - directed (later changed by the parameters library)
 
@@ -44,7 +45,8 @@ void IncidenceMatrix::exportToGraphviz(const char* filename) const {
     // Specs: https://graphviz.org/doc/info/lang.html
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
-        throw std::runtime_error("Could not open graph file for exporting.");
+        Logger::getInstance()->log(Logger::logType_t::ERROR, "Could not open file. Graph was not exported.\n");
+        return;
     }
 
     outFile << (directed ? "digraph" : "graph") << " G {\n";
