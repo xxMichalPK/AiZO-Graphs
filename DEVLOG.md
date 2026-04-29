@@ -41,7 +41,7 @@ Basically in order to actually run the algorithms we have to implement some stru
 
 ### Tasks (probably for more days)
 
-- [⚙️] Implement a generic data structure API (this time lets split the structures into simple ones and indexable ones)
-- [❌] Implement a queue
-- [❌] Implement a priority queue
-- [❌] Implement a priority queue
+- [✅] Implement a generic data structure API (this time lets split the structures into simple ones and indexable ones)
+- [✅] Implement a queue
+- [✅] Implement a priority queue
+- [❌] Implement an array

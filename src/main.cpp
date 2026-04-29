@@ -5,6 +5,7 @@
 #include "IncidenceMatrix.hpp"
 #include "AdjacencyList.hpp"
 #include "Queue.hpp"
+#include "PriorityQueue.hpp"
 
 int main(int argc, char* argv[]) {
     Logger::initialize(argc, argv);
@@ -27,7 +28,7 @@ int main(int argc, char* argv[]) {
         logger->log(Logger::logType_t::WARNING, "Graphviz support is disabled.\n");
     #endif
 
-    Queue<int> testQueue;
+    PriorityQueue<int> testQueue;
     testQueue.push(10);
     testQueue.push(2);
     testQueue.push(43);
