@@ -4,6 +4,7 @@
 #include "Logger.hpp"
 #include "IncidenceMatrix.hpp"
 #include "AdjacencyList.hpp"
+#include "Queue.hpp"
 
 int main(int argc, char* argv[]) {
     Logger::initialize(argc, argv);
@@ -25,5 +26,19 @@ int main(int argc, char* argv[]) {
     #else
         logger->log(Logger::logType_t::WARNING, "Graphviz support is disabled.\n");
     #endif
+
+    Queue<int> testQueue;
+    testQueue.push(10);
+    testQueue.push(2);
+    testQueue.push(43);
+    testQueue.push(-12);
+    testQueue.push(15);
+
+    size_t queueSize = testQueue.size();
+    for (size_t i = 0; i < queueSize; i++) {
+        int el = testQueue.getFront();
+        logger->log(Logger::logType_t::INFO, "Element ", i, ": ", el, "\n");
+        testQueue.pop();
+    }
     return 0;
 }
