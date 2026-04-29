@@ -99,7 +99,7 @@ void Queue<T>::pop() {
 template<typename T>
 T Queue<T>::getFront() {
     if (m_head == nullptr) {
-        throw new std::out_of_range("The queue is empty!");
+        throw std::out_of_range("The queue is empty!");
     }
     return m_head->data;
 }
@@ -112,7 +112,7 @@ T Queue<T>::getFront() {
 template<typename T>
 T Queue<T>::getBack() {
     if (m_tail == nullptr) {
-        throw new std::out_of_range("The queue is empty!");
+        throw std::out_of_range("The queue is empty!");
     }
     return m_tail->data;
 }

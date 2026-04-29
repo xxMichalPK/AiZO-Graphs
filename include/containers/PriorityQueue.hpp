@@ -117,7 +117,7 @@ void PriorityQueue<T>::resize(size_t newSize) {
         newData[i] = m_data[i];
     }
 
-    delete m_data;
+    delete[] m_data;
     m_memorySize = newSize;
     m_data = newData;
 }
@@ -212,6 +212,10 @@ void PriorityQueue<T>::push(T element) {
  */
 template<typename T>
 void PriorityQueue<T>::pop() {
+    if (this->m_elementCount == 0) {
+        throw std::out_of_range("The priority queue is empty");
+    }
+
     this->m_elementCount--;
     // Swap the first and last element
     swap(0, this->m_elementCount);
@@ -232,7 +236,7 @@ void PriorityQueue<T>::pop() {
 template<typename T>
 T PriorityQueue<T>::getFront() {
     if (this->m_elementCount == 0) {
-        throw new std::out_of_range("The priority queue is empty");
+        throw std::out_of_range("The priority queue is empty");
     }
 
     return m_data[0];

@@ -44,4 +44,5 @@ Basically in order to actually run the algorithms we have to implement some stru
 - [✅] Implement a generic data structure API (this time lets split the structures into simple ones and indexable ones)
 - [✅] Implement a queue
 - [✅] Implement a priority queue
+- [❌] Fix the priority queue (it seems it's not optimal because I understood the Floyd algorithm wrong - it's not meant to be used when inserting data)
 - [❌] Implement an array
