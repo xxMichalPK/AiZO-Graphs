@@ -18,7 +18,7 @@
 
 ❌, ✅, ⚙️
 
-## 2026-04-27 - The initial idea
+## 2026-04-27/28 - The initial idea and graph representations
 
 ### The plan
 
@@ -29,4 +29,19 @@ This time make it look professional at least when it comes to the API and try to
 - [✅] Implement the incidence matrix representation
 - [✅] Implement the adjacency list representation
 - [✅] Implement a file parser (better than last time)
-- [⚙️] Implement a unified logging system (Singleton class?? - last time it was a mess) (ref: [Singleton design patterns](https://www.geeksforgeeks.org/system-design/singleton-pattern-c-design-patterns/))
+- [✅] Implement a unified logging system (Singleton class?? - last time it was a mess) (ref: [Singleton design patterns](https://www.geeksforgeeks.org/system-design/singleton-pattern-c-design-patterns/))
+
+---
+
+## 2026-04-29 - Structures for algorithms
+
+### Plan for the structures
+
+Basically in order to actually run the algorithms we have to implement some structures that will be used inside them. For now we need a priority queue, a standard queue and later an array and a stack?? It seems like that
+
+### Tasks (probably for more days)
+
+- [⚙️] Implement a generic data structure API (this time lets split the structures into simple ones and indexable ones)
+- [❌] Implement a queue
+- [❌] Implement a priority queue
+- [❌] Implement a priority queue
