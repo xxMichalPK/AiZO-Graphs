@@ -14,8 +14,13 @@ class IndexedContainer : public BaseContainer<T> {
         void insert(T element) {
             this->push(element);
         }
+        void remove() {
+            this->pop();
+        }
+
         virtual T get(size_t index) = 0;
         virtual void set(size_t index, T element) = 0;
+        virtual void removeAt(size_t index) = 0;
 
 };
 

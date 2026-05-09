@@ -21,6 +21,7 @@ class DynamicArray : public IndexedContainer<T> {
         virtual T getBack() override;
         virtual T get(size_t index) override;
         virtual void set(size_t index, T element) override;
+        virtual void removeAt(size_t index) override;
     
     protected:
         void resize(size_t newSize);
@@ -113,6 +114,22 @@ void DynamicArray<T>::set(size_t index, T element) {
     }
 
     m_data[index] = element;
+}
+
+template<typename T>
+void DynamicArray<T>::removeAt(size_t index) {
+    if (this->m_elementCount == 0) {
+        throw std::out_of_range("The array is empty!");
+    }
+
+    if (index >= this->m_elementCount) {
+        throw std::out_of_range("Index out of bounds!");
+    }
+
+    for (size_t i = index; i < this->m_elementCount; i++) {
+        m_data[i] = m_data[i + 1];
+    }
+    this->m_elementCount--;
 }
 
 #endif // DYNAMICARRAY_HPP
