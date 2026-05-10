@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Parameters.h"
 #include "DataParser.hpp"
 #include "Timer.hpp"
 #include "Logger.hpp"
@@ -12,6 +13,18 @@
 int main(int argc, char* argv[]) {
     Logger::initialize(argc, argv);
     Logger* logger = Logger::getInstance();
+
+    int paramStatus = Parameters::readParameters(argc - 1, &argv[1]);
+    if (paramStatus != 0) return paramStatus;
+    
+    switch (Parameters::runMode) {
+        case Parameters::RunModes::help:
+            Parameters::help();
+            return 0;
+        default:
+            logger->log(Logger::logType_t::ERROR, "Selected run mode does not exist or is not implemented yet!\n");
+            return 1;
+    }
 
     logger->log(Logger::logType_t::INFO, "Start: ", Timer::getCurrentDate(), " ", Timer::getCurrentTime(), "\n");
 
