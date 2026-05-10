@@ -6,6 +6,8 @@
 #include "AdjacencyList.hpp"
 #include "Queue.hpp"
 #include "PriorityQueue.hpp"
+#include "DynamicArray.hpp"
+#include "GraphGenerator.hpp"
 
 int main(int argc, char* argv[]) {
     Logger::initialize(argc, argv);
@@ -18,8 +20,9 @@ int main(int argc, char* argv[]) {
     if (graphSize.vertices == 0 && graphSize.edges == 0) return 1;
 
     // Create and load the graph
-    AdjacencyList graph(graphSize.vertices, graphSize.edges);
-    if (!DataParser::loadGraph("graph_data.csv", graph)) return 1;
+    AdjacencyList graph(10, 20);
+    GraphGenerator::generate(graph, 10, .5);
+    // if (!DataParser::loadGraph("graph_data.csv", graph)) return 1;
     
     #if GRAPHVIZ_SUPPORT
         logger->log(Logger::logType_t::INFO, "Graphviz support is enabled.\n");
@@ -27,6 +30,7 @@ int main(int argc, char* argv[]) {
     #else
         logger->log(Logger::logType_t::WARNING, "Graphviz support is disabled.\n");
     #endif
+
 
     PriorityQueue<int> testQueue;
     testQueue.push(10);
