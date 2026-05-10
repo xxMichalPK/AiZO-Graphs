@@ -1,7 +1,7 @@
 #include "IncidenceMatrix.hpp"
 #include "Logger.hpp"
 
-constexpr int directed = 1; // 0 - undirected, 1 - directed (later changed by the parameters library)
+constexpr int directed = 0; // 0 - undirected, 1 - directed (later changed by the parameters library)
 
 IncidenceMatrix::IncidenceMatrix(size_t vertexCount, size_t edgeCount) : 
     m_numVertices(vertexCount), m_numEdges(edgeCount) {
@@ -36,6 +36,17 @@ void IncidenceMatrix::addEdge(size_t startVertex, size_t endVertex, intmax_t wei
             break;
     }
     m_currentEdgeIndex++;
+}
+
+bool IncidenceMatrix::checkEdge(size_t startVertex, size_t endVertex) {
+    for (size_t i = 0; i < m_numEdges; i++) {
+        if ((m_matrix[startVertex][i] != 0) && (m_matrix[endVertex][i] != 0)) return true;
+    }
+    return false;
+}
+
+size_t IncidenceMatrix::getEdgeCount() {
+    return m_numEdges;
 }
 
 #if GRAPHVIZ_SUPPORT

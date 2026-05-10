@@ -19,6 +19,8 @@ class AdjacencyList : public GraphRepr {
         ~AdjacencyList();
 
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) override;
+        virtual bool checkEdge(size_t startVertex, size_t endVertex) override;
+        virtual size_t getEdgeCount() override;
 
         #if GRAPHVIZ_SUPPORT
             virtual void exportToGraphviz(const char* filename) const override;

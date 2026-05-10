@@ -2,7 +2,7 @@
 #include "Logger.hpp"
 #include <iostream>
 
-constexpr int directed = 1; // 0 - undirected, 1 - directed (later changed by the parameters library)
+constexpr int directed = 0; // 0 - undirected, 1 - directed (later changed by the parameters library)
 
 AdjacencyList::AdjacencyList(size_t vertexCount, size_t edgeCount) : m_numVertices(vertexCount), m_numEdges(edgeCount) {
     m_list = new Edge*[m_numVertices]();
@@ -30,6 +30,23 @@ void AdjacencyList::addEdge(size_t startVertex, size_t endVertex, intmax_t weigh
     // So the next edge is the current head and we can do it fast
     Edge* newEdge = new Edge{endVertex, weight, m_list[startVertex]};
     m_list[startVertex] = newEdge;
+}
+
+bool AdjacencyList::checkEdge(size_t startVertex, size_t endVertex) {
+    if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
+        return false;
+    }
+
+    Edge* currentEdge = m_list[startVertex];
+    while (currentEdge != nullptr) {
+        if (currentEdge->endVertex == endVertex) return true;
+        currentEdge = currentEdge->next;
+    }
+    return false;
+}
+
+size_t AdjacencyList::getEdgeCount() {
+    return m_numEdges;
 }
 
 #if GRAPHVIZ_SUPPORT

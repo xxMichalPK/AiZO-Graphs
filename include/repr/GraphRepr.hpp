@@ -14,6 +14,8 @@ class GraphRepr {
         virtual ~GraphRepr() = default;
 
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) = 0;
+        virtual bool checkEdge(size_t startVertex, size_t endVertex) = 0;
+        virtual size_t getEdgeCount() = 0;
 
         #if GRAPHVIZ_SUPPORT
             virtual void exportToGraphviz(const char* filename) const = 0;
