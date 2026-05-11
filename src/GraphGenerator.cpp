@@ -5,7 +5,7 @@
 
 constexpr int directed = 0;
 
-bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, double density) {    
+bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, int density) {    
     switch (directed) {
         case 0:
             return generateUndirected(graph, vertexCount, density);
@@ -19,14 +19,14 @@ bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, double densi
     return false;
 }
 
-bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, double density) {
+bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, int density) {
     (void)graph;
     (void)vertexCount;
     (void)density;
     return false;
 }
 
-bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, double density) {
+bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, int density) {
     (void)density;
     DynamicArray<size_t> freeVertices(vertexCount + 1);
     DynamicArray<size_t> usedVertices(vertexCount + 1);

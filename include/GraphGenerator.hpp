@@ -6,11 +6,11 @@
 class GraphGenerator {
     public:
         GraphGenerator() = delete;
-        static bool generate(GraphRepr &graph, size_t vertexCount, double density);
+        static bool generate(GraphRepr &graph, size_t vertexCount, int density);
     
     private:
-        static bool generateDirected(GraphRepr &graph, size_t vertexCount, double density);
-        static bool generateUndirected(GraphRepr &graph, size_t vertexCount, double density);
+        static bool generateDirected(GraphRepr &graph, size_t vertexCount, int density);
+        static bool generateUndirected(GraphRepr &graph, size_t vertexCount, int density);
 };
 
 #endif // GRAPHGENERATOR_HPP
