@@ -1,23 +1,29 @@
-#include <iostream>
 #include "Parameters.h"
-#include "DataParser.hpp"
-#include "Timer.hpp"
+
+// Utilities
 #include "Logger.hpp"
-#include "IncidenceMatrix.hpp"
-#include "AdjacencyList.hpp"
-#include "Queue.hpp"
-#include "PriorityQueue.hpp"
-#include "DynamicArray.hpp"
-#include "GraphGenerator.hpp"
+#include "Timer.hpp"
+
+// Run modes
 #include "SingleFileMode.hpp"
 #include "BenchmarkMode.hpp"
 
+/**
+ * The main entry point of the program
+ * 
+ * @param argc number of arguments passed
+ * @param argv pointer to the list of arguments
+ * 
+ * @returns 0 on success, any other number on failure
+ */
 int main(int argc, char* argv[]) {
     Logger::initialize(argc, argv);
 
+    // Read parameters and check if we can go further
     int paramStatus = Parameters::readParameters(argc - 1, &argv[1]);
     if (paramStatus != 0) return paramStatus;
     
+    // Run the program based on the requested run mode
     Logger::logln(Logger::INFO, "Start: ", Timer::getCurrentDate(), " ", Timer::getCurrentTime());
     switch (Parameters::runMode) {
         case Parameters::RunModes::help:
@@ -28,9 +34,10 @@ int main(int argc, char* argv[]) {
         case Parameters::RunModes::benchmark:
             return BenchmarkMode::run();
         default:
-            Logger::logln(Logger::ERROR, "Selected run mode does not exist or is not implemented yet!");
-            return 1;
+            break;
     }
 
-    return 0;
+    // If we're here the user did not provide the run mode
+    Logger::logln(Logger::ERROR, "No run mode was selected. See \'", argv[0], " --help\' for help");
+    return 1;
 }
