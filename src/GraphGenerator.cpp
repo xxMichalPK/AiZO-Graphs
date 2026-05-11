@@ -54,6 +54,13 @@ bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size
         remainingEdgeCount--;
     }
 
+    // Add the "loop" edge connecting the last and the first vertices
+    intmax_t maxWeight = (intmax_t)((double)edgeCount * (4. / 5.));
+    maxWeight = maxWeight == 0 ? 1 : maxWeight;
+    intmax_t weight = (std::rand() % maxWeight) + 1;
+    graph.addEdge(--currentVertex, 0, weight);
+    remainingEdgeCount--;
+
     // Add the random connections between vertices that are not yet connected
     while (remainingEdgeCount > 0) {
         int startVertex = std::rand() % vertexCount;
