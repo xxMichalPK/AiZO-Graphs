@@ -55,7 +55,7 @@ void IncidenceMatrix::exportToGraphviz(const char* filename) const {
     // Specs: https://graphviz.org/doc/info/lang.html
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
-        Logger::getInstance()->log(Logger::logType_t::ERROR, "Could not open file. Graph was not exported.\n");
+        Logger::logln(Logger::ERROR, "Could not open file. Graph was not exported.");
         return;
     }
 

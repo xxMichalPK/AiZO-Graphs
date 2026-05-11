@@ -14,12 +14,11 @@
 
 int main(int argc, char* argv[]) {
     Logger::initialize(argc, argv);
-    Logger* logger = Logger::getInstance();
 
     int paramStatus = Parameters::readParameters(argc - 1, &argv[1]);
     if (paramStatus != 0) return paramStatus;
     
-    logger->log(Logger::logType_t::INFO, "Start: ", Timer::getCurrentDate(), " ", Timer::getCurrentTime(), "\n");
+    Logger::logln(Logger::INFO, "Start: ", Timer::getCurrentDate(), " ", Timer::getCurrentTime());
     switch (Parameters::runMode) {
         case Parameters::RunModes::help:
             Parameters::help();
@@ -29,7 +28,7 @@ int main(int argc, char* argv[]) {
         case Parameters::RunModes::benchmark:
             return BenchmarkMode::run();
         default:
-            logger->log(Logger::logType_t::ERROR, "Selected run mode does not exist or is not implemented yet!\n");
+            Logger::logln(Logger::ERROR, "Selected run mode does not exist or is not implemented yet!");
             return 1;
     }
 

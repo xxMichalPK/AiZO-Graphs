@@ -13,11 +13,11 @@ bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, size_t edgeC
 
 bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
     if (edgeCount < vertexCount - 1) {
-        Logger::getInstance()->log(Logger::logType_t::ERROR, "Impossible to generate a connected graph with ", vertexCount, " vertices and ",
-                                    edgeCount, " edges!\n");
+        Logger::logln(Logger::ERROR, "Impossible to generate a connected graph with ", vertexCount, " vertices and ",
+                                    edgeCount, " edges!");
         return false;
     }
-    
+
     std::srand(std::time(nullptr));
 
     // In a directed graph we have to connect all the points (maybe other algorithm in the future)
@@ -55,8 +55,8 @@ bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size
 bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
     // Check if it is even possible to generate such a graph (number of edges has to be at least V-1)
     if (edgeCount < vertexCount - 1) {
-        Logger::getInstance()->log(Logger::logType_t::ERROR, "Impossible to generate a connected graph with ", vertexCount, " vertices and ",
-                                    edgeCount, " edges!\n");
+        Logger::logln(Logger::ERROR, "Impossible to generate a connected graph with ", vertexCount, " vertices and ",
+                                    edgeCount, " edges!");
         return false;
     }
 

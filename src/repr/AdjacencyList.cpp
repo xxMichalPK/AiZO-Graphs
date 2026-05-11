@@ -24,7 +24,7 @@ AdjacencyList::~AdjacencyList() {
 
 void AdjacencyList::addEdge(size_t startVertex, size_t endVertex, intmax_t weight) {
     if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
-        Logger::getInstance()->log(Logger::logType_t::ERROR, "Vertex out of bounds.\n");
+        Logger::logln(Logger::ERROR, "Vertex out of bounds.");
         return;
     }
 
@@ -67,7 +67,7 @@ size_t AdjacencyList::getEdgeCount() {
 void AdjacencyList::exportToGraphviz(const char* filename) const {
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
-        Logger::getInstance()->log(Logger::logType_t::ERROR, "Could not open file. Graph was not exported.\n");
+        Logger::logln(Logger::ERROR, "Could not open file. Graph was not exported.\n");
         return;
     }
 

@@ -54,13 +54,13 @@ bool DataParser::loadGraph(const std::filesystem::path& filename, GraphRepr& gra
         // Check for any errors when reading indicating we don't have
         // enough edges specified
         if (dataFile.fail()) {
-            Logger::getInstance()->log(Logger::logType_t::ERROR, "Wrong data size.\n");
+            Logger::logln(Logger::ERROR, "Wrong data size.");
             return false;
         }
 
         // Validate if the vertices are in order as specified in the instruction
         if ((start < lastStartVertex) || (start > lastStartVertex + 1)) {
-            Logger::getInstance()->log(Logger::logType_t::ERROR, "Edges are not in the correct order.\n");
+            Logger::logln(Logger::ERROR, "Edges are not in the correct order.");
             return false;
         }
         lastStartVertex = start;
@@ -81,7 +81,7 @@ bool DataParser::loadGraph(const std::filesystem::path& filename, GraphRepr& gra
 bool DataParser::fileExists(const std::filesystem::path& filename) {
     // Check if the file exists
     if (!std::filesystem::exists(filename)) {
-        Logger::getInstance()->log(Logger::logType_t::ERROR, "Input file ", filename, " does not exist.\n");
+        Logger::logln(Logger::ERROR, "Input file ", filename, " does not exist.");
         return false;
     }
     return true;
@@ -95,7 +95,7 @@ bool DataParser::fileExists(const std::filesystem::path& filename) {
  */
 bool DataParser::validateOpen(std::ifstream& dataFile) {
     if (!dataFile.is_open()) {
-        Logger::getInstance()->log(Logger::logType_t::ERROR, "Could not open file.\n");
+        Logger::logln(Logger::ERROR, "Could not open file.");
         return false;
     }
     return true;
@@ -109,7 +109,7 @@ bool DataParser::validateOpen(std::ifstream& dataFile) {
  */
 bool DataParser::validateAllRead(std::ifstream& dataFile) {
     if (dataFile >> std::ws && !dataFile.eof()) {
-        Logger::getInstance()->log(Logger::logType_t::ERROR, "Too much data in file.\n");
+        Logger::logln(Logger::ERROR, "Too much data in file.");
         return false;
     }
     return true;

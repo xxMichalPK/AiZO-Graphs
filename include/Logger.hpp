@@ -38,13 +38,18 @@ class Logger {
         static void initialize(int argc, char** argv, const std::filesystem::path& logFile = "log.csv");
         static Logger* getInstance();
 
+        // Static logln - log line
         template<typename Type, typename... Args>
-        void log(logType_t type, Type arg1, Args... arg2);
+        static void logln(logType_t type, Type arg1, Args... arg2);
+
+        template<typename Type, typename... Args>
+        static void log(logType_t type, Type arg1, Args... arg2);
         void logBenchmark(size_t executionTime);
         void logBenchmark(size_t averageTime, size_t minTime, size_t maxTime);
     
     private:
-        void log(logType_t) {}; // Base case for the templated variadic function
+        static void log(logType_t) { } // Base case for the templated variadic function
+        static void logln(logType_t) { std::cout << "\n"; }
         void logBenchmarkCommon(std::ofstream& logFile);
         void writeBenchmarkHeader(std::ofstream& logFile);
         bool validateOpen(std::ofstream& logFile);
@@ -55,13 +60,13 @@ class Logger {
 template<typename Type, typename... Args>
 void Logger::log(Logger::logType_t type, Type arg1, Args... arg2) {
     // Print the initial type
-    if (type == Logger::logType_t::INDENT) {
+    if (type == Logger::INDENT) {
         std::cout << "         ";
-    } else if (type == Logger::logType_t::INFO) {
+    } else if (type == Logger::INFO) {
         std::cout << "[ INFO ] ";
-    } else if (type == Logger::logType_t::WARNING) {
+    } else if (type == Logger::WARNING) {
         std::cout << "[ " << LOG_COLOR_YELLOW << "WARN" << LOG_COLOR_RESET << " ] ";
-    } else if (type == Logger::logType_t::ERROR) {
+    } else if (type == Logger::ERROR) {
         std::cout << "[ " << LOG_COLOR_RED << "ERRO" << LOG_COLOR_RESET << " ] ";
     }
 
@@ -69,7 +74,27 @@ void Logger::log(Logger::logType_t type, Type arg1, Args... arg2) {
     std::cout << arg1;
 
     // Print the other arguments recursively
-    log(Logger::logType_t::NONE, arg2...);
+    Logger::log(Logger::NONE, arg2...);
+}
+
+template<typename Type, typename... Args>
+void Logger::logln(logType_t type, Type arg1, Args... arg2) {
+    // Print the initial type
+    if (type == Logger::INDENT) {
+        std::cout << "         ";
+    } else if (type == Logger::INFO) {
+        std::cout << "[ INFO ] ";
+    } else if (type == Logger::WARNING) {
+        std::cout << "[ " << LOG_COLOR_YELLOW << "WARN" << LOG_COLOR_RESET << " ] ";
+    } else if (type == Logger::ERROR) {
+        std::cout << "[ " << LOG_COLOR_RED << "ERRO" << LOG_COLOR_RESET << " ] ";
+    }
+
+    // Print the first argument
+    std::cout << arg1;
+
+    // Print the other arguments recursively
+    Logger::logln(Logger::NONE, arg2...);
 }
 
 #endif // LOGGER_HPP

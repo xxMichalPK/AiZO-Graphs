@@ -11,21 +11,21 @@ int BenchmarkMode::run() {
     bool directed = isDirected();
 
     size_t edgeCount = calculateEdgeCount(Parameters::vertexCount, Parameters::density);
-    Logger::getInstance()->log(Logger::logType_t::INFO, "The graph with ", Parameters::vertexCount, " vertices and density ",
-                                Parameters::density, " should have ", edgeCount, " edges.\n");
+    Logger::logln(Logger::INFO, "The graph with ", Parameters::vertexCount, " vertices and density ",
+                                Parameters::density, " should have ", edgeCount, " edges.");
     
     AdjacencyList graph(Parameters::vertexCount, edgeCount, directed);
     success = GraphGenerator::generate(graph, Parameters::vertexCount, edgeCount, directed);
     if (!success) {
-        Logger::getInstance()->log(Logger::logType_t::ERROR, "Failed to generate a graph with provided parameters!\n");
+        Logger::logln(Logger::ERROR, "Failed to generate a graph with provided parameters!");
         return 1;
     }
     
     #if GRAPHVIZ_SUPPORT
-        Logger::getInstance()->log(Logger::logType_t::INFO, "Graphviz support is enabled.\n");
+        Logger::logln(Logger::INFO, "Graphviz support is enabled.");
         graph.exportToGraphviz("graph_output.dot");
     #else
-        Logger::getInstance()->log(Logger::logType_t::WARNING, "Graphviz support is disabled.\n");
+        Logger::logln(Logger::WARNING, "Graphviz support is disabled.");
     #endif
 
     return 0;
