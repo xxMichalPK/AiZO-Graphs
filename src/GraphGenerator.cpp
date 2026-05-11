@@ -3,6 +3,16 @@
 #include "Logger.hpp"
 #include <random>
 
+/**
+ * Generates a connected graph based on provided arguments and parsed parameters
+ * 
+ * @param graph the graph to generate the edges into
+ * @param vertexCount number of vertices of the final graph
+ * @param edgeCount number of edges in the final graph
+ * @param directed if the graph should be a directed or undirected one
+ * 
+ * @returns true if generation was successful, false otherwise
+ */
 bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, size_t edgeCount, bool directed) {
     if (directed) {
         return generateDirected(graph, vertexCount, edgeCount);
@@ -11,6 +21,15 @@ bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, size_t edgeC
     return generateUndirected(graph, vertexCount, edgeCount);
 }
 
+/**
+ * Generates a directed graph based on provided arguments and parsed parameters
+ * 
+ * @param graph the graph to generate the edges into
+ * @param vertexCount number of vertices of the final graph
+ * @param edgeCount number of edges in the final graph
+ * 
+ * @returns true if generation was successful, false otherwise
+ */
 bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
     if (edgeCount < vertexCount - 1) {
         Logger::logln(Logger::ERROR, "Impossible to generate a connected graph with ", vertexCount, " vertices and ",
@@ -52,6 +71,15 @@ bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size
     return true;
 }
 
+/**
+ * Generates an undirected graph based on provided arguments and parsed parameters
+ * 
+ * @param graph the graph to generate the edges into
+ * @param vertexCount number of vertices of the final graph
+ * @param edgeCount number of edges in the final graph
+ * 
+ * @returns true if generation was successful, false otherwise
+ */
 bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
     // Check if it is even possible to generate such a graph (number of edges has to be at least V-1)
     if (edgeCount < vertexCount - 1) {

@@ -6,12 +6,18 @@
 #include "AdjacencyList.hpp"
 #include "GraphGenerator.hpp"
 
+/**
+ * Runs the benchmark
+ * 
+ * @returns 0 on success, other value on failure
+ */
 int BenchmarkMode::run() {
     bool success = true;
     bool directed = isDirected();
+    const char* directedStr = directed ? "A directed" : "An undirected";
 
     size_t edgeCount = calculateEdgeCount(Parameters::vertexCount, Parameters::density);
-    Logger::logln(Logger::INFO, "The graph with ", Parameters::vertexCount, " vertices and density ",
+    Logger::logln(Logger::INFO, directedStr, " graph with ", Parameters::vertexCount, " vertices and density ",
                                 Parameters::density, " should have ", edgeCount, " edges.");
     
     AdjacencyList graph(Parameters::vertexCount, edgeCount, directed);
@@ -31,6 +37,14 @@ int BenchmarkMode::run() {
     return 0;
 }
 
+/**
+ * Calculates the number of edges in a graph based on the provided graph density
+ * 
+ * @param vertexCount number of all vertices in the graph
+ * @param density the density of the graph (between 0 and 100 inclusive)
+ * 
+ * @returns number of edges in a graph with provided parameters
+ */
 size_t BenchmarkMode::calculateEdgeCount(size_t vertexCount, int density) {
     // Density should be between 0 and 100
     if (density < 0 || density > 100) return 0;
@@ -44,6 +58,11 @@ size_t BenchmarkMode::calculateEdgeCount(size_t vertexCount, int density) {
     return (size_t)((d_density * vertexCount * (vertexCount - 1)) / 2.);
 }
 
+/**
+ * Tells you if the graph should be directed or not
+ * 
+ * @returns true if it should be directed, false otherwise
+ */
 bool BenchmarkMode::isDirected() {
     if (Parameters::problem == Parameters::Problems::mst) return false;
     return true;

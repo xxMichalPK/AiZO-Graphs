@@ -1,7 +1,13 @@
 #include "IncidenceMatrix.hpp"
 #include "Logger.hpp"
 
-
+/**
+ * Constructs an object of the incidence matrix representation of the graph
+ * 
+ * @param vertexCount number of all possible vertices
+ * @param edgeCount number of all possible edges
+ * @param directed if the graph should be a directed or undirected one
+ */
 IncidenceMatrix::IncidenceMatrix(size_t vertexCount, size_t edgeCount, bool directed) : 
     m_numVertices(vertexCount), m_numEdges(edgeCount), m_directed(directed) {
 
@@ -13,6 +19,9 @@ IncidenceMatrix::IncidenceMatrix(size_t vertexCount, size_t edgeCount, bool dire
     }
 }
 
+/**
+ * Clears the memory of the incidence matrix
+ */
 IncidenceMatrix::~IncidenceMatrix() {
     for (size_t i = 0; i < m_numVertices; i++) {
         delete[] m_matrix[i];
@@ -20,6 +29,13 @@ IncidenceMatrix::~IncidenceMatrix() {
     delete[] m_matrix;
 }
 
+/**
+ * Adds an edge to the graph representation
+ * 
+ * @param startVertex start of the edge
+ * @param endVertex end of the edge
+ * @param weight the weight of the edge
+ */
 void IncidenceMatrix::addEdge(size_t startVertex, size_t endVertex, intmax_t weight) {
     // The weights are in range rand(1,k*4/5) so we can use 0 as the indicator of no edge
     // Now the case of undirected or directed graph... If it's undirected, just use the same weight
@@ -37,6 +53,14 @@ void IncidenceMatrix::addEdge(size_t startVertex, size_t endVertex, intmax_t wei
     m_currentEdgeIndex++;
 }
 
+/**
+ * Checks if an edge is defined in the graph (if the graph contains the specified edge)
+ * 
+ * @param startVertex start of the edge
+ * @param endVertex end of the edge
+ * 
+ * @returns true when the edge belongs to the graph, false otherwise
+ */
 bool IncidenceMatrix::checkEdge(size_t startVertex, size_t endVertex) {
     for (size_t i = 0; i < m_numEdges; i++) {
         if ((m_matrix[startVertex][i] != 0) && (m_matrix[endVertex][i] != 0)) return true;
@@ -44,6 +68,9 @@ bool IncidenceMatrix::checkEdge(size_t startVertex, size_t endVertex) {
     return false;
 }
 
+/**
+ * Returns the total possible number of edges in this graph representation
+ */
 size_t IncidenceMatrix::getEdgeCount() {
     return m_numEdges;
 }
@@ -51,6 +78,11 @@ size_t IncidenceMatrix::getEdgeCount() {
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 
+/**
+ * Exports the graph data into a nice graphical representation using the graphviz program
+ * 
+ * @param filename path where the exported image should be saved (preferably ending in *.dot) 
+ */
 void IncidenceMatrix::exportToGraphviz(const char* filename) const {
     // Specs: https://graphviz.org/doc/info/lang.html
     std::ofstream outFile(filename);

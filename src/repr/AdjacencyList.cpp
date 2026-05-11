@@ -2,7 +2,13 @@
 #include "Logger.hpp"
 #include <iostream>
 
-
+/**
+ * Constructs an object of the adjacency list representation of the graph
+ * 
+ * @param vertexCount number of all possible vertices
+ * @param edgeCount number of all possible edges
+ * @param directed if the graph should be a directed or undirected one
+ */
 AdjacencyList::AdjacencyList(size_t vertexCount, size_t edgeCount, bool directed) : 
     m_numVertices(vertexCount), m_numEdges(edgeCount), m_directed(directed) {
     
@@ -10,6 +16,9 @@ AdjacencyList::AdjacencyList(size_t vertexCount, size_t edgeCount, bool directed
     m_list = new Edge*[m_numVertices]();
 }
 
+/**
+ * Clears the memory of the adjacency list
+ */
 AdjacencyList::~AdjacencyList() {
     for (size_t i = 0; i < m_numVertices; i++) {
         Edge* current = m_list[i];
@@ -22,6 +31,13 @@ AdjacencyList::~AdjacencyList() {
     delete[] m_list;
 }
 
+/**
+ * Adds an edge to the graph representation
+ * 
+ * @param startVertex start of the edge
+ * @param endVertex end of the edge
+ * @param weight the weight of the edge
+ */
 void AdjacencyList::addEdge(size_t startVertex, size_t endVertex, intmax_t weight) {
     if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
         Logger::logln(Logger::ERROR, "Vertex out of bounds.");
@@ -34,6 +50,14 @@ void AdjacencyList::addEdge(size_t startVertex, size_t endVertex, intmax_t weigh
     m_list[startVertex] = newEdge;
 }
 
+/**
+ * Checks if an edge is defined in the graph (if the graph contains the specified edge)
+ * 
+ * @param startVertex start of the edge
+ * @param endVertex end of the edge
+ * 
+ * @returns true when the edge belongs to the graph, false otherwise
+ */
 bool AdjacencyList::checkEdge(size_t startVertex, size_t endVertex) {
     if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
         return false;
@@ -64,6 +88,11 @@ size_t AdjacencyList::getEdgeCount() {
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 
+/**
+ * Exports the graph data into a nice graphical representation using the graphviz program
+ * 
+ * @param filename path where the exported image should be saved (preferably ending in *.dot) 
+ */
 void AdjacencyList::exportToGraphviz(const char* filename) const {
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
