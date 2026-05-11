@@ -46,3 +46,23 @@ Basically in order to actually run the algorithms we have to implement some stru
 - [✅] Implement a priority queue
 - [❌] Fix the priority queue (it seems it's not optimal because I understood the Floyd algorithm wrong - it's not meant to be used when inserting data)
 - [❌] Implement an array
+
+---
+
+## 2026-05-10 - Dynamic array
+
+### Tasks
+
+- [✅] Implement dynamic array
+- [✅] Incorporated the parameter library
+
+---
+
+## 2026-05-11 - Graph generation
+
+### Tasks
+
+- [✅] Added edge calculations based on the requested density
+- [✅] Implement directed graph generation
+- [✅] Implement undirected graph generation
+- [✅] Fixed bugs with chechEdge method for undirected graphs
