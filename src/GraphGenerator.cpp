@@ -3,31 +3,22 @@
 #include "Logger.hpp"
 #include <random>
 
-constexpr int directed = 0;
-
-bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, int density) {    
-    switch (directed) {
-        case 0:
-            return generateUndirected(graph, vertexCount, density);
-        case 1:
-            return generateDirected(graph, vertexCount, density);
-        default:
-            break;
+bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, size_t edgeCount, bool directed) {
+    if (directed) {
+        return generateDirected(graph, vertexCount, edgeCount);
     }
-
-    Logger::getInstance()->log(Logger::logType_t::ERROR, "Wrong \"directed\" parameter!\n");
-    return false;
+    
+    return generateUndirected(graph, vertexCount, edgeCount);
 }
 
-bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, int density) {
+bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
     (void)graph;
     (void)vertexCount;
-    (void)density;
+    (void)edgeCount;
     return false;
 }
 
-bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, int density) {
-    (void)density;
+bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
     DynamicArray<size_t> freeVertices(vertexCount + 1);
     DynamicArray<size_t> usedVertices(vertexCount + 1);
     
@@ -38,7 +29,6 @@ bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, in
 
     std::srand(std::time(nullptr));
     // Insert the starting vertex manually
-    size_t edgeCount = graph.getEdgeCount();
     int vertexIdx = std::rand() % freeVertices.size();
     size_t vertexValue = freeVertices.get(vertexIdx);
     freeVertices.removeAt(vertexIdx);
