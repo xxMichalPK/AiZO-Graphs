@@ -12,13 +12,54 @@ bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, size_t edgeC
 }
 
 bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
-    (void)graph;
-    (void)vertexCount;
-    (void)edgeCount;
-    return false;
+    if (edgeCount < vertexCount - 1) {
+        Logger::getInstance()->log(Logger::logType_t::ERROR, "Impossible to generate a connected graph with ", vertexCount, " vertices and ",
+                                    edgeCount, " edges!\n");
+        return false;
+    }
+    
+    std::srand(std::time(nullptr));
+
+    // In a directed graph we have to connect all the points (maybe other algorithm in the future)
+    size_t prevStart = 0;
+    size_t currentVertex = 1;
+    size_t remainingEdgeCount = edgeCount;
+    for (size_t i = 0; i < vertexCount - 1; i++) {
+        intmax_t maxWeight = (intmax_t)((double)edgeCount * (4. / 5.));
+        maxWeight = maxWeight == 0 ? 1 : maxWeight;
+        intmax_t weight = (std::rand() % maxWeight) + 1;
+        graph.addEdge(prevStart, currentVertex, weight);
+        
+        prevStart++;
+        currentVertex++;
+        remainingEdgeCount--;
+    }
+
+    // Add the random connections between vertices that are not yet connected
+    while (remainingEdgeCount > 0) {
+        int startVertex = std::rand() % vertexCount;
+        int endVertex = std::rand() % vertexCount;
+        // We've got 2 the same vertices or the edge already exists
+        if (startVertex == endVertex || graph.checkEdge(startVertex, endVertex)) continue;
+
+        intmax_t maxWeight = (intmax_t)((double)edgeCount * (4. / 5.));
+        maxWeight = maxWeight == 0 ? 1 : maxWeight;
+        intmax_t weight = (std::rand() % maxWeight) + 1;
+        graph.addEdge(startVertex, endVertex, weight);
+        remainingEdgeCount--;
+    }
+
+    return true;
 }
 
 bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
+    // Check if it is even possible to generate such a graph (number of edges has to be at least V-1)
+    if (edgeCount < vertexCount - 1) {
+        Logger::getInstance()->log(Logger::logType_t::ERROR, "Impossible to generate a connected graph with ", vertexCount, " vertices and ",
+                                    edgeCount, " edges!\n");
+        return false;
+    }
+
     DynamicArray<size_t> freeVertices(vertexCount + 1);
     DynamicArray<size_t> usedVertices(vertexCount + 1);
     
@@ -34,6 +75,7 @@ bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, si
     freeVertices.removeAt(vertexIdx);
     usedVertices.insert(vertexValue);
 
+    size_t remainingEdgeCount = edgeCount;
     while (usedVertices.size() < vertexCount) {
         // Get the on of the previously added vertices
         int prevIdx = std::rand() % usedVertices.size();
@@ -53,6 +95,21 @@ bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, si
         // Remove the vertex from the free array and add to used
         usedVertices.insert(vertexValue);
         freeVertices.removeAt(vertexIdx);
+        remainingEdgeCount--;
+    }
+
+    // Add the random connections between vertices that are not yet connected
+    while (remainingEdgeCount > 0) {
+        int startVertex = std::rand() % vertexCount;
+        int endVertex = std::rand() % vertexCount;
+        // We've got 2 the same vertices or the edge already exists
+        if (startVertex == endVertex || graph.checkEdge(startVertex, endVertex)) continue;
+
+        intmax_t maxWeight = (intmax_t)((double)edgeCount * (4. / 5.));
+        maxWeight = maxWeight == 0 ? 1 : maxWeight;
+        intmax_t weight = (std::rand() % maxWeight) + 1;
+        graph.addEdge(startVertex, endVertex, weight);
+        remainingEdgeCount--;
     }
 
     return true;

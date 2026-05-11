@@ -8,12 +8,14 @@
 
 int BenchmarkMode::run() {
     bool success = true;
+    bool directed = isDirected();
 
     size_t edgeCount = calculateEdgeCount(Parameters::vertexCount, Parameters::density);
     Logger::getInstance()->log(Logger::logType_t::INFO, "The graph with ", Parameters::vertexCount, " vertices and density ",
                                 Parameters::density, " should have ", edgeCount, " edges.\n");
-    AdjacencyList graph(Parameters::vertexCount, edgeCount);
-    success = GraphGenerator::generate(graph, Parameters::vertexCount, edgeCount, isDirected());
+    
+    AdjacencyList graph(Parameters::vertexCount, edgeCount, directed);
+    success = GraphGenerator::generate(graph, Parameters::vertexCount, edgeCount, directed);
     if (!success) {
         Logger::getInstance()->log(Logger::logType_t::ERROR, "Failed to generate a graph with provided parameters!\n");
         return 1;

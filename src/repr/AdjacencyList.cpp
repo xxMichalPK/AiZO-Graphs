@@ -44,6 +44,16 @@ bool AdjacencyList::checkEdge(size_t startVertex, size_t endVertex) {
         if (currentEdge->endVertex == endVertex) return true;
         currentEdge = currentEdge->next;
     }
+
+    if (m_directed) return false;
+
+    // In an undirected graph we have to check both directions
+    currentEdge = m_list[endVertex];
+    while (currentEdge != nullptr) {
+        if (currentEdge->endVertex == startVertex) return true;
+        currentEdge = currentEdge->next;
+    }
+
     return false;
 }
 
