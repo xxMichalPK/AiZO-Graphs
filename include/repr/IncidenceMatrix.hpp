@@ -9,9 +9,10 @@ class IncidenceMatrix : public GraphRepr {
         size_t m_numEdges = 0;
         size_t m_currentEdgeIndex = 0;
         intmax_t** m_matrix = nullptr;
+        bool m_directed;
 
     public:
-        IncidenceMatrix(size_t vertexCount, size_t edgeCount);
+        IncidenceMatrix(size_t vertexCount, size_t edgeCount, bool directed = false);
         ~IncidenceMatrix();
 
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) override;

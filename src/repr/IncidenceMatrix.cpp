@@ -1,10 +1,9 @@
 #include "IncidenceMatrix.hpp"
 #include "Logger.hpp"
 
-constexpr int directed = 0; // 0 - undirected, 1 - directed (later changed by the parameters library)
 
-IncidenceMatrix::IncidenceMatrix(size_t vertexCount, size_t edgeCount) : 
-    m_numVertices(vertexCount), m_numEdges(edgeCount) {
+IncidenceMatrix::IncidenceMatrix(size_t vertexCount, size_t edgeCount, bool directed) : 
+    m_numVertices(vertexCount), m_numEdges(edgeCount), m_directed(directed) {
 
     // The incidence matrix has numVertices rows and numEdges columns
     // so we need to allocate memory for it so m_matrix[row][col] points to the corrent weight
@@ -25,7 +24,7 @@ void IncidenceMatrix::addEdge(size_t startVertex, size_t endVertex, intmax_t wei
     // The weights are in range rand(1,k*4/5) so we can use 0 as the indicator of no edge
     // Now the case of undirected or directed graph... If it's undirected, just use the same weight
     // else the negative weight will be used as the end of the edge
-    switch (directed) {
+    switch (m_directed) {
         case 0: // undirected
             m_matrix[startVertex][m_currentEdgeIndex] = weight;
             m_matrix[endVertex][m_currentEdgeIndex] = weight;
@@ -60,7 +59,7 @@ void IncidenceMatrix::exportToGraphviz(const char* filename) const {
         return;
     }
 
-    outFile << (directed ? "digraph" : "graph") << " G {\n";
+    outFile << (m_directed ? "digraph" : "graph") << " G {\n";
     for (size_t edge = 0; edge < m_numEdges; edge++) {
         bool startFound = false;
         size_t startVertex = 0;
@@ -90,7 +89,7 @@ void IncidenceMatrix::exportToGraphviz(const char* filename) const {
         if (startWeight == 0 || endWeight == 0) continue; // invalid edge, skip
         
         // Write the endge based on the direction of the graph
-        if (directed) {
+        if (m_directed) {
             // Directed graph
             outFile << "    " << startVertex << " -> " << endVertex << " [label=\"" << startWeight << "\"];\n";
         } else {

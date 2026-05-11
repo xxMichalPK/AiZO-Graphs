@@ -2,9 +2,11 @@
 #include "Logger.hpp"
 #include <iostream>
 
-constexpr int directed = 0; // 0 - undirected, 1 - directed (later changed by the parameters library)
 
-AdjacencyList::AdjacencyList(size_t vertexCount, size_t edgeCount) : m_numVertices(vertexCount), m_numEdges(edgeCount) {
+AdjacencyList::AdjacencyList(size_t vertexCount, size_t edgeCount, bool directed) : 
+    m_numVertices(vertexCount), m_numEdges(edgeCount), m_directed(directed) {
+    
+    //
     m_list = new Edge*[m_numVertices]();
 }
 
@@ -59,12 +61,12 @@ void AdjacencyList::exportToGraphviz(const char* filename) const {
         return;
     }
 
-    outFile << (directed ? "digraph" : "graph") << " G {\n";
+    outFile << (m_directed ? "digraph" : "graph") << " G {\n";
     for (size_t vertex = 0; vertex < m_numVertices; vertex++) {
         Edge* current = m_list[vertex];
         while (current != nullptr) {
             // Write the edge based on the direction of the graph
-            if (directed) {
+            if (m_directed) {
                 // Directed graph
                 outFile << "    " << vertex << " -> " << current->endVertex << " [label=\"" << current->weight << "\"];\n";
             } else {

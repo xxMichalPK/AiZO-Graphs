@@ -13,9 +13,10 @@ class AdjacencyList : public GraphRepr {
             Edge* next;
         };
         struct Edge** m_list = nullptr;
+        bool m_directed;
 
     public:
-        AdjacencyList(size_t vertexCount, size_t edgeCount);
+        AdjacencyList(size_t vertexCount, size_t edgeCount, bool directed = false);
         ~AdjacencyList();
 
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) override;
