@@ -16,6 +16,11 @@ int BenchmarkMode::run() {
     bool directed = isDirected();
     const char* directedStr = directed ? "A directed" : "An undirected";
 
+    if (Parameters::vertexCount <= 0 || Parameters::density <= 0) {
+        Logger::logln(Logger::ERROR, "Incorrect vertex number or density specified!");
+        return 1;
+    }
+
     size_t edgeCount = calculateEdgeCount(Parameters::vertexCount, Parameters::density);
     Logger::logln(Logger::INFO, directedStr, " graph with ", Parameters::vertexCount, " vertices and density ",
                                 Parameters::density, " should have ", edgeCount, " edges.");
