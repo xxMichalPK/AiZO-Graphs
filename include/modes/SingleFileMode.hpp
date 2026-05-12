@@ -10,9 +10,6 @@ class SingleFileMode : public RunModeBase {
         SingleFileMode() = delete;
 
         static int run();
-    
-    private:
-        static DynamicArray<GraphRepr*>* createRepresentations(size_t vertexCount, size_t edgeCount);
 };
 
 #endif // SINGLEFILEMODE_HPP

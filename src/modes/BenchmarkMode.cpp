@@ -20,20 +20,32 @@ int BenchmarkMode::run() {
     Logger::logln(Logger::INFO, directedStr, " graph with ", Parameters::vertexCount, " vertices and density ",
                                 Parameters::density, " should have ", edgeCount, " edges.");
     
-    AdjacencyList graph(Parameters::vertexCount, edgeCount, directed);
-    success = GraphGenerator::generate(graph, Parameters::vertexCount, edgeCount, directed);
+    // Create all requested representations
+    DynamicArray<GraphRepr*>* representations = createRepresentations(Parameters::vertexCount, edgeCount);
+    if (representations == nullptr) {
+        Logger::logln(Logger::ERROR, "Failed to create graph representations");
+        return 1;
+    }
+
+    success = GraphGenerator::generate(*representations, Parameters::vertexCount, edgeCount, directed);
     if (!success) {
         Logger::logln(Logger::ERROR, "Failed to generate a graph with provided parameters!");
         return 1;
     }
     
-    #if GRAPHVIZ_SUPPORT
-        Logger::logln(Logger::INFO, "Graphviz support is enabled.");
-        graph.exportToGraphviz("graph_output.dot");
-    #else
-        Logger::logln(Logger::WARNING, "Graphviz support is disabled.");
-    #endif
+#if GRAPHVIZ_SUPPORT
+    if (Parameters::vertexCount <= 10) {
+        for (size_t i = 0; i < representations->size(); i++) {
+            std::string graphName = "graph_repr" + std::to_string(i) + ".dot";
+            representations->get(i)->exportToGraphviz(graphName.c_str());
+        }
+    }
+#endif
 
+    for (size_t i = 0; i < representations->size(); i++) {
+        delete representations->get(i);
+    }
+    delete representations;
     return 0;
 }
 

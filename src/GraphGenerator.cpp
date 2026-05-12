@@ -6,31 +6,31 @@
 /**
  * Generates a connected graph based on provided arguments and parsed parameters
  * 
- * @param graph the graph to generate the edges into
+ * @param representations a dynamic array of graph representations to fill with data
  * @param vertexCount number of vertices of the final graph
  * @param edgeCount number of edges in the final graph
  * @param directed if the graph should be a directed or undirected one
  * 
  * @returns true if generation was successful, false otherwise
  */
-bool GraphGenerator::generate(GraphRepr &graph, size_t vertexCount, size_t edgeCount, bool directed) {
+bool GraphGenerator::generate(DynamicArray<GraphRepr*> &representations, size_t vertexCount, size_t edgeCount, bool directed) {
     if (directed) {
-        return generateDirected(graph, vertexCount, edgeCount);
+        return generateDirected(representations, vertexCount, edgeCount);
     }
     
-    return generateUndirected(graph, vertexCount, edgeCount);
+    return generateUndirected(representations, vertexCount, edgeCount);
 }
 
 /**
  * Generates a directed graph based on provided arguments and parsed parameters
  * 
- * @param graph the graph to generate the edges into
+ * @param representations a dynamic array of graph representations to fill with data
  * @param vertexCount number of vertices of the final graph
  * @param edgeCount number of edges in the final graph
  * 
  * @returns true if generation was successful, false otherwise
  */
-bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
+bool GraphGenerator::generateDirected(DynamicArray<GraphRepr*> &representations, size_t vertexCount, size_t edgeCount) {
     if (edgeCount < vertexCount - 1) {
         Logger::logln(Logger::ERROR, "Impossible to generate a connected graph with ", vertexCount, " vertices and ",
                                     edgeCount, " edges!");
@@ -47,7 +47,9 @@ bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size
         intmax_t maxWeight = (intmax_t)((double)edgeCount * (4. / 5.));
         maxWeight = maxWeight == 0 ? 1 : maxWeight;
         intmax_t weight = (std::rand() % maxWeight) + 1;
-        graph.addEdge(prevStart, currentVertex, weight);
+        for (size_t g = 0; g < representations.size(); g++) {
+            representations.get(g)->addEdge(prevStart, currentVertex, weight);
+        }
         
         prevStart++;
         currentVertex++;
@@ -58,7 +60,10 @@ bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size
     intmax_t maxWeight = (intmax_t)((double)edgeCount * (4. / 5.));
     maxWeight = maxWeight == 0 ? 1 : maxWeight;
     intmax_t weight = (std::rand() % maxWeight) + 1;
-    graph.addEdge(--currentVertex, 0, weight);
+    currentVertex--;
+    for (size_t g = 0; g < representations.size(); g++) {
+        representations.get(g)->addEdge(currentVertex, 0, weight);
+    }
     remainingEdgeCount--;
 
     // Add the random connections between vertices that are not yet connected
@@ -66,12 +71,14 @@ bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size
         int startVertex = std::rand() % vertexCount;
         int endVertex = std::rand() % vertexCount;
         // We've got 2 the same vertices or the edge already exists
-        if (startVertex == endVertex || graph.checkEdge(startVertex, endVertex)) continue;
+        if (startVertex == endVertex || representations.get(0)->checkEdge(startVertex, endVertex)) continue;
 
         intmax_t maxWeight = (intmax_t)((double)edgeCount * (4. / 5.));
         maxWeight = maxWeight == 0 ? 1 : maxWeight;
         intmax_t weight = (std::rand() % maxWeight) + 1;
-        graph.addEdge(startVertex, endVertex, weight);
+        for (size_t g = 0; g < representations.size(); g++) {
+            representations.get(g)->addEdge(startVertex, endVertex, weight);
+        }
         remainingEdgeCount--;
     }
 
@@ -81,13 +88,13 @@ bool GraphGenerator::generateDirected(GraphRepr &graph, size_t vertexCount, size
 /**
  * Generates an undirected graph based on provided arguments and parsed parameters
  * 
- * @param graph the graph to generate the edges into
+ * @param representations a dynamic array of graph representations to fill with data
  * @param vertexCount number of vertices of the final graph
  * @param edgeCount number of edges in the final graph
  * 
  * @returns true if generation was successful, false otherwise
  */
-bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, size_t edgeCount) {
+bool GraphGenerator::generateUndirected(DynamicArray<GraphRepr*> &representations, size_t vertexCount, size_t edgeCount) {
     // Check if it is even possible to generate such a graph (number of edges has to be at least V-1)
     if (edgeCount < vertexCount - 1) {
         Logger::logln(Logger::ERROR, "Impossible to generate a connected graph with ", vertexCount, " vertices and ",
@@ -119,13 +126,15 @@ bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, si
         vertexIdx = std::rand() % freeVertices.size();
         vertexValue = freeVertices.get(vertexIdx);
         // Check if the edge exists and skip it
-        if (graph.checkEdge(prevValue, vertexValue)) continue;
+        if (representations.get(0)->checkEdge(prevValue, vertexValue)) continue;
 
         // Add the new edge
         intmax_t maxWeight = (intmax_t)((double)edgeCount * (4. / 5.));
         maxWeight = maxWeight == 0 ? 1 : maxWeight;
         intmax_t weight = (std::rand() % maxWeight) + 1;
-        graph.addEdge(prevValue, vertexValue, weight);
+        for (size_t g = 0; g < representations.size(); g++) {
+            representations.get(g)->addEdge(prevValue, vertexValue, weight);
+        }
 
         // Remove the vertex from the free array and add to used
         usedVertices.insert(vertexValue);
@@ -138,12 +147,14 @@ bool GraphGenerator::generateUndirected(GraphRepr &graph, size_t vertexCount, si
         int startVertex = std::rand() % vertexCount;
         int endVertex = std::rand() % vertexCount;
         // We've got 2 the same vertices or the edge already exists
-        if (startVertex == endVertex || graph.checkEdge(startVertex, endVertex)) continue;
+        if (startVertex == endVertex || representations.get(0)->checkEdge(startVertex, endVertex)) continue;
 
         intmax_t maxWeight = (intmax_t)((double)edgeCount * (4. / 5.));
         maxWeight = maxWeight == 0 ? 1 : maxWeight;
         intmax_t weight = (std::rand() % maxWeight) + 1;
-        graph.addEdge(startVertex, endVertex, weight);
+        for (size_t g = 0; g < representations.size(); g++) {
+            representations.get(g)->addEdge(startVertex, endVertex, weight);
+        }
         remainingEdgeCount--;
     }
 
