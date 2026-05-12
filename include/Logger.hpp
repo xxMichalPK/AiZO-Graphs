@@ -24,6 +24,7 @@ class Logger {
         typedef enum logType {
             NONE,
             INDENT,
+            OK,
             INFO,
             WARNING,
             ERROR
@@ -62,6 +63,8 @@ void Logger::log(Logger::logType_t type, Type arg1, Args... arg2) {
     // Print the initial type
     if (type == Logger::INDENT) {
         std::cout << "         ";
+    } else if (type == Logger::OK) {
+        std::cout << "[ " << LOG_COLOR_GREEN << " OK " << LOG_COLOR_RESET << " ] ";
     } else if (type == Logger::INFO) {
         std::cout << "[ INFO ] ";
     } else if (type == Logger::WARNING) {
@@ -82,6 +85,8 @@ void Logger::logln(logType_t type, Type arg1, Args... arg2) {
     // Print the initial type
     if (type == Logger::INDENT) {
         std::cout << "         ";
+    } else if (type == Logger::OK) {
+        std::cout << "[ " << LOG_COLOR_GREEN << " OK " << LOG_COLOR_RESET << " ] ";
     } else if (type == Logger::INFO) {
         std::cout << "[ INFO ] ";
     } else if (type == Logger::WARNING) {

@@ -31,12 +31,15 @@ int BenchmarkMode::run() {
         Logger::logln(Logger::ERROR, "Failed to create graph representations");
         return 1;
     }
+    Logger::logln(Logger::OK, "Created representation(s) for a graph with ",
+                  Parameters::vertexCount, " vertices and ", edgeCount, " edges");
 
     success = GraphGenerator::generate(*representations, Parameters::vertexCount, edgeCount, directed);
     if (!success) {
         Logger::logln(Logger::ERROR, "Failed to generate a graph with provided parameters!");
         return 1;
     }
+    Logger::logln(Logger::OK, "Generated random graph data into representation(s)");
     
 #if GRAPHVIZ_SUPPORT
     if (Parameters::vertexCount <= 10) {

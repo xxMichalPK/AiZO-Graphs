@@ -30,8 +30,10 @@ int main(int argc, char* argv[]) {
             Parameters::help();
             return 0;
         case Parameters::RunModes::singleFile:
+            Logger::logln(Logger::INFO, "Running in single file mode...");
             return SingleFileMode::run();
         case Parameters::RunModes::benchmark:
+            Logger::logln(Logger::INFO, "Running in benchmark mode...");
             return BenchmarkMode::run();
         default:
             break;

@@ -36,6 +36,8 @@ int SingleFileMode::run() {
         Logger::logln(Logger::ERROR, "Failed to create graph representations");
         return 1;
     }
+    Logger::logln(Logger::OK, "Created representation(s) for a graph with ",
+                  graphSize.vertices, " vertices and ", graphSize.edges, " edges");
 
     // Load data into all representations
     bool success = true;
@@ -49,6 +51,7 @@ int SingleFileMode::run() {
         Logger::logln(Logger::ERROR, "Failed to load graph data into representation");
         return 1;
     }
+    Logger::logln(Logger::OK, "Loaded graph data into representation(s)");
 
     // Do something with the representation...
 #if GRAPHVIZ_SUPPORT
