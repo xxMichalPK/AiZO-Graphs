@@ -73,4 +73,4 @@ Basically in order to actually run the algorithms we have to implement some stru
 
 - [⚙️] Implement Single File mode support
 - [✅] Implement dynamic graph representation creation
-- [❌] Change the generator to allow filling up multiple representations at once 
+- [✅] Change the generator to allow filling up multiple representations at once 
