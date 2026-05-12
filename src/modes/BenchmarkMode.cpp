@@ -57,13 +57,3 @@ size_t BenchmarkMode::calculateEdgeCount(size_t vertexCount, int density) {
 
     return (size_t)((d_density * vertexCount * (vertexCount - 1)) / 2.);
 }
-
-/**
- * Tells you if the graph should be directed or not
- * 
- * @returns true if it should be directed, false otherwise
- */
-bool BenchmarkMode::isDirected() {
-    if (Parameters::problem == Parameters::Problems::mst) return false;
-    return true;
-}

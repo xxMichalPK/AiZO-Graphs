@@ -66,3 +66,11 @@ Basically in order to actually run the algorithms we have to implement some stru
 - [✅] Implement directed graph generation
 - [✅] Implement undirected graph generation
 - [✅] Fixed bugs with chechEdge method for undirected graphs
+
+## 2026-05-12 - Single File Mode
+
+### Tasks
+
+- [⚙️] Implement Single File mode support
+- [✅] Implement dynamic graph representation creation
+- [❌] Change the generator to allow filling up multiple representations at once 

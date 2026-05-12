@@ -4,8 +4,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#define GRAPHVIZ_SUPPORT 1 // for testing purposes
-
 class GraphRepr {
     protected:
         GraphRepr() = default;
