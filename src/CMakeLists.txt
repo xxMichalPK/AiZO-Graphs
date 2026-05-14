@@ -9,5 +9,6 @@ SET(PROJECT_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/modes/SingleFileMode.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/repr/IncidenceMatrix.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/repr/AdjacencyList.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/PrimMST.cpp
     PARENT_SCOPE
 )

@@ -11,6 +11,9 @@
 #include "AdjacencyList.hpp"
 #include "IncidenceMatrix.hpp"
 
+#include "GraphAlgorithmBase.hpp"
+#include "PrimMST.hpp"
+
 /**
  * Runs program in the single file mode
  * 
@@ -54,6 +57,9 @@ int SingleFileMode::run() {
     Logger::logln(Logger::OK, "Loaded graph data into representation(s)");
 
     // Do something with the representation...
+    GraphAlgorithmBase* alg = new PrimMST(*representations->get(0));
+    alg->run();
+
 #if GRAPHVIZ_SUPPORT
     if (graphSize.vertices <= 10) {
         for (size_t i = 0; i < representations->size(); i++) {
@@ -63,6 +69,7 @@ int SingleFileMode::run() {
     }
 #endif
 
+    delete alg;
     for (size_t i = 0; i < representations->size(); i++) {
         delete representations->get(i);
     }
