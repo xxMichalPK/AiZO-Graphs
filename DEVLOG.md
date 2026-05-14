@@ -67,6 +67,8 @@ Basically in order to actually run the algorithms we have to implement some stru
 - [✅] Implement undirected graph generation
 - [✅] Fixed bugs with chechEdge method for undirected graphs
 
+---
+
 ## 2026-05-12 - Single File Mode
 
 ### Tasks
@@ -74,3 +76,12 @@ Basically in order to actually run the algorithms we have to implement some stru
 - [⚙️] Implement Single File mode support
 - [✅] Implement dynamic graph representation creation
 - [✅] Change the generator to allow filling up multiple representations at once 
+
+---
+
+## 2026-05-12 - First algorithms
+
+### Tasks
+
+- [⚙️] Implement a standarized algorithm interface
+- [❌] Implement Prim's MST algorithm
