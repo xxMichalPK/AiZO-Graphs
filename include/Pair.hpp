@@ -6,21 +6,21 @@
 template<typename T1, typename T2>
 class Pair {
     protected:
-        T1 element1 {};
-        T2 element2 {};
+        T1 m_first {};
+        T2 m_second {};
 
     public:
         Pair() = default;
-        Pair(T1 e1, T2 e2) : element1(e1), element2(e2) {}
+        Pair(T1 first, T2 second) : m_first(first), m_second(second) {}
 
-        T1 first() const { return element1; }
-        T2 second() const { return element2; }
+        T1 first() const { return m_first; }
+        T2 second() const { return m_second; }
 
-        bool operator<(Pair e2) { return element1 < e2.element1; }
-        bool operator<=(Pair e2) { return element1 <= e2.element1; }
-        bool operator>(Pair e2) { return element1 > e2.element1; }
-        bool operator>=(Pair e2) { return element1 >= e2.element1; }
-        bool operator==(Pair e2) { return element1 == e2.element1; }
+        bool operator<(Pair otherPair) { return m_first < otherPair.m_first; }
+        bool operator<=(Pair otherPair) { return m_first <= otherPair.m_first; }
+        bool operator>(Pair otherPair) { return m_first > otherPair.m_first; }
+        bool operator>=(Pair otherPair) { return m_first >= otherPair.m_first; }
+        bool operator==(Pair otherPair) { return m_first == otherPair.m_first; }
 };
 
 template<typename T1, typename T2>
