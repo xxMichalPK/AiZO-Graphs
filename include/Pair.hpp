@@ -13,8 +13,8 @@ class Pair {
         Pair() = default;
         Pair(T1 e1, T2 e2) : element1(e1), element2(e2) {}
 
-        T1 first() { return element1; }
-        T2 second() { return element2; }
+        T1 first() const { return element1; }
+        T2 second() const { return element2; }
 
         bool operator<(Pair e2) { return element1 < e2.element1; }
         bool operator<=(Pair e2) { return element1 <= e2.element1; }
