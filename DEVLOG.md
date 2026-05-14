@@ -83,5 +83,6 @@ Basically in order to actually run the algorithms we have to implement some stru
 
 ### Tasks
 
+- [✅] Implement Pair class
 - [⚙️] Implement a standarized algorithm interface
 - [❌] Implement Prim's MST algorithm
