@@ -41,10 +41,10 @@ class Logger {
 
         // Static logln - log line
         template<typename Type, typename... Args>
-        static void logln(logType_t type, Type arg1, Args... arg2);
+        static void logln(logType_t type, Type&& arg1, Args&&... arg2);
 
         template<typename Type, typename... Args>
-        static void log(logType_t type, Type arg1, Args... arg2);
+        static void log(logType_t type, Type&& arg1, Args&&... arg2);
         void logBenchmark(size_t executionTime);
         void logBenchmark(size_t averageTime, size_t minTime, size_t maxTime);
     
@@ -59,7 +59,7 @@ class Logger {
 
 // Implement the templated variadic function as shown at https://www.geeksforgeeks.org/cpp/variadic-function-templates-c/
 template<typename Type, typename... Args>
-void Logger::log(Logger::logType_t type, Type arg1, Args... arg2) {
+void Logger::log(Logger::logType_t type, Type&& arg1, Args&&... arg2) {
     // Print the initial type
     if (type == Logger::INDENT) {
         std::cout << "         ";
@@ -81,7 +81,7 @@ void Logger::log(Logger::logType_t type, Type arg1, Args... arg2) {
 }
 
 template<typename Type, typename... Args>
-void Logger::logln(logType_t type, Type arg1, Args... arg2) {
+void Logger::logln(logType_t type, Type&& arg1, Args&&... arg2) {
     // Print the initial type
     if (type == Logger::INDENT) {
         std::cout << "         ";
