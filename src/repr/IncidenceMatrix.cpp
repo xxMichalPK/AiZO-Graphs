@@ -62,6 +62,10 @@ void IncidenceMatrix::addEdge(size_t startVertex, size_t endVertex, intmax_t wei
  * @returns true when the edge belongs to the graph, false otherwise
  */
 bool IncidenceMatrix::checkEdge(size_t startVertex, size_t endVertex) {
+    if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
+        return false;
+    }
+
     for (size_t i = 0; i < m_numEdges; i++) {
         if ((m_matrix[startVertex][i] != 0) && (m_matrix[endVertex][i] != 0)) return true;
     }
@@ -69,6 +73,11 @@ bool IncidenceMatrix::checkEdge(size_t startVertex, size_t endVertex) {
 }
 
 intmax_t IncidenceMatrix::getEdgeWeight(size_t startVertex, size_t endVertex) {
+    if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
+        Logger::logln(Logger::ERROR, "Vertex out of bounds.");
+        return 0;
+    }
+
     for (size_t i = 0; i < m_numEdges; i++) {
         if ((m_matrix[startVertex][i] != 0) && (m_matrix[endVertex][i] != 0)) return m_matrix[startVertex][i];
     }
@@ -76,10 +85,17 @@ intmax_t IncidenceMatrix::getEdgeWeight(size_t startVertex, size_t endVertex) {
 }
 
 /**
- * Returns the total possible number of edges in this graph representation
+ * Returns number of edges in this graph representation
  */
 size_t IncidenceMatrix::getEdgeCount() {
     return m_numEdges;
+}
+
+/**
+ * Returns the number of vertices in this graph representation
+ */
+size_t IncidenceMatrix::getVertexCount() {
+    return m_numVertices;
 }
 
 #if GRAPHVIZ_SUPPORT

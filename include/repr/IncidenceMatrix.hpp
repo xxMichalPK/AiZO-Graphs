@@ -19,6 +19,7 @@ class IncidenceMatrix : public GraphRepr {
         virtual bool checkEdge(size_t startVertex, size_t endVertex) override;
         virtual intmax_t getEdgeWeight(size_t startVertex, size_t endVertex) override;
         virtual size_t getEdgeCount() override;
+        virtual size_t getVertexCount() override;
 
         #if GRAPHVIZ_SUPPORT
             virtual void exportToGraphviz(const char* filename) const override;

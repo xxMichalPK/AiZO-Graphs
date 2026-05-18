@@ -109,6 +109,10 @@ size_t AdjacencyList::getEdgeCount() {
     return m_numEdges;
 }
 
+size_t AdjacencyList::getVertexCount() {
+    return m_numVertices;
+}
+
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 
