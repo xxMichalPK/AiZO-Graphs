@@ -12,6 +12,7 @@ class DynamicArray : public IndexedContainer<T> {
 
     public:
         DynamicArray(size_t initialSize);
+        DynamicArray(size_t initialSize, T defaultValue);
         DynamicArray() : DynamicArray(10) {}
         ~DynamicArray();
 
@@ -32,6 +33,15 @@ class DynamicArray : public IndexedContainer<T> {
 template<typename T>
 DynamicArray<T>::DynamicArray(size_t initialSize) : m_currentSize(initialSize) {
     m_data = new T[m_currentSize]();
+}
+
+template<typename T>
+DynamicArray<T>::DynamicArray(size_t initialSize, T defaultValue) : m_currentSize(initialSize) {
+    m_data = new T[m_currentSize]();
+    for (size_t i = 0; i < m_currentSize; i++) {
+        m_data[i] = defaultValue;
+    }
+    this->m_elementCount = m_currentSize;
 }
 
 template<typename T>
