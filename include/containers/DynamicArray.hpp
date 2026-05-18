@@ -22,6 +22,7 @@ class DynamicArray : public IndexedContainer<T> {
         virtual T get(size_t index) override;
         virtual void set(size_t index, T element) override;
         virtual void removeAt(size_t index) override;
+        virtual bool contains(T element) override;
     
     protected:
         void resize(size_t newSize);
@@ -130,6 +131,14 @@ void DynamicArray<T>::removeAt(size_t index) {
         m_data[i] = m_data[i + 1];
     }
     this->m_elementCount--;
+}
+
+template<typename T>
+bool DynamicArray<T>::contains(T element) {
+    for (size_t i = 0; i < this->m_elementCount; i++) {
+        if (m_data[i] == element) return true;
+    }
+    return false;
 }
 
 #endif // DYNAMICARRAY_HPP
