@@ -13,6 +13,7 @@ class GraphRepr {
 
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) = 0;
         virtual bool checkEdge(size_t startVertex, size_t endVertex) = 0;
+        virtual intmax_t getEdgeWeight(size_t startVertex, size_t endVertex) = 0;
         virtual size_t getEdgeCount() = 0;
 
         #if GRAPHVIZ_SUPPORT

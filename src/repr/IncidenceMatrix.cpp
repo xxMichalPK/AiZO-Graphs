@@ -68,6 +68,13 @@ bool IncidenceMatrix::checkEdge(size_t startVertex, size_t endVertex) {
     return false;
 }
 
+intmax_t IncidenceMatrix::getEdgeWeight(size_t startVertex, size_t endVertex) {
+    for (size_t i = 0; i < m_numEdges; i++) {
+        if ((m_matrix[startVertex][i] != 0) && (m_matrix[endVertex][i] != 0)) return m_matrix[startVertex][i];
+    }
+    return 0;
+}
+
 /**
  * Returns the total possible number of edges in this graph representation
  */

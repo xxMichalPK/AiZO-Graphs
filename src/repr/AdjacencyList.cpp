@@ -81,6 +81,30 @@ bool AdjacencyList::checkEdge(size_t startVertex, size_t endVertex) {
     return false;
 }
 
+intmax_t AdjacencyList::getEdgeWeight(size_t startVertex, size_t endVertex) {
+    if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
+        Logger::logln(Logger::ERROR, "Vertex out of bounds.");
+        return 0;
+    }
+
+    Edge* currentEdge = m_list[startVertex];
+    while (currentEdge != nullptr) {
+        if (currentEdge->endVertex == endVertex) return currentEdge->weight;
+        currentEdge = currentEdge->next;
+    }
+
+    if (m_directed) return 0;
+
+    // In an undirected graph we have to check both directions
+    currentEdge = m_list[endVertex];
+    while (currentEdge != nullptr) {
+        if (currentEdge->endVertex == startVertex) return currentEdge->weight;
+        currentEdge = currentEdge->next;
+    }
+
+    return 0;
+}
+
 size_t AdjacencyList::getEdgeCount() {
     return m_numEdges;
 }
