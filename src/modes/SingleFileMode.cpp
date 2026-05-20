@@ -12,6 +12,7 @@
 
 #include "GraphAlgorithmBase.hpp"
 #include "PrimMST.hpp"
+#include "KruskalMST.hpp"
 
 #include "GraphAlgorithmResult.hpp"
 #include "MSTResult.hpp"
@@ -63,10 +64,10 @@ int SingleFileMode::run() {
     // Do something with the representation...
     for (size_t i = 0; i < representations->size(); i++) {
         Logger::logln(Logger::INFO, "Running algorithm for representation ", i, "...");
-        GraphAlgorithmBase* alg = new PrimMST(*representations->get(i));
+        GraphAlgorithmBase* alg = new KruskalMST(*representations->get(i));
         alg->run();
         const GraphAlgorithmResult& result = alg->result();
-        Logger::logln(Logger::OK, "Prim's MST algorithm result: ", result);
+        Logger::logln(Logger::OK, "Kruskal's MST algorithm result: ", result);
         delete alg;
     }
 
