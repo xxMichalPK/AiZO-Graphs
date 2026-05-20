@@ -17,35 +17,17 @@ class RunModeBase {
          * 
          * @returns true if it should be directed, false otherwise
          */
-        static bool isDirected() {
-            return (Parameters::problem != Parameters::Problems::mst);
-        }
+        static bool isDirected();
 
-        static DynamicArray<GraphRepr*>* createRepresentations(size_t vertexCount, size_t edgeCount) {
-            DynamicArray<GraphRepr*>* representations = new DynamicArray<GraphRepr*>(2);
-            bool directed = isDirected();
-
-            switch (Parameters::structure) {
-                case Parameters::Structures::adjacencyList:
-                    Logger::logln(Logger::INFO, "Using adjacency list for graph representation");
-                    representations->insert(new AdjacencyList(vertexCount, edgeCount, directed));
-                    break;
-                case Parameters::Structures::incidenceMatrix:
-                    Logger::logln(Logger::INFO, "Using incidence matrix for graph representation");
-                    representations->insert(new IncidenceMatrix(vertexCount, edgeCount, directed));
-                    break;
-                case Parameters::Structures::allStructures:
-                    Logger::logln(Logger::INFO, "Using all available graph representations");
-                    representations->insert(new AdjacencyList(vertexCount, edgeCount, directed));
-                    representations->insert(new IncidenceMatrix(vertexCount, edgeCount, directed));
-                    break;
-                default:
-                    Logger::logln(Logger::ERROR, "No representation selected");
-                    return nullptr;
-            }
-
-            return representations;
-        }
+        /**
+         * Creates all requested graph representations
+         * 
+         * @param vertexCount number of vertices in the graph
+         * @param edgeCount number of edges in the graph
+         * 
+         * @returns a dynamic array of graph representations, nullptr on failure
+         */
+        static DynamicArray<GraphRepr*>* createRepresentations(size_t vertexCount, size_t edgeCount);
 };
 
 #endif // RUNMODEBASE_HPP
