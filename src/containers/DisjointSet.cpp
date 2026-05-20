@@ -1,8 +1,10 @@
 #include "DisjointSet.hpp"
 
-DisjointSet::DisjointSet(size_t size) : m_size(size) {
+DisjointSet::DisjointSet(size_t size, bool initialize) : m_size(size) {
     m_parent = new size_t[m_size];
     m_rank = new size_t[m_size]();
+    if (!initialize) return;
+
     for (size_t i = 0; i < m_size; i++) {
         m_parent[i] = i;
     }

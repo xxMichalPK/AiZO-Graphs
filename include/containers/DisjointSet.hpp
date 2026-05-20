@@ -10,7 +10,7 @@ class DisjointSet {
         size_t m_size = 0;
 
     public:
-        DisjointSet(size_t size);
+        DisjointSet(size_t size, bool initialize = true);
         ~DisjointSet();
 
         void makeSet(size_t element);
