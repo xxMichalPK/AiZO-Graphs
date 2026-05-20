@@ -48,6 +48,13 @@ void AdjacencyList::addEdge(size_t startVertex, size_t endVertex, intmax_t weigh
     // So the next edge is the current head and we can do it fast
     Edge* newEdge = new Edge{endVertex, weight, m_list[startVertex]};
     m_list[startVertex] = newEdge;
+
+    // If the graph is directed that's all
+    if (m_directed) return;
+
+    // In an undirected graph we need another edge in the opposite direction
+    newEdge = new Edge{startVertex, weight, m_list[endVertex]};
+    m_list[endVertex] = newEdge;
 }
 
 /**
@@ -69,15 +76,6 @@ bool AdjacencyList::checkEdge(size_t startVertex, size_t endVertex) {
         currentEdge = currentEdge->next;
     }
 
-    if (m_directed) return false;
-
-    // In an undirected graph we have to check both directions
-    currentEdge = m_list[endVertex];
-    while (currentEdge != nullptr) {
-        if (currentEdge->endVertex == startVertex) return true;
-        currentEdge = currentEdge->next;
-    }
-
     return false;
 }
 
@@ -93,15 +91,6 @@ intmax_t AdjacencyList::getEdgeWeight(size_t startVertex, size_t endVertex) {
         currentEdge = currentEdge->next;
     }
 
-    if (m_directed) return 0;
-
-    // In an undirected graph we have to check both directions
-    currentEdge = m_list[endVertex];
-    while (currentEdge != nullptr) {
-        if (currentEdge->endVertex == startVertex) return currentEdge->weight;
-        currentEdge = currentEdge->next;
-    }
-
     return 0;
 }
 
@@ -111,6 +100,16 @@ size_t AdjacencyList::getEdgeCount() {
 
 size_t AdjacencyList::getVertexCount() {
     return m_numVertices;
+}
+
+DynamicArray<size_t> AdjacencyList::getAdjacentVertices(size_t vertex) {
+    DynamicArray<size_t> adjacentVertices;
+    Edge* currentEdge = m_list[vertex];
+    while (currentEdge != nullptr) {
+        adjacentVertices.push(currentEdge->endVertex);
+        currentEdge = currentEdge->next;
+    }
+    return adjacentVertices;
 }
 
 #if GRAPHVIZ_SUPPORT
@@ -138,7 +137,9 @@ void AdjacencyList::exportToGraphviz(const char* filename) const {
                 outFile << "    " << vertex << " -> " << current->endVertex << " [label=\"" << current->weight << "\"];\n";
             } else {
                 // Undirected graph
-                outFile << "    " << vertex << " -- " << current->endVertex << " [label=\"" << current->weight << "\"];\n";
+                if (vertex <= current->endVertex) { // Only write each edge once
+                    outFile << "    " << vertex << " -- " << current->endVertex << " [label=\"" << current->weight << "\"];\n";
+                }
             }
             current = current->next;
         }

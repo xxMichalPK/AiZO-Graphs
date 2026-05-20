@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "DynamicArray.hpp"
 
 class GraphRepr {
     protected:
@@ -16,6 +17,7 @@ class GraphRepr {
         virtual intmax_t getEdgeWeight(size_t startVertex, size_t endVertex) = 0;
         virtual size_t getEdgeCount() = 0;
         virtual size_t getVertexCount() = 0;
+        virtual DynamicArray<size_t> getAdjacentVertices(size_t vertex) = 0;
 
         #if GRAPHVIZ_SUPPORT
             virtual void exportToGraphviz(const char* filename) const = 0;

@@ -98,6 +98,22 @@ size_t IncidenceMatrix::getVertexCount() {
     return m_numVertices;
 }
 
+DynamicArray<size_t> IncidenceMatrix::getAdjacentVertices(size_t vertex) {
+    DynamicArray<size_t> adjacentVertices;
+    for (size_t edgeIndex = 0; edgeIndex < m_numEdges; edgeIndex++) {
+        if (m_matrix[vertex][edgeIndex] <= 0) continue; // Skip end of edge and non-edges
+
+        // Get the adjacent vertex for this edge
+        for (size_t adjacentVertex = 0; adjacentVertex < m_numVertices; adjacentVertex++) {
+            if (adjacentVertex != vertex && m_matrix[adjacentVertex][edgeIndex] != 0) {
+                adjacentVertices.push(adjacentVertex);
+                break;
+            }
+        }
+    }
+    return adjacentVertices;
+}
+
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 
