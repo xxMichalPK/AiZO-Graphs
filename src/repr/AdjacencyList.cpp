@@ -112,6 +112,20 @@ DynamicArray<size_t> AdjacencyList::getAdjacentVertices(size_t vertex) {
     return adjacentVertices;
 }
 
+DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> AdjacencyList::getAllEdges() {
+    DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> edges;
+    for (size_t vertex = 0; vertex < m_numVertices; vertex++) {
+        Edge* currentEdge = m_list[vertex];
+        while (currentEdge != nullptr) {
+            if (m_directed || vertex <= currentEdge->endVertex) { // Only add each edge once for undirected graph
+                edges.push({currentEdge->weight, {vertex, currentEdge->endVertex}});
+            }
+            currentEdge = currentEdge->next;
+        }
+    }
+    return edges;
+}
+
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 

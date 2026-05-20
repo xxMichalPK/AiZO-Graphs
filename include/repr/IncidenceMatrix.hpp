@@ -21,6 +21,7 @@ class IncidenceMatrix : public GraphRepr {
         virtual size_t getEdgeCount() override;
         virtual size_t getVertexCount() override;
         virtual DynamicArray<size_t> getAdjacentVertices(size_t vertex) override;
+        virtual DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> getAllEdges() override;
 
         #if GRAPHVIZ_SUPPORT
             virtual void exportToGraphviz(const char* filename) const override;

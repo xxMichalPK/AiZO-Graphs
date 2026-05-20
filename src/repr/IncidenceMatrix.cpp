@@ -111,6 +111,31 @@ DynamicArray<size_t> IncidenceMatrix::getAdjacentVertices(size_t vertex) {
     return adjacentVertices;
 }
 
+DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> IncidenceMatrix::getAllEdges() {
+    DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> edges;
+    for (size_t edgeIndex = 0; edgeIndex < m_numEdges; edgeIndex++) {
+        bool startFound = false;
+        size_t startVertex = 0;
+        size_t endVertex = 0;
+        intmax_t weight = 0;
+
+        for (size_t vertex = 0; vertex < m_numVertices; vertex++) {
+            if (m_matrix[vertex][edgeIndex] > 0 && !startFound) {
+                startVertex = vertex;
+                weight = m_matrix[vertex][edgeIndex];
+                startFound = true;
+            } else if (m_matrix[vertex][edgeIndex] != 0) {
+                endVertex = vertex;
+            }
+        }
+
+        if (weight != 0) {
+            edges.push({weight, {startVertex, endVertex}});
+        }
+    }
+    return edges;
+}
+
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 
