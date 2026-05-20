@@ -4,7 +4,6 @@
 #include "SingleFileMode.hpp"
 
 #include "Parameters.h"
-#include "Logger.hpp"
 #include "DataParser.hpp"
 
 #include "GraphRepr.hpp"
@@ -13,6 +12,11 @@
 
 #include "GraphAlgorithmBase.hpp"
 #include "PrimMST.hpp"
+
+#include "GraphAlgorithmResult.hpp"
+#include "MSTResult.hpp"
+
+#include "Logger.hpp"
 
 /**
  * Runs program in the single file mode
@@ -57,8 +61,14 @@ int SingleFileMode::run() {
     Logger::logln(Logger::OK, "Loaded graph data into representation(s)");
 
     // Do something with the representation...
-    GraphAlgorithmBase* alg = new PrimMST(*representations->get(0));
-    alg->run();
+    for (size_t i = 0; i < representations->size(); i++) {
+        Logger::logln(Logger::INFO, "Running algorithm for representation ", i, "...");
+        GraphAlgorithmBase* alg = new PrimMST(*representations->get(i));
+        alg->run();
+        const GraphAlgorithmResult& result = alg->result();
+        Logger::logln(Logger::OK, "Prim's MST algorithm result: ", result);
+        delete alg;
+    }
 
 #if GRAPHVIZ_SUPPORT
     if (graphSize.vertices <= 10) {
@@ -69,7 +79,6 @@ int SingleFileMode::run() {
     }
 #endif
 
-    delete alg;
     for (size_t i = 0; i < representations->size(); i++) {
         delete representations->get(i);
     }
