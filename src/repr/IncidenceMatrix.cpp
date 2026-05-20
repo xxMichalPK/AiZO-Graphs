@@ -40,15 +40,12 @@ void IncidenceMatrix::addEdge(size_t startVertex, size_t endVertex, intmax_t wei
     // The weights are in range rand(1,k*4/5) so we can use 0 as the indicator of no edge
     // Now the case of undirected or directed graph... If it's undirected, just use the same weight
     // else the negative weight will be used as the end of the edge
-    switch (m_directed) {
-        case 0: // undirected
-            m_matrix[startVertex][m_currentEdgeIndex] = weight;
-            m_matrix[endVertex][m_currentEdgeIndex] = weight;
-            break;
-        case 1: // directed
-            m_matrix[startVertex][m_currentEdgeIndex] = weight;
-            m_matrix[endVertex][m_currentEdgeIndex] = -weight; // negative weight to indicate the end of the edge
-            break;
+    if (!m_directed) { // undirected
+        m_matrix[startVertex][m_currentEdgeIndex] = weight;
+        m_matrix[endVertex][m_currentEdgeIndex] = weight;
+    } else { // directed
+        m_matrix[startVertex][m_currentEdgeIndex] = weight;
+        m_matrix[endVertex][m_currentEdgeIndex] = -weight; // negative weight to indicate the end of the edge
     }
     m_currentEdgeIndex++;
 }
