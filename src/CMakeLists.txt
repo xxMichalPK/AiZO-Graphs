@@ -13,5 +13,6 @@ SET(PROJECT_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/containers/DisjointSet.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/PrimMST.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/KruskalMST.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/DijkstraSP.cpp
     PARENT_SCOPE
 )
