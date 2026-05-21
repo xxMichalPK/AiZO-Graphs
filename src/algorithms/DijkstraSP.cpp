@@ -51,6 +51,18 @@ int DijkstraSP::run() {
         // Set it as explored
         explored.set(currentVertex, true);
 
+        // Check if we reached the end vertex for early exit
+        if (currentVertex == (size_t)endVertex) {
+            m_result.pathLength = currentDistance;
+            // Backtrack the path from end to start
+            size_t pathVertex = (size_t)endVertex;
+            while (pathVertex != SIZE_MAX) {
+                m_result.path.push(pathVertex);
+                pathVertex = previous.get(pathVertex);
+            }
+            break;
+        }
+
         // Get the neighbors of the current vertex
         DynamicArray<size_t> neighbors = m_graph.getAdjacentVertices(currentVertex);
         for (size_t i = 0; i < neighbors.size(); i++) {
@@ -65,20 +77,13 @@ int DijkstraSP::run() {
                 pq.push({newDistance, neighbor});
             }
         }
-
-        // Check if we reached the end vertex
-        if (currentVertex == (size_t)endVertex) {
-            m_result.pathLength = currentDistance;
-            // Backtrack the path from end to start
-            size_t pathVertex = (size_t)endVertex;
-            while (pathVertex != SIZE_MAX) {
-                m_result.path.push(pathVertex);
-                pathVertex = previous.get(pathVertex);
-            }
-        }
     }
 
     this->m_resultReady = true;
+    if (m_result.path.isEmpty()) {
+        Logger::logln(Logger::ERROR, "No path found from vertex ", startVertex, " to vertex ", endVertex);
+        return 1;
+    }
     return 0;
 }
 
