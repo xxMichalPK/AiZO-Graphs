@@ -1,5 +1,6 @@
 #include "KruskalMST.hpp"
 #include "DisjointSet.hpp"
+#include "MergeSort.hpp"
 #include "Logger.hpp"
 
 /**
@@ -13,20 +14,8 @@ int KruskalMST::run() {
     DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> edges = m_graph.getAllEdges();
     DisjointSet set(m_graph.getVertexCount());
 
-    // For now sort the edges here but later do it better
-    for (size_t i = 0; i < edges.size(); i++) {
-        intmax_t weight1 = edges.get(i).first();
-        for (size_t j = i + 1; j < edges.size(); j++) {
-            intmax_t weight2 = edges.get(j).first();
-            if (weight2 < weight1) {
-                // Swap the edges
-                Pair<intmax_t, Pair<size_t, size_t>> temp = edges.get(i);
-                edges.set(i, edges.get(j));
-                edges.set(j, temp);
-                weight1 = edges.get(i).first();
-            }
-        }
-    }
+    // Sort the edges by weight
+    MergeSort<Pair<intmax_t, Pair<size_t, size_t>>>::sort(edges);
 
     for (size_t i = 0; i < edges.size(); i++) {
         intmax_t weight = edges.get(i).first();
