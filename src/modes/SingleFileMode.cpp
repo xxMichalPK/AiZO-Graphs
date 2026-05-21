@@ -14,6 +14,7 @@
 #include "PrimMST.hpp"
 #include "KruskalMST.hpp"
 #include "DijkstraSP.hpp"
+#include "BellmanFordSP.hpp"
 
 #include "GraphAlgorithmResult.hpp"
 #include "MSTResult.hpp"
@@ -66,10 +67,10 @@ int SingleFileMode::run() {
     // Do something with the representation...
     for (size_t i = 0; i < representations->size(); i++) {
         Logger::logln(Logger::INFO, "Running algorithm for representation ", i, "...");
-        GraphAlgorithmBase* alg = new DijkstraSP(*representations->get(i));
+        GraphAlgorithmBase* alg = new BellmanFordSP(*representations->get(i));
         alg->run();
         const GraphAlgorithmResult& result = alg->result();
-        Logger::logln(Logger::OK, "Dijkstra's SP algorithm result:");
+        Logger::logln(Logger::OK, "Bellman-Ford SP algorithm result:");
         Logger::logln(Logger::NONE, result);
         delete alg;
     }

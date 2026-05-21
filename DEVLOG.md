@@ -106,5 +106,6 @@ Basically in order to actually run the algorithms we have to implement some stru
 
 ### Tasks
 
-- [⚙️] Implement Dijkstra's shortest path algorithm
-- [❌] Implement Bellman-Ford's shortest path algorithm
+- [✅] Implement Dijkstra's shortest path algorithm
+- [⚙️] Implement Bellman-Ford's shortest path algorithm
+- [❌] Maybe change the incidence matrix to support negative weights (it holds 1 or -1 and stores weights in a separate array)?

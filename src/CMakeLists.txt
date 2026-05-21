@@ -14,5 +14,6 @@ SET(PROJECT_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/PrimMST.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/KruskalMST.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/DijkstraSP.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/BellmanFordSP.cpp
     PARENT_SCOPE
 )
