@@ -14,9 +14,12 @@
 
 ---
 
-### Icon bank
+### Icon legend
 
-❌, ✅, ⚙️
+- [❌] Not finished
+- [⚙️] In progress
+- [⏩] Finished after "deadline"
+- [✅] Finished
 
 ## 2026-04-27/28 - The initial idea and graph representations
 
@@ -45,7 +48,7 @@ Basically in order to actually run the algorithms we have to implement some stru
 - [✅] Implement a queue
 - [✅] Implement a priority queue
 - [❌] Fix the priority queue (it seems it's not optimal because I understood the Floyd algorithm wrong - it's not meant to be used when inserting data)
-- [❌] Implement an array
+- [⏩] Implement an array
 
 ---
 
@@ -84,5 +87,24 @@ Basically in order to actually run the algorithms we have to implement some stru
 ### Tasks
 
 - [✅] Implement Pair class
-- [⚙️] Implement a standarized algorithm interface
-- [❌] Implement Prim's MST algorithm
+- [✅] Implement a standarized algorithm interface
+- [⏩] Implement Prim's MST algorithm
+
+---
+
+## 2026-05-20 - Finish MST Algorithms
+
+### Tasks
+
+- [✅] Implement Prim's MST algorithm
+- [✅] Implement Merge Sort for Kruskal' MST
+- [✅] Implement Kruskal's MST algorithm
+
+---
+
+## 2026-05-21 - Implement SP algorithms
+
+### Tasks
+
+- [⚙️] Implement Dijkstra's shortest path algorithm
+- [❌] Implement Bellman-Ford's shortest path algorithm
