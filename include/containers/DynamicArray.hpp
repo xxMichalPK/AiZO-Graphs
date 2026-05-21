@@ -21,6 +21,7 @@ class DynamicArray : public IndexedContainer<T> {
         virtual T getFront() override;
         virtual T getBack() override;
         virtual T get(size_t index) override;
+        virtual const T get(size_t index) const override;
         virtual void set(size_t index, T element) override;
         virtual void removeAt(size_t index) override;
         virtual bool contains(T element) override;
@@ -103,6 +104,19 @@ T DynamicArray<T>::getBack() {
 
 template<typename T>
 T DynamicArray<T>::get(size_t index) {
+    if (this->m_elementCount == 0) {
+        throw std::out_of_range("The array is empty!");
+    }
+
+    if (index >= this->m_elementCount) {
+        throw std::out_of_range("Index out of bounds!");
+    }
+
+    return m_data[index];
+}
+
+template<typename T>
+const T DynamicArray<T>::get(size_t index) const {
     if (this->m_elementCount == 0) {
         throw std::out_of_range("The array is empty!");
     }
