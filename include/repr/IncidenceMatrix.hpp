@@ -18,6 +18,7 @@ class IncidenceMatrix : public GraphRepr {
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) override;
         virtual bool checkEdge(size_t startVertex, size_t endVertex) override;
         virtual intmax_t getEdgeWeight(size_t startVertex, size_t endVertex) override;
+        virtual void setEdgeWeight(size_t startVertex, size_t endVertex, intmax_t weight) override;
         virtual size_t getEdgeCount() override;
         virtual size_t getVertexCount() override;
         virtual DynamicArray<size_t> getAdjacentVertices(size_t vertex) override;

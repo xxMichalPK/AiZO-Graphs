@@ -136,6 +136,25 @@ DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> IncidenceMatrix::getAllEdges(
     return edges;
 }
 
+void IncidenceMatrix::setEdgeWeight(size_t startVertex, size_t endVertex, intmax_t weight) {
+    if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
+        Logger::logln(Logger::ERROR, "Vertex out of bounds.");
+        return;
+    }
+
+    for (size_t i = 0; i < m_numEdges; i++) {
+        if ((m_matrix[startVertex][i] != 0) && (m_matrix[endVertex][i] != 0)) {
+            m_matrix[startVertex][i] = weight;
+            if (m_directed) {
+                m_matrix[endVertex][i] = -weight; // negative weight to indicate the end of the edge
+            } else {
+                m_matrix[endVertex][i] = weight;
+            }
+            return;
+        }
+    }
+}
+
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 

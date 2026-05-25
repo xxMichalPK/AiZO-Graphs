@@ -126,6 +126,24 @@ DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> AdjacencyList::getAllEdges() 
     return edges;
 }
 
+void AdjacencyList::setEdgeWeight(size_t startVertex, size_t endVertex, intmax_t weight) {
+    if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
+        Logger::logln(Logger::ERROR, "Vertex out of bounds.");
+        return;
+    }
+
+    Edge* currentEdge = m_list[startVertex];
+    while (currentEdge != nullptr) {
+        if (currentEdge->endVertex == endVertex) {
+            currentEdge->weight = weight;
+            return;
+        }
+        currentEdge = currentEdge->next;
+    }
+
+    Logger::logln(Logger::ERROR, "Edge not found.");
+}
+
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 
