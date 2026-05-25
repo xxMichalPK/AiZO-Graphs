@@ -107,5 +107,23 @@ Basically in order to actually run the algorithms we have to implement some stru
 ### Tasks
 
 - [✅] Implement Dijkstra's shortest path algorithm
-- [⚙️] Implement Bellman-Ford's shortest path algorithm
+- [✅] Implement Bellman-Ford's shortest path algorithm
 - [❌] Maybe change the incidence matrix to support negative weights (it holds 1 or -1 and stores weights in a separate array)?
+
+---
+
+## 2026-05-23 - Maximum Flow algorithm
+
+### Tasks
+
+- [⏩] Implement Ford-Fulkerson algorithm
+
+---
+
+## 2026-05-25 - Result output
+
+### Tasks
+
+- [✅] Finish Ford-Fulkerson algorithm
+- [⚙️] Define a standard result output structure
+- [⚙️] Add result printing to a file
