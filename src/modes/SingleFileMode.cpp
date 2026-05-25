@@ -67,13 +67,22 @@ int SingleFileMode::run() {
 
     // Do something with the representation...
     for (size_t i = 0; i < representations->size(); i++) {
-        Logger::logln(Logger::INFO, "Running algorithm for representation ", i, "...");
-        GraphAlgorithmBase* alg = new FordFulkersonMF(*representations->get(i));
-        alg->run();
-        const GraphAlgorithmResult& result = alg->result();
-        Logger::logln(Logger::OK, "Ford-Fulkerson MF algorithm result:");
-        Logger::logln(Logger::NONE, result);
-        delete alg;
+        DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(*representations->get(i));
+        if (algorithms == nullptr) {
+            Logger::logln(Logger::ERROR, "Failed to create algorithms for representation ", i);
+            return 1;
+        }
+
+        for (size_t j = 0; j < algorithms->size(); j++) {
+            int result = algorithms->get(j)->run();
+            if (result != 0) {
+                Logger::logln(Logger::ERROR, "Algorithm ", j, " failed to run on representation ", i);
+                return 1;
+            }
+            GraphAlgorithmResult& algResult = algorithms->get(j)->result();
+            Logger::logln(Logger::OK, "Algorithm ", j, " ran successfully on representation ", i, " result: ", algResult);
+        }
+        delete algorithms;
     }
 
 #if GRAPHVIZ_SUPPORT

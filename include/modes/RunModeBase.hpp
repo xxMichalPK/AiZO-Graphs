@@ -6,6 +6,7 @@
 #include "DynamicArray.hpp"
 #include "AdjacencyList.hpp"
 #include "IncidenceMatrix.hpp"
+#include "GraphAlgorithmBase.hpp"
 
 class RunModeBase {
     public:
@@ -28,6 +29,15 @@ class RunModeBase {
          * @returns a dynamic array of graph representations, nullptr on failure
          */
         static DynamicArray<GraphRepr*>* createRepresentations(size_t vertexCount, size_t edgeCount);
+
+        static void deleteRepresentations(DynamicArray<GraphRepr*>* representations);
+
+        static DynamicArray<GraphAlgorithmBase*>* createAlgorithms(GraphRepr& graph);
+
+        static void deleteAlgorithms(DynamicArray<GraphAlgorithmBase*>* algorithms);
+    
+    private:
+        static DynamicArray<GraphAlgorithmBase*>* createPossibleAlgorithms(GraphRepr& graph);
 };
 
 #endif // RUNMODEBASE_HPP
