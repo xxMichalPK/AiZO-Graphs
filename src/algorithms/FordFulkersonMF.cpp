@@ -30,11 +30,8 @@ FordFulkersonMF::FordFulkersonMF(GraphRepr& graph) : m_graph(graph) {
 
         // Add the edge to the residual graph with the same capacity
         m_residualGraph->addEdge(startVertex, endVertex, weight);
-        Logger::logln(Logger::WARNING, "Added edge from ", startVertex, " to ", endVertex, " with capacity ", weight, " to the residual graph");
-
         // Add the reverse edge with 0 capacity for the residual graph
         m_residualGraph->addEdge(endVertex, startVertex, 0);
-        Logger::logln(Logger::WARNING, "Added reverse edge from ", endVertex, " to ", startVertex, " with capacity 0 to the residual graph");
     }
 }
 
