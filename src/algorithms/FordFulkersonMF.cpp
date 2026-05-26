@@ -7,7 +7,7 @@
 
 #include "Logger.hpp"
 
-FordFulkersonMF::FordFulkersonMF(GraphRepr& graph) : m_graph(graph) {
+FordFulkersonMF::FordFulkersonMF(GraphRepr& graph) : GraphAlgorithmBase("Ford-Fulkerson Maximum Flow"), m_graph(graph) {
     // Create a residual graph based on the original graph
     size_t vertexCount = m_graph.getVertexCount();
     size_t edgeCount = m_graph.getEdgeCount();

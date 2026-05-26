@@ -9,7 +9,7 @@
  * @param directed if the graph should be a directed or undirected one
  */
 IncidenceMatrix::IncidenceMatrix(size_t vertexCount, size_t edgeCount, bool directed) : 
-    m_numVertices(vertexCount), m_numEdges(edgeCount), m_directed(directed) {
+    GraphRepr("Incidence Matrix"), m_numVertices(vertexCount), m_numEdges(edgeCount), m_directed(directed) {
 
     // The incidence matrix has numVertices rows and numEdges columns
     // so we need to allocate memory for it so m_matrix[row][col] points to the corrent weight

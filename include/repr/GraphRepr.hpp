@@ -3,12 +3,16 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
 #include "DynamicArray.hpp"
 #include "Pair.hpp"
 
 class GraphRepr {
+    private:
+        std::string m_name;
+
     protected:
-        GraphRepr() = default;
+        GraphRepr(const std::string& name) : m_name(name) {}
     
     public:
         virtual ~GraphRepr() = default;
@@ -21,6 +25,7 @@ class GraphRepr {
         virtual size_t getVertexCount() = 0;
         virtual DynamicArray<size_t> getAdjacentVertices(size_t vertex) = 0;
         virtual DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> getAllEdges() = 0;
+        const std::string& name() const { return m_name; }
 
         #if GRAPHVIZ_SUPPORT
             virtual void exportToGraphviz(const char* filename) const = 0;

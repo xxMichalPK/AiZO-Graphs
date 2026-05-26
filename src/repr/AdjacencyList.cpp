@@ -10,7 +10,7 @@
  * @param directed if the graph should be a directed or undirected one
  */
 AdjacencyList::AdjacencyList(size_t vertexCount, size_t edgeCount, bool directed) : 
-    m_numVertices(vertexCount), m_numEdges(edgeCount), m_directed(directed) {
+    GraphRepr("Adjacency List"), m_numVertices(vertexCount), m_numEdges(edgeCount), m_directed(directed) {
     
     //
     m_list = new Edge*[m_numVertices]();

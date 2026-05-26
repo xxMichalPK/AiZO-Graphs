@@ -59,23 +59,18 @@ DynamicArray<GraphAlgorithmBase*>* RunModeBase::createAlgorithms(GraphRepr& grap
             delete algorithms;
             return createPossibleAlgorithms(graph);
         case Parameters::Algorithms::prim:
-            Logger::logln(Logger::INFO, "Using Prim's algorithm");
             algorithms->insert(new PrimMST(graph));
             break;
         case Parameters::Algorithms::kruskal:
-            Logger::logln(Logger::INFO, "Using Kruskal's algorithm");
             algorithms->insert(new KruskalMST(graph));
             break;
         case Parameters::Algorithms::dijkstra:
-            Logger::logln(Logger::INFO, "Using Dijkstra's algorithm");
             algorithms->insert(new DijkstraSP(graph));
             break;
         case Parameters::Algorithms::bellmanFord:
-            Logger::logln(Logger::INFO, "Using Bellman-Ford algorithm");
             algorithms->insert(new BellmanFordSP(graph));
             break;
         case Parameters::Algorithms::fordFulkerson:
-            Logger::logln(Logger::INFO, "Using Ford-Fulkerson algorithm");
             algorithms->insert(new FordFulkersonMF(graph));
             break;
         default:
@@ -92,17 +87,14 @@ DynamicArray<GraphAlgorithmBase*>* RunModeBase::createPossibleAlgorithms(GraphRe
 
     switch (Parameters::problem) {
         case Parameters::Problems::mst:
-            Logger::logln(Logger::INFO, "Using Prim's and Kruskal's algorithms");
             algorithms->insert(new PrimMST(graph));
             algorithms->insert(new KruskalMST(graph));
             break;
         case Parameters::Problems::sp:
-            Logger::logln(Logger::INFO, "Using Dijkstra's and Bellman-Ford algorithms");
             algorithms->insert(new DijkstraSP(graph));
             algorithms->insert(new BellmanFordSP(graph));
             break;
         case Parameters::Problems::mf:
-            Logger::logln(Logger::INFO, "Using Ford-Fulkerson algorithm");
             algorithms->insert(new FordFulkersonMF(graph));
             break;
         default:

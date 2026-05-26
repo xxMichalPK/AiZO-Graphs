@@ -11,7 +11,7 @@ class PrimMST : public GraphAlgorithmBase {
         MSTResult m_result {};
 
     public:
-        PrimMST(GraphRepr& graph) : m_graph(graph) {}
+        PrimMST(GraphRepr& graph) : GraphAlgorithmBase("Prim Minimum Spanning Tree"), m_graph(graph) {}
 
         virtual int run() override;
         virtual GraphAlgorithmResult& result() override;

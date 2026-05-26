@@ -67,20 +67,23 @@ int SingleFileMode::run() {
 
     // Do something with the representation...
     for (size_t i = 0; i < representations->size(); i++) {
-        DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(*representations->get(i));
+        GraphRepr& currentRepr = *representations->get(i);
+        DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(currentRepr);
         if (algorithms == nullptr) {
             Logger::logln(Logger::ERROR, "Failed to create algorithms for representation ", i);
             return 1;
         }
 
         for (size_t j = 0; j < algorithms->size(); j++) {
-            int result = algorithms->get(j)->run();
+            GraphAlgorithmBase& currentAlg = *algorithms->get(j);
+            int result = currentAlg.run();
             if (result != 0) {
                 Logger::logln(Logger::ERROR, "Algorithm ", j, " failed to run on representation ", i);
                 return 1;
             }
-            GraphAlgorithmResult& algResult = algorithms->get(j)->result();
-            Logger::logln(Logger::OK, "Algorithm ", j, " ran successfully on representation ", i, " result: ", algResult);
+            GraphAlgorithmResult& algResult = currentAlg.result();
+            Logger::logln(Logger::OK, currentAlg.name(), " ran successfully on ", currentRepr.name(), " result:");
+            Logger::logln(Logger::INFO, algResult);
         }
         delete algorithms;
     }
