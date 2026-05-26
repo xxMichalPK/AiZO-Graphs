@@ -60,7 +60,7 @@ int SingleFileMode::run() {
 
     // Check if the graph was loaded correctly
     if (!success) {
-        Logger::logln(Logger::ERROR, "Failed to load graph data into representation");
+        Logger::logln(Logger::ERROR, "Failed to load graph data into representation(s)");
         return 1;
     }
     Logger::logln(Logger::OK, "Loaded graph data into representation(s)");
@@ -70,14 +70,14 @@ int SingleFileMode::run() {
         GraphRepr& currentRepr = *representations->get(i);
         DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(currentRepr);
         if (algorithms == nullptr) {
-            Logger::logln(Logger::ERROR, "Failed to create algorithms for representation ", i);
+            Logger::logln(Logger::ERROR, "Failed to create algorithms for ", currentRepr.name());
             return 1;
         }
 
         for (size_t j = 0; j < algorithms->size(); j++) {
             GraphAlgorithmBase& currentAlg = *algorithms->get(j);
             if (currentAlg.run() != 0) {
-                Logger::logln(Logger::ERROR, "Algorithm ", j, " failed to run on representation ", i);
+                Logger::logln(Logger::ERROR, currentAlg.name(), " failed to run on ", currentRepr.name());
                 return 1;
             }
             GraphAlgorithmResult& algResult = currentAlg.result();

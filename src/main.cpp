@@ -24,15 +24,16 @@ int main(int argc, char* argv[]) {
     if (paramStatus != 0) return paramStatus;
     
     // Run the program based on the requested run mode
-    Logger::logln(Logger::INFO, "Start: ", Timer::getCurrentDate(), " ", Timer::getCurrentTime());
     switch (Parameters::runMode) {
         case Parameters::RunModes::help:
-            Parameters::help();
-            return 0;
+        Parameters::help();
+        return 0;
         case Parameters::RunModes::singleFile:
+            Logger::logln(Logger::INFO, "Start: ", Timer::getCurrentDate(), " ", Timer::getCurrentTime());
             Logger::logln(Logger::INFO, "Running in single file mode...");
             return SingleFileMode::run();
         case Parameters::RunModes::benchmark:
+            Logger::logln(Logger::INFO, "Start: ", Timer::getCurrentDate(), " ", Timer::getCurrentTime());
             Logger::logln(Logger::INFO, "Running in benchmark mode...");
             return BenchmarkMode::run();
         default:
