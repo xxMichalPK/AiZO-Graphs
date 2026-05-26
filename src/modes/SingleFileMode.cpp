@@ -76,8 +76,7 @@ int SingleFileMode::run() {
 
         for (size_t j = 0; j < algorithms->size(); j++) {
             GraphAlgorithmBase& currentAlg = *algorithms->get(j);
-            int result = currentAlg.run();
-            if (result != 0) {
+            if (currentAlg.run() != 0) {
                 Logger::logln(Logger::ERROR, "Algorithm ", j, " failed to run on representation ", i);
                 return 1;
             }
@@ -85,7 +84,7 @@ int SingleFileMode::run() {
             Logger::logln(Logger::OK, currentAlg.name(), " ran successfully on ", currentRepr.name(), " result:");
             Logger::logln(Logger::INFO, algResult);
         }
-        delete algorithms;
+        deleteAlgorithms(algorithms);
     }
 
 #if GRAPHVIZ_SUPPORT
@@ -97,9 +96,6 @@ int SingleFileMode::run() {
     }
 #endif
 
-    for (size_t i = 0; i < representations->size(); i++) {
-        delete representations->get(i);
-    }
-    delete representations;
+    deleteRepresentations(representations);
     return 0;
 }

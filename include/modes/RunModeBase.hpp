@@ -1,6 +1,7 @@
 #ifndef RUNMODEBASE_HPP
 #define RUNMODEBASE_HPP
 
+#include <string>
 #include "Parameters.h"
 #include "Logger.hpp"
 #include "DynamicArray.hpp"
@@ -37,7 +38,12 @@ class RunModeBase {
         static void deleteAlgorithms(DynamicArray<GraphAlgorithmBase*>* algorithms);
     
     private:
-        static DynamicArray<GraphAlgorithmBase*>* createPossibleAlgorithms(GraphRepr& graph);
+        static DynamicArray<GraphAlgorithmBase*>* createMSTAlgorithms(GraphRepr& graph);
+        static DynamicArray<GraphAlgorithmBase*>* createSPAlgorithms(GraphRepr& graph);
+        static DynamicArray<GraphAlgorithmBase*>* createMFAlgorithms(GraphRepr& graph);
+
+        static std::string getSelectedAlgorithmName();
+        static std::string getSelectedProblemName();
 };
 
 #endif // RUNMODEBASE_HPP

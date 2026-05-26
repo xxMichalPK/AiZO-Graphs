@@ -9,10 +9,25 @@
 #include "FordFulkersonMF.hpp"
 
 
+/**
+ * Checks if the graph should be directed based on the problem type
+ * as specified in the instruction
+ * 
+ * @returns true if the graph should be directed, false otherwise
+ */
 bool RunModeBase::isDirected() {
     return (Parameters::problem != Parameters::Problems::mst);
 }
 
+
+/**
+ * Creates all requested graph representations based on the provided parameters
+ * 
+ * @param vertexCount number of vertices in the graph
+ * @param edgeCount number of edges in the graph
+ * 
+ * @returns an array of graph representations, nullptr on failure
+ */
 DynamicArray<GraphRepr*>* RunModeBase::createRepresentations(size_t vertexCount, size_t edgeCount) {
     DynamicArray<GraphRepr*>* representations = new DynamicArray<GraphRepr*>(2);
     bool directed = isDirected();
@@ -40,6 +55,12 @@ DynamicArray<GraphRepr*>* RunModeBase::createRepresentations(size_t vertexCount,
     return representations;
 }
 
+
+/**
+ * Safely deletes all graph representations and the array itself
+ * 
+ * @param representations the array of graph representations to delete
+ */
 void RunModeBase::deleteRepresentations(DynamicArray<GraphRepr*>* representations) {
     if (representations == nullptr) return;
 
@@ -49,63 +70,35 @@ void RunModeBase::deleteRepresentations(DynamicArray<GraphRepr*>* representation
     delete representations;
 }
 
+
+/**
+ * Creates all requested algorithms based on the provided parameters
+ * 
+ * @param graph the graph for which to create algorithms
+ * 
+ * @returns an array of algorithms, nullptr on failure
+ */
 DynamicArray<GraphAlgorithmBase*>* RunModeBase::createAlgorithms(GraphRepr& graph) {
-    if (Parameters::algorithm == Parameters::Algorithms::allAlgorithms) return createPossibleAlgorithms(graph);
-
-    DynamicArray<GraphAlgorithmBase*>* algorithms = new DynamicArray<GraphAlgorithmBase*>(1);
-
-    switch (Parameters::algorithm) {
-        case Parameters::Algorithms::allAlgorithms:
-            delete algorithms;
-            return createPossibleAlgorithms(graph);
-        case Parameters::Algorithms::prim:
-            algorithms->insert(new PrimMST(graph));
-            break;
-        case Parameters::Algorithms::kruskal:
-            algorithms->insert(new KruskalMST(graph));
-            break;
-        case Parameters::Algorithms::dijkstra:
-            algorithms->insert(new DijkstraSP(graph));
-            break;
-        case Parameters::Algorithms::bellmanFord:
-            algorithms->insert(new BellmanFordSP(graph));
-            break;
-        case Parameters::Algorithms::fordFulkerson:
-            algorithms->insert(new FordFulkersonMF(graph));
-            break;
-        default:
-            Logger::logln(Logger::WARNING, "No algorithm selected");
-            delete algorithms;
-            return nullptr;
-    }
-
-    return algorithms;
-}
-
-DynamicArray<GraphAlgorithmBase*>* RunModeBase::createPossibleAlgorithms(GraphRepr& graph) {
-    DynamicArray<GraphAlgorithmBase*>* algorithms = new DynamicArray<GraphAlgorithmBase*>(2);
-
     switch (Parameters::problem) {
         case Parameters::Problems::mst:
-            algorithms->insert(new PrimMST(graph));
-            algorithms->insert(new KruskalMST(graph));
-            break;
+            return createMSTAlgorithms(graph);
         case Parameters::Problems::sp:
-            algorithms->insert(new DijkstraSP(graph));
-            algorithms->insert(new BellmanFordSP(graph));
-            break;
+            return createSPAlgorithms(graph);
         case Parameters::Problems::mf:
-            algorithms->insert(new FordFulkersonMF(graph));
-            break;
+            return createMFAlgorithms(graph);
         default:
-            Logger::logln(Logger::WARNING, "No problem type selected");
-            delete algorithms;
-            return nullptr;
+            Logger::logln(Logger::ERROR, "No problem type selected");
     }
 
-    return algorithms;
+    return nullptr;
 }
 
+
+/**
+ * Safely deletes all algorithms and the array itself
+ * 
+ * @param algorithms the array of algorithms to delete
+ */
 void RunModeBase::deleteAlgorithms(DynamicArray<GraphAlgorithmBase*>* algorithms) {
     if (algorithms == nullptr) return;
 
@@ -113,4 +106,123 @@ void RunModeBase::deleteAlgorithms(DynamicArray<GraphAlgorithmBase*>* algorithms
         delete algorithms->get(i);
     }
     delete algorithms;
+}
+
+
+/**
+ * Creates all MST algorithms based on the provided parameters
+ * 
+ * @param graph the graph for which to create algorithms
+ * 
+ * @returns an array of algorithms, nullptr on failure
+ */
+DynamicArray<GraphAlgorithmBase*>* RunModeBase::createMSTAlgorithms(GraphRepr& graph) {
+    if (Parameters::problem != Parameters::Problems::mst) return nullptr;
+
+    switch (Parameters::algorithm) {
+        case Parameters::Algorithms::allAlgorithms: {
+            DynamicArray<GraphAlgorithmBase*>* algorithms = new DynamicArray<GraphAlgorithmBase*>(2);
+            algorithms->insert(new PrimMST(graph));
+            algorithms->insert(new KruskalMST(graph));
+            return algorithms;
+        }
+        case Parameters::Algorithms::prim:
+            return new DynamicArray<GraphAlgorithmBase*>(1, new PrimMST(graph));
+        case Parameters::Algorithms::kruskal:
+            return new DynamicArray<GraphAlgorithmBase*>(1, new KruskalMST(graph));
+        default:
+            Logger::logln(Logger::WARNING, "Can't create ", getSelectedAlgorithmName(), " algorithm for ", getSelectedProblemName(), " problem");
+            return nullptr;
+    }
+}
+
+
+/**
+ * Creates all SP algorithms based on the provided parameters
+ * 
+ * @param graph the graph for which to create algorithms
+ * 
+ * @returns an array of algorithms, nullptr on failure
+ */
+DynamicArray<GraphAlgorithmBase*>* RunModeBase::createSPAlgorithms(GraphRepr& graph) {
+    if (Parameters::problem != Parameters::Problems::sp) return nullptr;
+
+    switch (Parameters::algorithm) {
+        case Parameters::Algorithms::allAlgorithms: {
+            DynamicArray<GraphAlgorithmBase*>* algorithms = new DynamicArray<GraphAlgorithmBase*>(2);
+            algorithms->insert(new DijkstraSP(graph));
+            algorithms->insert(new BellmanFordSP(graph));
+            return algorithms;
+        }
+        case Parameters::Algorithms::dijkstra:
+            return new DynamicArray<GraphAlgorithmBase*>(1, new DijkstraSP(graph));
+        case Parameters::Algorithms::bellmanFord:
+            return new DynamicArray<GraphAlgorithmBase*>(1, new BellmanFordSP(graph));
+        default:
+            Logger::logln(Logger::WARNING, "Can't create ", getSelectedAlgorithmName(), " algorithm for ", getSelectedProblemName(), " problem");
+            return nullptr;
+    }
+}
+
+
+/**
+ * Creates all MF algorithms based on the provided parameters
+ * 
+ * @param graph the graph for which to create algorithms
+ * 
+ * @returns an array of algorithms, nullptr on failure
+ */
+DynamicArray<GraphAlgorithmBase*>* RunModeBase::createMFAlgorithms(GraphRepr& graph) {
+    if (Parameters::problem != Parameters::Problems::mf) return nullptr;
+
+    switch (Parameters::algorithm) {
+        case Parameters::Algorithms::allAlgorithms:
+        case Parameters::Algorithms::fordFulkerson:
+            return new DynamicArray<GraphAlgorithmBase*>(1, new FordFulkersonMF(graph));
+        default:
+            Logger::logln(Logger::WARNING, "Can't create ", getSelectedAlgorithmName(), " algorithm for ", getSelectedProblemName(), " problem");
+            return nullptr;
+    }
+}
+
+
+/**
+ * Returns the name of the selected algorithm based on the provided parameters
+ * 
+ * @returns the name of the selected algorithm
+ */
+std::string RunModeBase::getSelectedAlgorithmName() {
+    switch (Parameters::algorithm) {
+        case Parameters::Algorithms::prim:
+            return "Prim's MST";
+        case Parameters::Algorithms::kruskal:
+            return "Kruskal's MST";
+        case Parameters::Algorithms::dijkstra:
+            return "Dijkstra's SP";
+        case Parameters::Algorithms::bellmanFord:
+            return "Bellman-Ford SP";
+        case Parameters::Algorithms::fordFulkerson:
+            return "Ford-Fulkerson MF";
+        default:
+            return "Unknown Algorithm";
+    }
+}
+
+
+/**
+ * Returns the name of the selected problem based on the provided parameters
+ * 
+ * @returns the name of the selected problem
+ */
+std::string RunModeBase::getSelectedProblemName() {
+    switch (Parameters::problem) {
+        case Parameters::Problems::mst:
+            return "Minimum Spanning Tree";
+        case Parameters::Problems::sp:
+            return "Shortest Path";
+        case Parameters::Problems::mf:
+            return "Maximum Flow";
+        default:
+            return "Unknown Problem";
+    }
 }
