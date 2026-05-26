@@ -125,6 +125,17 @@ Basically in order to actually run the algorithms we have to implement some stru
 ### Tasks
 
 - [✅] Finish Ford-Fulkerson algorithm
-- [⚙️] Create algorithm factories for full parameter library support
+- [✅] Create algorithm factories for full parameter library support
+- [❌] Define a standard result output structure
+- [❌] Add result printing to a file
+
+---
+
+## 2026-05-26 - Result output and refinement
+
+### Tasks
+
+- [✅] Refine the algorithm factory
+- [⚙️] Add all missing comments
 - [❌] Define a standard result output structure
 - [❌] Add result printing to a file
