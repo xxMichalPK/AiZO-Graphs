@@ -220,7 +220,9 @@ std::string IncidenceMatrix::toString() {
         for (size_t edge = 0; edge < m_numEdges; edge++) {
             out << std::setw(width) << m_matrix[vertex][edge];
         }
-        out << "\n";
+        if (vertex < m_numVertices - 1) {
+            out << "\n";
+        }
     }
 
     return out.str();

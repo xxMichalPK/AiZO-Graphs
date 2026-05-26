@@ -19,6 +19,10 @@ class MFResult : public GraphAlgorithmResult {
         virtual intmax_t cost() override {
             return maxFlow;
         }
+
+        virtual std::string resultStringRepresentation() override {
+            return ""; // There's nothing for now
+        }
 };
 
 #endif // MFRESULT_HPP

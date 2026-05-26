@@ -19,6 +19,10 @@ class MSTResult : public GraphAlgorithmResult {
         virtual intmax_t cost() override {
             return pathLength;
         }
+
+        virtual std::string resultStringRepresentation() override {
+            return ""; // TODO: Implement the spanning tree representation and return it here
+        }
 };
 
 #endif // MSTRESULT_HPP

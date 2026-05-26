@@ -34,7 +34,7 @@ std::string ReportBuilder::buildReport(size_t reportIndex, GraphRepr* representa
             break;
     }
 
-    return reportHeader + detailedReport;
+    return reportHeader + detailedReport + "\n\n";
 }
 
 
@@ -46,9 +46,9 @@ std::string ReportBuilder::buildReport(size_t reportIndex, GraphRepr* representa
  */
 std::string ReportBuilder::buildReportHeader(size_t reportIndex, GraphRepr* representation) {
     std::string header;
-    header += std::string(20, '=') + "\n";
+    header += std::string(40, '=') + "\n";
     header += "Report #" + std::to_string(reportIndex) + "\n";
-    header += std::string(20, '=') + "\n";
+    header += std::string(40, '=') + "\n";
     header += "Type: Directed/Undirected (TO DO)\n";
     header += "Vertex count: " + std::to_string(representation->getVertexCount()) + "\n";
     header += "Edge count: " + std::to_string(representation->getEdgeCount()) + "\n";
@@ -71,13 +71,11 @@ std::string ReportBuilder::buildMSTReport(GraphRepr* representation, GraphAlgori
     report += "Algorithm: " + algorithm->name() + "\n";
 
     report += "\n--- GRAPH ---\n\n";
-    report += representation->toString() + "\n";
+    report += representation->toString();
     report += "\n";
 
-    report += "\n--- RESULT ---\n";
-    // Print the MST tree here (TO DO)
-    report += "\n";
-
+    report += "\n--- RESULT ---\n\n";
+    report += "MST Tree: " + result->resultStringRepresentation() + "\n";
     report += "Total cost: " + std::to_string(result->cost()) + "\n";
     return report;
 }
@@ -96,14 +94,14 @@ std::string ReportBuilder::buildSPReport(GraphRepr* representation, GraphAlgorit
     std::string report;
     report += "Representation: " + representation->name() + "\n";
     report += "Algorithm: " + algorithm->name() + "\n";
+    report += "Start vertex: " + std::to_string(Parameters::vertexStart) + "\n";
+    report += "End vertex: " + std::to_string(Parameters::vertexEnd) + "\n";
 
     report += "\n--- GRAPH ---\n\n";
-    report += representation->toString() + "\n";
+    report += representation->toString();
 
-    report += "\n--- RESULT ---\n";
-    // Print the path here (TO DO)
-    report += "\n";
-
+    report += "\n--- RESULT ---\n\n";
+    report += "Shortest Path: " + result->resultStringRepresentation() + "\n";
     report += "Total cost: " + std::to_string(result->cost()) + "\n";
     return report;
 }
@@ -122,12 +120,14 @@ std::string ReportBuilder::buildMFReport(GraphRepr* representation, GraphAlgorit
     std::string report;
     report += "Representation: " + representation->name() + "\n";
     report += "Algorithm: " + algorithm->name() + "\n";
+    report += "Source vertex: " + std::to_string(Parameters::vertexStart) + "\n";
+    report += "Sink vertex: " + std::to_string(Parameters::vertexEnd) + "\n";
 
     report += "\n--- GRAPH ---\n\n";
-    report += representation->toString() + "\n";
+    report += representation->toString();
     report += "\n";
 
-    report += "\n--- RESULT ---\n";
+    report += "\n--- RESULT ---\n\n";
     report += "Total flow: " + std::to_string(result->cost()) + "\n";
     return report;
 }

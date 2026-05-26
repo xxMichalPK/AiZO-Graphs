@@ -210,7 +210,9 @@ std::string AdjacencyList::toString() {
             }
             currentEdge = currentEdge->next;
         }
-        result += "\n";
+        if (vertex < m_numVertices - 1) {
+            result += "\n";
+        }
     }
     return result;
 }

@@ -13,6 +13,7 @@ class GraphAlgorithmResult {
 
         virtual intmax_t cost() = 0;
         virtual void print(std::ostream& os) const = 0;
+        virtual std::string resultStringRepresentation() = 0;
 };
 
 /**
