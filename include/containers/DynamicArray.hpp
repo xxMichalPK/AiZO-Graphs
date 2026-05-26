@@ -31,11 +31,24 @@ class DynamicArray : public IndexedContainer<T> {
 
 };
 
+
+/**
+ * Constructs a DynamicArray with the specified initial size
+ * 
+ * @param initialSize the initial size of the dynamic array
+ */
 template<typename T>
 DynamicArray<T>::DynamicArray(size_t initialSize) : m_currentSize(initialSize) {
     m_data = new T[m_currentSize]();
 }
 
+
+/**
+ * Constructs a DynamicArray with the specified initial size and default value
+ * 
+ * @param initialSize the initial size of the dynamic array
+ * @param defaultValue the default value to initialize the elements of the array with
+ */
 template<typename T>
 DynamicArray<T>::DynamicArray(size_t initialSize, T defaultValue) : m_currentSize(initialSize) {
     m_data = new T[m_currentSize]();
@@ -45,11 +58,21 @@ DynamicArray<T>::DynamicArray(size_t initialSize, T defaultValue) : m_currentSiz
     this->m_elementCount = m_currentSize;
 }
 
+
+/**
+ * Frees the memory allocated for the dynamic array
+ */
 template<typename T>
 DynamicArray<T>::~DynamicArray() {
     delete[] m_data;
 }
 
+
+/**
+ * Resizes the dynamic array to the new size if the new size is greater than the current size
+ * 
+ * @param newSize the new size to resize the array to
+ */
 template<typename T>
 void DynamicArray<T>::resize(size_t newSize) {
     if (newSize <= m_currentSize) return;
@@ -65,6 +88,12 @@ void DynamicArray<T>::resize(size_t newSize) {
     m_data = newData;
 }
 
+
+/**
+ * Adds an element to the end of the dynamic array
+ * 
+ * @param element the element to add
+ */
 template<typename T>
 void DynamicArray<T>::push(T element) {
     if (this->m_elementCount >= m_currentSize) {
@@ -75,6 +104,10 @@ void DynamicArray<T>::push(T element) {
     this->m_elementCount++;
 }
 
+
+/**
+ * Removes the last element from the dynamic array
+ */
 template<typename T>
 void DynamicArray<T>::pop() {
     if (this->m_elementCount == 0) {
@@ -84,6 +117,12 @@ void DynamicArray<T>::pop() {
     this->m_elementCount--;
 }
 
+
+/**
+ * Gets the first element of the dynamic array
+ * 
+ * @return the first element of the dynamic array
+ */
 template<typename T>
 T DynamicArray<T>::getFront() {
     if (this->m_elementCount == 0) {
@@ -93,6 +132,12 @@ T DynamicArray<T>::getFront() {
     return m_data[0];
 }
 
+
+/**
+ * Gets the last element of the dynamic array
+ * 
+ * @return the last element of the dynamic array
+ */
 template<typename T>
 T DynamicArray<T>::getBack() {
     if (this->m_elementCount == 0) {
@@ -102,6 +147,14 @@ T DynamicArray<T>::getBack() {
     return m_data[this->m_elementCount - 1];
 }
 
+
+/**
+ * Gets the element at the specified index
+ * 
+ * @param index the index of the element to get
+ * 
+ * @return the element at the specified index
+ */
 template<typename T>
 T DynamicArray<T>::get(size_t index) {
     if (this->m_elementCount == 0) {
@@ -115,6 +168,14 @@ T DynamicArray<T>::get(size_t index) {
     return m_data[index];
 }
 
+
+/**
+ * Gets the element at the specified index
+ * 
+ * @param index the index of the element to get
+ * 
+ * @return the element at the specified index
+ */
 template<typename T>
 const T DynamicArray<T>::get(size_t index) const {
     if (this->m_elementCount == 0) {
@@ -128,6 +189,14 @@ const T DynamicArray<T>::get(size_t index) const {
     return m_data[index];
 }
 
+
+/**
+ * Sets the element at the specified index
+ * 
+ * @param index the index of the element to set
+ * 
+ * @param element the value to set the element to
+ */
 template<typename T>
 void DynamicArray<T>::set(size_t index, T element) {
     if (this->m_elementCount == 0) {
@@ -141,6 +210,12 @@ void DynamicArray<T>::set(size_t index, T element) {
     m_data[index] = element;
 }
 
+
+/**
+ * Removes the element at the specified index and shifts the remaining elements to the left
+ * 
+ * @param index the index of the element to remove
+ */
 template<typename T>
 void DynamicArray<T>::removeAt(size_t index) {
     if (this->m_elementCount == 0) {
@@ -157,6 +232,14 @@ void DynamicArray<T>::removeAt(size_t index) {
     this->m_elementCount--;
 }
 
+
+/**
+ * Checks if the dynamic array contains the specified element
+ * 
+ * @param element the element to check for
+ * 
+ * @return true if the element is found in the array, false otherwise
+ */
 template<typename T>
 bool DynamicArray<T>::contains(T element) {
     for (size_t i = 0; i < this->m_elementCount; i++) {

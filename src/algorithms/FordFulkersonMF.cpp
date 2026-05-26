@@ -7,6 +7,12 @@
 
 #include "Logger.hpp"
 
+
+/**
+ * Initializes the Ford-Fulkerson algorithm by creating a residual graph based on the original graph
+ * 
+ * @param graph the original graph to find the maximum flow for
+ */
 FordFulkersonMF::FordFulkersonMF(GraphRepr& graph) : GraphAlgorithmBase("Ford-Fulkerson Maximum Flow"), m_graph(graph) {
     // Create a residual graph based on the original graph
     size_t vertexCount = m_graph.getVertexCount();
@@ -35,10 +41,20 @@ FordFulkersonMF::FordFulkersonMF(GraphRepr& graph) : GraphAlgorithmBase("Ford-Fu
     }
 }
 
+
+/**
+ * Frees the memory allocated for the residual graph
+ */
 FordFulkersonMF::~FordFulkersonMF() {
     delete m_residualGraph;
 }
 
+
+/**
+ * Run the Ford-Fulkerson algorithm for maximum flow
+ * 
+ * @returns 0 on success, 1 on failure
+ */
 int FordFulkersonMF::run() {
     if (!m_residualGraph) {
         Logger::logln(Logger::ERROR, "Residual graph not initialized");
@@ -76,6 +92,17 @@ int FordFulkersonMF::run() {
     return 0;
 }
 
+
+/**
+ * Performs a depth-first search to find an augmenting path in the residual graph and returns the bottleneck flow of that path
+ * Based on: https://www.youtube.com/watch?v=Xu8jjJnwvxE
+ * 
+ * @param vertex the current vertex being explored
+ * @param flow the current flow being sent through the path
+ * @param visited an array to keep track of visited vertices during the DFS
+ * 
+ * @returns the bottleneck flow of the augmenting path found, or 0 if no augmenting path is found
+ */
 intmax_t FordFulkersonMF::dfsSolve(size_t vertex, intmax_t flow, DynamicArray<size_t>& visited) {
     // Check if the vertex is the sink, if yes, return the current flow
     if (vertex == (size_t)Parameters::vertexEnd) {

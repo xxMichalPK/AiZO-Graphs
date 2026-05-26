@@ -39,7 +39,6 @@ class PriorityQueue : public BaseContainer<T> {
 
 };
 
-// Do the implementation here because last time there was too much jumping between the files
 
 /**
  * Initializes the priority queue with the predefined size

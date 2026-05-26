@@ -19,6 +19,7 @@ IncidenceMatrix::IncidenceMatrix(size_t vertexCount, size_t edgeCount, bool dire
     }
 }
 
+
 /**
  * Clears the memory of the incidence matrix
  */
@@ -28,6 +29,7 @@ IncidenceMatrix::~IncidenceMatrix() {
     }
     delete[] m_matrix;
 }
+
 
 /**
  * Adds an edge to the graph representation
@@ -50,6 +52,7 @@ void IncidenceMatrix::addEdge(size_t startVertex, size_t endVertex, intmax_t wei
     m_currentEdgeIndex++;
 }
 
+
 /**
  * Checks if an edge is defined in the graph (if the graph contains the specified edge)
  * 
@@ -69,6 +72,15 @@ bool IncidenceMatrix::checkEdge(size_t startVertex, size_t endVertex) {
     return false;
 }
 
+
+/**
+ * Returns the weight of the specified edge
+ * 
+ * @param startVertex start of the edge
+ * @param endVertex end of the edge
+ * 
+ * @returns the weight of the edge, or 0 if the edge does not exist
+ */
 intmax_t IncidenceMatrix::getEdgeWeight(size_t startVertex, size_t endVertex) {
     if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
         Logger::logln(Logger::ERROR, "Vertex out of bounds.");
@@ -81,20 +93,35 @@ intmax_t IncidenceMatrix::getEdgeWeight(size_t startVertex, size_t endVertex) {
     return 0;
 }
 
+
 /**
  * Returns number of edges in this graph representation
+ * 
+ * @returns the number of edges
  */
 size_t IncidenceMatrix::getEdgeCount() {
     return m_numEdges;
 }
 
+
 /**
  * Returns the number of vertices in this graph representation
+ * 
+ * @returns the number of vertices
  */
 size_t IncidenceMatrix::getVertexCount() {
     return m_numVertices;
 }
 
+
+/**
+ * Returns a list of all vertices that are adjacent to the specified vertex
+ * (all vertices that are connected to the specified vertex by an edge)
+ * 
+ * @param vertex the vertex for which the adjacent vertices should be returned
+ * 
+ * @returns a list of all adjacent vertices
+ */
 DynamicArray<size_t> IncidenceMatrix::getAdjacentVertices(size_t vertex) {
     DynamicArray<size_t> adjacentVertices;
     for (size_t edgeIndex = 0; edgeIndex < m_numEdges; edgeIndex++) {
@@ -111,6 +138,12 @@ DynamicArray<size_t> IncidenceMatrix::getAdjacentVertices(size_t vertex) {
     return adjacentVertices;
 }
 
+
+/**
+ * Returns a list of all edges in the graph in the format (weight, (startVertex, endVertex))
+ * 
+ * @returns a list of all edges
+ */
 DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> IncidenceMatrix::getAllEdges() {
     DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> edges;
     for (size_t edgeIndex = 0; edgeIndex < m_numEdges; edgeIndex++) {
@@ -136,6 +169,14 @@ DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> IncidenceMatrix::getAllEdges(
     return edges;
 }
 
+
+/**
+ * Sets the weight of the specified edge
+ * 
+ * @param startVertex start of the edge
+ * @param endVertex end of the edge
+ * @param weight the new weight of the edge
+ */
 void IncidenceMatrix::setEdgeWeight(size_t startVertex, size_t endVertex, intmax_t weight) {
     if (startVertex >= m_numVertices || endVertex >= m_numVertices) {
         Logger::logln(Logger::ERROR, "Vertex out of bounds.");
@@ -154,6 +195,7 @@ void IncidenceMatrix::setEdgeWeight(size_t startVertex, size_t endVertex, intmax
         }
     }
 }
+
 
 #if GRAPHVIZ_SUPPORT
 #include <fstream>

@@ -14,6 +14,12 @@ class MergeSort {
         static void merge(IndexedContainer<T>& container, size_t left, size_t mid, size_t right);
 };
 
+
+/**
+ * Sorts the given container using the merge sort algorithm
+ * 
+ * @param container the container to sort
+ */
 template<typename T>
 void MergeSort<T>::sort(IndexedContainer<T>& container) {
     size_t size = container.size();
@@ -25,6 +31,14 @@ void MergeSort<T>::sort(IndexedContainer<T>& container) {
     MergeSort<T>::merge(container, 0, mid, size);
 }
 
+
+/**
+ * Sorts the given container using the merge sort algorithm
+ * 
+ * @param container the container to sort
+ * @param left the left index of the subarray to sort
+ * @param right the right index of the subarray to sort
+ */
 template<typename T>
 void MergeSort<T>::sort(IndexedContainer<T>& container, size_t left, size_t right) {
     if (left >= right - 1) return;
@@ -35,6 +49,15 @@ void MergeSort<T>::sort(IndexedContainer<T>& container, size_t left, size_t righ
     MergeSort<T>::merge(container, left, mid, right);
 }
 
+
+/**
+ * Merges two sorted subarrays into a single sorted subarray
+ * 
+ * @param container the container containing the subarrays to merge
+ * @param left the left index of the first subarray
+ * @param mid the right index of the first subarray
+ * @param right the right index of the second subarray
+ */
 template<typename T>
 void MergeSort<T>::merge(IndexedContainer<T>& container, size_t left, size_t mid, size_t right) {
     size_t l = left;
