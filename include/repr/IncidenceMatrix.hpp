@@ -17,12 +17,17 @@ class IncidenceMatrix : public GraphRepr {
 
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) override;
         virtual bool checkEdge(size_t startVertex, size_t endVertex) override;
+
         virtual intmax_t getEdgeWeight(size_t startVertex, size_t endVertex) override;
         virtual void setEdgeWeight(size_t startVertex, size_t endVertex, intmax_t weight) override;
+
         virtual size_t getEdgeCount() override;
         virtual size_t getVertexCount() override;
+
         virtual DynamicArray<size_t> getAdjacentVertices(size_t vertex) override;
         virtual DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> getAllEdges() override;
+
+        virtual std::string toString() override;
 
         #if GRAPHVIZ_SUPPORT
             virtual void exportToGraphviz(const char* filename) const override;

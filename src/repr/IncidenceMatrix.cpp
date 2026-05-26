@@ -197,6 +197,36 @@ void IncidenceMatrix::setEdgeWeight(size_t startVertex, size_t endVertex, intmax
 }
 
 
+/**
+ * Returns a string representation of the incidence matrix
+ * 
+ * @returns a string representing the matrix
+ */
+std::string IncidenceMatrix::toString() {
+    const int width = 5;
+    const int labelWidth = 4;
+
+    std::ostringstream out;
+    out << std::setw(labelWidth) << " ";
+
+    for (size_t edge = 0; edge < m_numEdges; edge++) {
+        out << std::setw(width) << ("e" + std::to_string(edge));
+    }
+
+    out << "\n";
+    for (size_t vertex = 0; vertex < m_numVertices; vertex++) {
+        out << std::left << std::setw(labelWidth) << ("v" + std::to_string(vertex)) << std::right;
+
+        for (size_t edge = 0; edge < m_numEdges; edge++) {
+            out << std::setw(width) << m_matrix[vertex][edge];
+        }
+        out << "\n";
+    }
+
+    return out.str();
+}
+
+
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 

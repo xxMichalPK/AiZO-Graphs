@@ -192,6 +192,30 @@ void AdjacencyList::setEdgeWeight(size_t startVertex, size_t endVertex, intmax_t
 }
 
 
+/**
+ * Returns a string representation of the adjacency list
+ * 
+ * @returns a string representing the list
+ */
+std::string AdjacencyList::toString() {
+    std::string result = "";
+    for (size_t vertex = 0; vertex < m_numVertices; vertex++) {
+        result += std::to_string(vertex) + " -> ";
+        Edge* currentEdge = m_list[vertex];
+        while (currentEdge != nullptr) {
+            result += "(" + std::to_string(currentEdge->endVertex) + ":" + std::to_string(currentEdge->weight) + ")";
+            
+            if (currentEdge->next != nullptr) {
+                result += " ";
+            }
+            currentEdge = currentEdge->next;
+        }
+        result += "\n";
+    }
+    return result;
+}
+
+
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
 
