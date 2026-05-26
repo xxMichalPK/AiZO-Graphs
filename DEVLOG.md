@@ -137,5 +137,5 @@ Basically in order to actually run the algorithms we have to implement some stru
 
 - [✅] Refine the algorithm factory
 - [✅] Add all missing comments
-- [❌] Define a standard result output structure
-- [❌] Add result printing to a file
+- [⚙️] Define a standard result output structure
+- [⚙️] Add result printing to a file

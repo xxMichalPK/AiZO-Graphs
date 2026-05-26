@@ -5,6 +5,7 @@ SET(PROJECT_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Timer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Logger.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/GraphGenerator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ReportBuilder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/modes/RunModeBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/modes/BenchmarkMode.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/modes/SingleFileMode.cpp

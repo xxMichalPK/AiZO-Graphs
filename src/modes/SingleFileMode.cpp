@@ -22,6 +22,7 @@
 #include "SPResult.hpp"
 
 #include "Logger.hpp"
+#include "ReportBuilder.hpp"
 
 /**
  * Runs program in the single file mode
@@ -32,6 +33,12 @@ int SingleFileMode::run() {
     // Check if the input file exists
     if (!std::filesystem::exists(Parameters::inputFile)) {
         Logger::logln(Logger::ERROR, "Input file does not exist!");
+        return 1;
+    }
+
+    // Check if the output file is provided
+    if (Parameters::outputFile.empty()) {
+        Logger::logln(Logger::ERROR, "No output file provided!");
         return 1;
     }
 
@@ -66,6 +73,13 @@ int SingleFileMode::run() {
     Logger::logln(Logger::OK, "Loaded graph data into representation(s)");
 
     // Do something with the representation...
+    // Open the output file
+    std::ofstream output(Parameters::outputFile);
+    if (!output.is_open()) {
+        Logger::logln(Logger::ERROR, "Failed to open output file!");
+        return 1;
+    }
+
     for (size_t i = 0; i < representations->size(); i++) {
         GraphRepr& currentRepr = *representations->get(i);
         DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(currentRepr);
@@ -83,6 +97,9 @@ int SingleFileMode::run() {
             GraphAlgorithmResult& algResult = currentAlg.result();
             Logger::logln(Logger::OK, currentAlg.name(), " ran successfully on ", currentRepr.name(), " result:");
             Logger::logln(Logger::INFO, algResult);
+
+            std::string report = ReportBuilder::buildReport(i * algorithms->size() + j + 1, &currentRepr, &currentAlg, &algResult);
+            output << report << "\n\n";
         }
         deleteAlgorithms(algorithms);
     }
