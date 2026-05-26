@@ -24,7 +24,7 @@ int KruskalMST::run() {
 
         if (set.find(startVertex) != set.find(endVertex)) {
             set.unionSets(startVertex, endVertex);
-            // m_result.edges.push({weight, {startVertex, endVertex}});
+            m_result.edges.push({weight, {startVertex, endVertex}});
             m_result.pathLength += weight;
         }
     }

@@ -31,7 +31,7 @@ int PrimMST::run() {
         // Get the vertex with the smallest weight and remove it from the queue
         Pair<intmax_t, size_t> currentPair = pq.getFront();
         size_t currentVertex = currentPair.second();
-        size_t currentWeight = currentPair.first();
+        intmax_t currentWeight = currentPair.first();
         pq.pop();
 
         // Skip if the vertex is already in the MST
@@ -40,6 +40,12 @@ int PrimMST::run() {
         // Add the vertex to the MST and update the result
         inMST.set(currentVertex, true);
         m_result.pathLength += currentWeight;
+
+        // Push the edge to the result if it's not the starting vertex
+        if (p.get(currentVertex) != -1) {
+            size_t parentVertex = (size_t)p.get(currentVertex);
+            m_result.edges.push({currentWeight, {parentVertex, currentVertex}});
+        }
 
         // Find all the neighbors of the current vertex and add them to the pq if needed
         DynamicArray<size_t> adjacentVertices = m_graph.getAdjacentVertices(currentVertex);

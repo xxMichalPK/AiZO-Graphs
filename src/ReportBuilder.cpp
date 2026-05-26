@@ -75,7 +75,8 @@ std::string ReportBuilder::buildMSTReport(GraphRepr* representation, GraphAlgori
     report += "\n";
 
     report += "\n--- RESULT ---\n\n";
-    report += "MST Tree: " + result->resultStringRepresentation() + "\n";
+    report += "MST Tree:\n";
+    report += result->resultStringRepresentation() + "\n";
     report += "Total cost: " + std::to_string(result->cost()) + "\n";
     return report;
 }
