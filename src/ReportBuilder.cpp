@@ -1,5 +1,6 @@
 #include "ReportBuilder.hpp"
 #include "Parameters.h"
+#include "RunModeBase.hpp"
 #include "Logger.hpp"
 #include "SPResult.hpp"
 
@@ -14,9 +15,9 @@
  * @returns the generated report string
  */
 std::string ReportBuilder::buildReport(size_t reportIndex, GraphRepr* representation, 
-                                       GraphAlgorithmBase* algorithm, GraphAlgorithmResult* result) {
+                                       GraphAlgorithmBase* algorithm, GraphAlgorithmResult* result, size_t durationMicroseconds) {
 
-    std::string reportHeader = buildReportHeader(reportIndex, representation);
+    std::string reportHeader = buildReportHeader(reportIndex, representation, durationMicroseconds);
 
     std::string detailedReport;
     switch (Parameters::problem) {
@@ -44,12 +45,13 @@ std::string ReportBuilder::buildReport(size_t reportIndex, GraphRepr* representa
  * @param reportIndex the index of the report
  * @param representation the graph representation on which the algorithm was run
  */
-std::string ReportBuilder::buildReportHeader(size_t reportIndex, GraphRepr* representation) {
+std::string ReportBuilder::buildReportHeader(size_t reportIndex, GraphRepr* representation, size_t durationMicroseconds) {
     std::string header;
     header += std::string(40, '=') + "\n";
     header += "Report #" + std::to_string(reportIndex) + "\n";
     header += std::string(40, '=') + "\n";
-    header += "Type: Directed/Undirected (TO DO)\n";
+    header += "Execution time: " + std::to_string(durationMicroseconds) + "us\n";
+    header += "Type: " + std::string(RunModeBase::isDirected() ? "Directed" : "Undirected") + "\n";
     header += "Vertex count: " + std::to_string(representation->getVertexCount()) + "\n";
     header += "Edge count: " + std::to_string(representation->getEdgeCount()) + "\n";
     return header;

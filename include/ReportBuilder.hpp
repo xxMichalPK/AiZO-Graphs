@@ -13,10 +13,10 @@ class ReportBuilder {
         ReportBuilder() = delete;
 
         static std::string buildReport(size_t reportIndex, GraphRepr* representation,
-                                       GraphAlgorithmBase* algorithm, GraphAlgorithmResult* result);
+                                       GraphAlgorithmBase* algorithm, GraphAlgorithmResult* result, size_t durationMicroseconds = 0);
     
     private:
-        static std::string buildReportHeader(size_t reportIndex, GraphRepr* representation);
+        static std::string buildReportHeader(size_t reportIndex, GraphRepr* representation, size_t durationMicroseconds = 0);
         static std::string buildMSTReport(GraphRepr* representation, GraphAlgorithmBase* algorithm, GraphAlgorithmResult* result);
         static std::string buildSPReport(GraphRepr* representation, GraphAlgorithmBase* algorithm, GraphAlgorithmResult* result);
         static std::string buildMFReport(GraphRepr* representation, GraphAlgorithmBase* algorithm, GraphAlgorithmResult* result);

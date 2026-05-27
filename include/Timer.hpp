@@ -17,8 +17,9 @@ class Timer {
 
         template<typename Ratio = std::micro>
         size_t getDuration() const {
-            auto duration = std::chrono::duration_cast<Ratio>(m_endTime - m_startTime);
-            return duration.count();
+            using DurationType = std::chrono::duration<size_t, Ratio>;
+            DurationType duration = std::chrono::duration_cast<DurationType>(m_endTime - m_startTime);
+            return static_cast<size_t>(duration.count());
         }
 
         // Functions for getting the system date and time as strings

@@ -23,6 +23,7 @@
 
 #include "Logger.hpp"
 #include "ReportBuilder.hpp"
+#include "Timer.hpp"
 
 /**
  * Runs program in the single file mode
@@ -90,15 +91,19 @@ int SingleFileMode::run() {
 
         for (size_t j = 0; j < algorithms->size(); j++) {
             GraphAlgorithmBase& currentAlg = *algorithms->get(j);
-            if (currentAlg.run() != 0) {
+            Timer timer;
+            timer.start();
+            int runResult = currentAlg.run();
+            timer.stop();
+            if (runResult != 0) {
                 Logger::logln(Logger::ERROR, currentAlg.name(), " failed to run on ", currentRepr.name());
                 return 1;
             }
             GraphAlgorithmResult& algResult = currentAlg.result();
-            Logger::logln(Logger::OK, currentAlg.name(), " ran successfully on ", currentRepr.name(), " result:");
-            Logger::logln(Logger::INFO, algResult);
+            size_t duration = timer.getDuration();
+            Logger::logln(Logger::OK, currentAlg.name(), " ran successfully on ", currentRepr.name(), " in: ", duration, "us");
 
-            std::string report = ReportBuilder::buildReport(i * algorithms->size() + j + 1, &currentRepr, &currentAlg, &algResult);
+            std::string report = ReportBuilder::buildReport(i * algorithms->size() + j + 1, &currentRepr, &currentAlg, &algResult, duration);
             output << report << "\n\n";
         }
         deleteAlgorithms(algorithms);
