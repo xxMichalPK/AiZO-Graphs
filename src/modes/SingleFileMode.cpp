@@ -102,6 +102,7 @@ int SingleFileMode::run() {
             GraphAlgorithmResult& algResult = currentAlg.result();
             size_t duration = timer.getDuration();
             Logger::logln(Logger::OK, currentAlg.name(), " ran successfully on ", currentRepr.name(), " in: ", duration, "us");
+            Logger::logln(Logger::INFO, "The total cost of the result is: ", algResult.cost());
 
             std::string report = ReportBuilder::buildReport(i * algorithms->size() + j + 1, &currentRepr, &currentAlg, &algResult, duration);
             output << report << "\n\n";

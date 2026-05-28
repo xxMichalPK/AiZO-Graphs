@@ -59,7 +59,7 @@ bool DataParser::loadGraph(const std::filesystem::path& filename, GraphRepr& gra
         }
 
         // Validate if the vertices are in order as specified in the instruction
-        if ((start < lastStartVertex) || (start > lastStartVertex + 1)) {
+        if (start < lastStartVertex) { //! Was (start < lastStartVertex) || (start > lastStartVertex + 1) ASK ABOUT IT!
             Logger::logln(Logger::ERROR, "Edges are not in the correct order.");
             return false;
         }
