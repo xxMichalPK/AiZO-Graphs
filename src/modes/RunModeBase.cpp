@@ -39,11 +39,15 @@ DynamicArray<GraphRepr*>* RunModeBase::createRepresentations(size_t vertexCount,
             break;
         case Parameters::Structures::incidenceMatrix:
             Logger::logln(Logger::INFO, "Using incidence matrix for graph representation");
+            
+            if (!confirmMatrixSize(vertexCount, edgeCount)) break;
             representations->insert(new IncidenceMatrix(vertexCount, edgeCount, directed));
             break;
         case Parameters::Structures::allStructures:
             Logger::logln(Logger::INFO, "Using all available graph representations");
             representations->insert(new AdjacencyList(vertexCount, edgeCount, directed));
+            // Always confirm the incidence matrix cause it can explode quickly
+            if (!confirmMatrixSize(vertexCount, edgeCount)) break;
             representations->insert(new IncidenceMatrix(vertexCount, edgeCount, directed));
             break;
         default:
@@ -68,6 +72,24 @@ void RunModeBase::deleteRepresentations(DynamicArray<GraphRepr*>* representation
         delete representations->get(i);
     }
     delete representations;
+}
+
+
+/**
+ * With large vertex and edge counts, the matrix can swallow all the RAM and crash so ask the user to confirm
+ * the size when it exceeds 16GB
+ */
+bool RunModeBase::confirmMatrixSize(size_t vertexCount, size_t edgeCount) {
+    const size_t edgeSize = sizeof(intmax_t);
+    const size_t totalSize = vertexCount * edgeCount * edgeSize;
+    const size_t totalSizeGB = totalSize / (1024ull * 1024 * 1024);
+
+    if (totalSizeGB < 16) return true;
+
+    Logger::log(Logger::WARNING, "The matrix representation is about to use ", totalSizeGB, " GB of RAM. Do you want to continue? (y/n): ");
+    char response;
+    std::cin >> response;
+    return (response == 'y' || response == 'Y');
 }
 
 

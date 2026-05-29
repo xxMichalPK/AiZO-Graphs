@@ -23,6 +23,7 @@ class RunModeBase {
         static void deleteAlgorithms(DynamicArray<GraphAlgorithmBase*>* algorithms);
     
     private:
+        static bool confirmMatrixSize(size_t vertexCount, size_t edgeCount);
         static DynamicArray<GraphAlgorithmBase*>* createMSTAlgorithms(GraphRepr& graph);
         static DynamicArray<GraphAlgorithmBase*>* createSPAlgorithms(GraphRepr& graph);
         static DynamicArray<GraphAlgorithmBase*>* createMFAlgorithms(GraphRepr& graph);

@@ -52,7 +52,7 @@ int SingleFileMode::run() {
 
     // Create all requested representations
     DynamicArray<GraphRepr*>* representations = createRepresentations(graphSize.vertices, graphSize.edges);
-    if (representations == nullptr) {
+    if (representations == nullptr || representations->size() == 0) {
         Logger::logln(Logger::ERROR, "Failed to create graph representations");
         return 1;
     }

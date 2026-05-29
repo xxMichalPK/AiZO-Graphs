@@ -71,15 +71,14 @@ std::string ReportBuilder::buildMSTReport(GraphRepr* representation, GraphAlgori
     std::string report;
     report += "Representation: " + representation->name() + "\n";
     report += "Algorithm: " + algorithm->name() + "\n";
+    report += "Total cost: " + std::to_string(result->cost()) + "\n";
 
     report += "\n--- GRAPH ---\n\n";
     report += representation->toString();
     report += "\n";
 
-    report += "\n--- RESULT ---\n\n";
-    report += "MST Tree:\n";
+    report += "\n--- MST TREE ---\n\n";
     report += result->resultStringRepresentation() + "\n";
-    report += "Total cost: " + std::to_string(result->cost()) + "\n";
     return report;
 }
 
@@ -99,13 +98,13 @@ std::string ReportBuilder::buildSPReport(GraphRepr* representation, GraphAlgorit
     report += "Algorithm: " + algorithm->name() + "\n";
     report += "Start vertex: " + std::to_string(Parameters::vertexStart) + "\n";
     report += "End vertex: " + std::to_string(Parameters::vertexEnd) + "\n";
+    report += "Total cost: " + std::to_string(result->cost()) + "\n";
 
     report += "\n--- GRAPH ---\n\n";
     report += representation->toString();
 
-    report += "\n--- RESULT ---\n\n";
-    report += "Shortest Path: " + result->resultStringRepresentation() + "\n";
-    report += "Total cost: " + std::to_string(result->cost()) + "\n";
+    report += "\n--- SHORTEST PATH ---\n\n";
+    report += result->resultStringRepresentation() + "\n";
     return report;
 }
 
@@ -125,12 +124,11 @@ std::string ReportBuilder::buildMFReport(GraphRepr* representation, GraphAlgorit
     report += "Algorithm: " + algorithm->name() + "\n";
     report += "Source vertex: " + std::to_string(Parameters::vertexStart) + "\n";
     report += "Sink vertex: " + std::to_string(Parameters::vertexEnd) + "\n";
+    report += "Total flow: " + std::to_string(result->cost()) + "\n";
 
     report += "\n--- GRAPH ---\n\n";
     report += representation->toString();
     report += "\n";
 
-    report += "\n--- RESULT ---\n\n";
-    report += "Total flow: " + std::to_string(result->cost()) + "\n";
     return report;
 }
