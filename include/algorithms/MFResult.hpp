@@ -20,7 +20,7 @@ class MFResult : public GraphAlgorithmResult {
             return maxFlow;
         }
 
-        virtual std::string resultStringRepresentation() override {
+        virtual std::string fullResultString() override {
             return ""; // There's nothing for now
         }
 };

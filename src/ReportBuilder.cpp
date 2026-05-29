@@ -78,7 +78,7 @@ std::string ReportBuilder::buildMSTReport(GraphRepr* representation, GraphAlgori
     report += "\n";
 
     report += "\n--- MST TREE ---\n\n";
-    report += result->resultStringRepresentation() + "\n";
+    report += result->fullResultString() + "\n";
     return report;
 }
 
@@ -104,7 +104,7 @@ std::string ReportBuilder::buildSPReport(GraphRepr* representation, GraphAlgorit
     report += representation->toString();
 
     report += "\n--- SHORTEST PATH ---\n\n";
-    report += result->resultStringRepresentation() + "\n";
+    report += result->fullResultString() + "\n";
     return report;
 }
 

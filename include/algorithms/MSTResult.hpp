@@ -14,22 +14,14 @@ class MSTResult : public GraphAlgorithmResult {
         MSTResult() = default;
         
         virtual void print(std::ostream& os) const override {
-            os << "Path length: " << pathLength;
-            os << "\nEdges in the MST:\n";
-            for (size_t i = 0; i < edges.size(); i++) {
-                auto edge = edges.get(i);
-                intmax_t weight = edge.first();
-                size_t startVertex = edge.second().first();
-                size_t endVertex = edge.second().second();
-                os << startVertex << " -- " << endVertex << " (" << weight << ")" "\n";
-            }
+            os << "MST weight: " << pathLength;
         }
 
         virtual intmax_t cost() override {
             return pathLength;
         }
 
-        virtual std::string resultStringRepresentation() override {
+        virtual std::string fullResultString() override {
             std::string result = "";
             for (size_t i = 0; i < edges.size(); i++) {
                 auto edge = edges.get(i);

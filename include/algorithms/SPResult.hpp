@@ -15,24 +15,14 @@ class SPResult : public GraphAlgorithmResult {
         SPResult() = default;
         
         virtual void print(std::ostream& os) const override {
-            os << "Path length: " << pathLength << "\nPath: ";
-            os << "(start) ";
-            for (size_t i = path.size(); i > 0; i--) {
-                size_t vertex = path.get(i - 1);
-                os << vertex;
-
-                if (i > 1) {
-                    os << " -> ";
-                }
-            }
-            os << " (end)";
+            os << "Path length: " << pathLength;
         }
 
         virtual intmax_t cost() override {
             return pathLength;
         }
 
-        virtual std::string resultStringRepresentation() override {
+        virtual std::string fullResultString() override {
             std::string result = "";
             for (size_t i = path.size(); i > 0; i--) {
                 size_t vertex = path.get(i - 1);
