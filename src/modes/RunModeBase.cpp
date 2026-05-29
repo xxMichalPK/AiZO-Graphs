@@ -248,3 +248,15 @@ std::string RunModeBase::getSelectedProblemName() {
             return "Unknown Problem";
     }
 }
+
+
+void RunModeBase::exportGraphImages(DynamicArray<GraphRepr*>* representations) {
+#if GRAPHVIZ_SUPPORT
+    if (Parameters::vertexCount <= 10) {
+        for (size_t i = 0; i < representations->size(); i++) {
+            std::string graphName = "graph_repr" + std::to_string(i) + ".dot";
+            representations->get(i)->exportToGraphviz(graphName.c_str());
+        }
+    }
+#endif
+}

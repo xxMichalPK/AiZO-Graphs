@@ -110,14 +110,7 @@ int SingleFileMode::run() {
         deleteAlgorithms(algorithms);
     }
 
-#if GRAPHVIZ_SUPPORT
-    if (graphSize.vertices <= 10) {
-        for (size_t i = 0; i < representations->size(); i++) {
-            std::string graphName = "graph_repr" + std::to_string(i) + ".dot";
-            representations->get(i)->exportToGraphviz(graphName.c_str());
-        }
-    }
-#endif
+    exportGraphImages(representations);
 
     deleteRepresentations(representations);
     return 0;
