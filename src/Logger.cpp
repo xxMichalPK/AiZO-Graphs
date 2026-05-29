@@ -1,5 +1,6 @@
 #include "Logger.hpp"
 #include "Timer.hpp"
+#include "Parameters.h"
 #include <fstream>
 #include <iostream>
 
@@ -44,7 +45,7 @@ void Logger::setLogFile(const std::filesystem::path& logFile) {
  * 
  * @param executionTime The execution time in microseconds
  */
-void Logger::logBenchmark(size_t executionTime) {
+void Logger::logBenchmark(const std::string& representationName, const std::string& algorithmName, size_t executionTime) {
     std::ofstream logFile(m_logFile, std::ios::app);
     if (!validateOpen(logFile)) return;
 
@@ -52,7 +53,38 @@ void Logger::logBenchmark(size_t executionTime) {
     logBenchmarkCommon(logFile);
 
     // Log the execution time
-    logFile << ",SINGLE_RUN," << executionTime << "us,,,\n";
+    logFile << "," << representationName << "," << algorithmName << ","
+        << Parameters::vertexCount << "," << Parameters::density << ",SINGLE_RUN,"
+        << executionTime << "us,,,\n";
+}
+
+/**
+ * Log the benchmark summary (average, min, max) to the log file
+ * 
+ * @param averageTime The average execution time in microseconds
+ * @param minTime The minimum execution time in microseconds
+ * @param maxTime The maximum execution time in microseconds
+ */
+void Logger::logBenchmark(const std::string& representationName, const std::string& algorithmName, size_t averageTime, size_t minTime, size_t maxTime) {
+    std::ofstream logFile(m_logFile, std::ios::app);
+    if (!validateOpen(logFile)) return;
+
+    // Log the common stats
+    logBenchmarkCommon(logFile);
+
+    // Log the benchmark times
+    logFile << "," << representationName << "," << algorithmName << "," 
+        << Parameters::vertexCount << "," << Parameters::density << ",SUMMARY,,"
+        << averageTime << "us," << minTime << "us," << maxTime << "us\n";
+}
+
+/**
+ * Log a single benchmark execution time to the log file
+ * 
+ * @param executionTime The execution time in microseconds
+ */
+void Logger::logBenchmark(size_t executionTime) {
+    logBenchmark("NO_REPRESENTATION", "NO_ALGORITHM", executionTime);
 }
 
 /**
@@ -63,14 +95,7 @@ void Logger::logBenchmark(size_t executionTime) {
  * @param maxTime The maximum execution time in microseconds
  */
 void Logger::logBenchmark(size_t averageTime, size_t minTime, size_t maxTime) {
-    std::ofstream logFile(m_logFile, std::ios::app);
-    if (!validateOpen(logFile)) return;
-
-    // Log the common stats
-    logBenchmarkCommon(logFile);
-
-    // Log the benchmark times
-    logFile << ",SUMMARY,," << averageTime << "us," << minTime << "us," << maxTime << "us\n";
+    logBenchmark("NO_REPRESENTATION", "NO_ALGORITHM", averageTime, minTime, maxTime);
 }
 
 /**
@@ -103,7 +128,7 @@ void Logger::writeBenchmarkHeader(std::ofstream& logFile) {
     // Check if the file is open or has content, if not write the header
     if (!logFile.is_open() || logFile.tellp() != 0) return;
 
-    logFile << "DATE,TIME,ARGUMENTS,TYPE,EXECUTION TIME (us),AVERAGE (us),MIN (us),MAX (us)\n";
+    logFile << "DATE,TIME,ARGUMENTS,REPRESENTATION,ALGORITHM,VERTICES,DENSITY,TYPE,EXECUTION TIME (us),AVERAGE (us),MIN (us),MAX (us)\n";
 }
 
 /**

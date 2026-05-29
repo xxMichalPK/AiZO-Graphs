@@ -11,7 +11,7 @@ class DijkstraSP : public GraphAlgorithmBase {
         SPResult m_result {};
 
     public:
-        DijkstraSP(GraphRepr& graph) : GraphAlgorithmBase("Dijkstra Shortest Path"), m_graph(graph) {}
+        DijkstraSP(GraphRepr& graph) : GraphAlgorithmBase("Dijkstra Shortest Path", "DIJKSTRA"), m_graph(graph) {}
 
         virtual int run() override;
         virtual GraphAlgorithmResult& result() override;

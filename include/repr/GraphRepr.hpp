@@ -11,9 +11,10 @@
 class GraphRepr {
     private:
         std::string m_name;
+        std::string m_id;
 
     protected:
-        GraphRepr(const std::string& name) : m_name(name) {}
+        GraphRepr(const std::string& name, const std::string& id) : m_name(name), m_id(id) {}
     
     public:
         virtual ~GraphRepr() = default;
@@ -31,7 +32,7 @@ class GraphRepr {
         virtual DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> getAllEdges() = 0;
 
         const std::string& name() const { return m_name; }
-
+        const std::string& id() const { return m_id; }
         virtual std::string toString() = 0;
 
         #if GRAPHVIZ_SUPPORT

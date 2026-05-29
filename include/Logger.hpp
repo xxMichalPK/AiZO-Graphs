@@ -47,6 +47,8 @@ class Logger {
 
         template<typename Type, typename... Args>
         static void log(logType_t type, Type&& arg1, Args&&... arg2);
+        void logBenchmark(const std::string& representationName, const std::string& algorithmName, size_t executionTime);
+        void logBenchmark(const std::string& representationName, const std::string& algorithmName, size_t averageTime, size_t minTime, size_t maxTime);
         void logBenchmark(size_t executionTime);
         void logBenchmark(size_t averageTime, size_t minTime, size_t maxTime);
     

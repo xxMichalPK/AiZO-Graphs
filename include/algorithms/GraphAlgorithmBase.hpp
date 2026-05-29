@@ -7,12 +7,13 @@
 class GraphAlgorithmBase {
     private:
         std::string m_name;
+        std::string m_id;
 
     protected:
         bool m_resultReady = false;
 
     protected:
-        GraphAlgorithmBase(const std::string& name) : m_name(name) {}
+        GraphAlgorithmBase(const std::string& name, const std::string& id) : m_name(name), m_id(id) {}
 
     public:
         virtual ~GraphAlgorithmBase() = default;
@@ -24,6 +25,9 @@ class GraphAlgorithmBase {
         }
         const std::string& name() const {
             return m_name;
+        }
+        const std::string& id() const {
+            return m_id;
         }
 };
 

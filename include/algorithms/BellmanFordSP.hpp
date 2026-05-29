@@ -11,7 +11,7 @@ class BellmanFordSP : public GraphAlgorithmBase {
         SPResult m_result {};
 
     public:
-        BellmanFordSP(GraphRepr& graph) : GraphAlgorithmBase("Bellman-Ford Shortest Path"), m_graph(graph) {}
+        BellmanFordSP(GraphRepr& graph) : GraphAlgorithmBase("Bellman-Ford Shortest Path", "BELLMAN_FORD"), m_graph(graph) {}
 
         virtual int run() override;
         virtual GraphAlgorithmResult& result() override;

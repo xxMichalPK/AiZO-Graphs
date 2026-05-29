@@ -84,13 +84,16 @@ bool BenchmarkMode::benchmarkAlgorithm(GraphAlgorithmBase& algorithm, GraphRepr&
 
     GraphAlgorithmResult* initialResult = nullptr;
 
+    const std::string& algName = algorithm.name();
+    const std::string& reprName = representation.name();
+
     // Loop for the specified number of iterations
     for (int i = 0; i < Parameters::iterations; i++) {
         timer.start();
         int runResult = algorithm.run();
         timer.stop();
         if (runResult != 0) {
-            Logger::logln(Logger::ERROR, algorithm.name(), " failed to run on ", representation.name());
+            Logger::logln(Logger::ERROR, algName, " failed to run on ", reprName);
             return false;
         }
 
@@ -98,25 +101,25 @@ bool BenchmarkMode::benchmarkAlgorithm(GraphAlgorithmBase& algorithm, GraphRepr&
         if (initialResult == nullptr) {
             initialResult = &algResult;
         } else if (initialResult->cost() != algResult.cost()) {
-            Logger::logln(Logger::ERROR, algorithm.name(), " produced different results on iteration ", i);
+            Logger::logln(Logger::ERROR, algName, " produced different results on iteration ", i);
             return false;
         }
 
         size_t duration = timer.getDuration();
-        Logger::getInstance()->logBenchmark(duration);
+        Logger::getInstance()->logBenchmark(representation.id(), algorithm.id(), duration);
 
         totalDuration += duration;
         minDuration = duration < minDuration ? duration : minDuration;
         maxDuration = duration > maxDuration ? duration : maxDuration;
     }
 
-    Logger::logln(Logger::OK, algorithm.name(), " ran successfully on ", representation.name(), ". ", *initialResult);
+    Logger::logln(Logger::OK, algName, " ran successfully on ", reprName, ". ", *initialResult);
     Logger::logln(Logger::INFO, "Average execution time: ", totalDuration / Parameters::iterations, "us");
     Logger::logln(Logger::INFO, "Minimum execution time: ", minDuration, "us");
     Logger::logln(Logger::INFO, "Maximum execution time: ", maxDuration, "us");
 
     // Write the benchmark results to the log file
-    Logger::getInstance()->logBenchmark(totalDuration / Parameters::iterations, minDuration, maxDuration);
+    Logger::getInstance()->logBenchmark(representation.id(), algorithm.id(), totalDuration / Parameters::iterations, minDuration, maxDuration);
 
     return true;
 }

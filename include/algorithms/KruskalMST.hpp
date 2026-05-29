@@ -11,7 +11,7 @@ class KruskalMST : public GraphAlgorithmBase {
         MSTResult m_result {};
 
     public:
-        KruskalMST(GraphRepr& graph) : GraphAlgorithmBase("Kruskal Minimum Spanning Tree"), m_graph(graph) {}
+        KruskalMST(GraphRepr& graph) : GraphAlgorithmBase("Kruskal Minimum Spanning Tree", "KRUSKAL"), m_graph(graph) {}
 
         virtual int run() override;
         virtual GraphAlgorithmResult& result() override;

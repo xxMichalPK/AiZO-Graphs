@@ -13,7 +13,7 @@
  * 
  * @param graph the original graph to find the maximum flow for
  */
-FordFulkersonMF::FordFulkersonMF(GraphRepr& graph) : GraphAlgorithmBase("Ford-Fulkerson Maximum Flow"), m_graph(graph) {
+FordFulkersonMF::FordFulkersonMF(GraphRepr& graph) : GraphAlgorithmBase("Ford-Fulkerson Maximum Flow", "FORD_FULKERSON"), m_graph(graph) {
     // Create a residual graph based on the original graph
     size_t vertexCount = m_graph.getVertexCount();
     size_t edgeCount = m_graph.getEdgeCount();
