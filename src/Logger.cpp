@@ -31,6 +31,15 @@ Logger* Logger::getInstance() {
 }
 
 /**
+ * Set the log file path
+ * 
+ * @param logFile The new log file path
+ */
+void Logger::setLogFile(const std::filesystem::path& logFile) {
+    m_logFile = logFile;
+}
+
+/**
  * Log a single benchmark execution time to the log file
  * 
  * @param executionTime The execution time in microseconds

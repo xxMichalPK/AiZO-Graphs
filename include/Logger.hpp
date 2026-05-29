@@ -39,6 +39,8 @@ class Logger {
         static void initialize(int argc, char** argv, const std::filesystem::path& logFile = "log.csv");
         static Logger* getInstance();
 
+        void setLogFile(const std::filesystem::path& logFile);
+
         // Static logln - log line
         template<typename Type, typename... Args>
         static void logln(logType_t type, Type&& arg1, Args&&... arg2);
