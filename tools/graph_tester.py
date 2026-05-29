@@ -7,15 +7,15 @@ def parse_arguments():
     parser.add_argument("-a", "--algorithm", type=str, required=True, help="Graph algorithm to test", choices=[
         "prim", "kruskal", "dijkstra", "bellman-ford", "ford-fulkerson"
     ])
-    parser.add_argument("-s", "--source", type=int, help="Source node for path algorithms")
-    parser.add_argument("-t", "--end", type=int, help="End node for path algorithms")
+    parser.add_argument("-c", "--source", type=int, help="Source node for path algorithms")
+    parser.add_argument("-e", "--end", type=int, help="End node for path algorithms")
     return parser.parse_args()
 
 
 def main():
     args = parse_arguments()
     # Load the graph
-    graph = nx.read_edgelist(args.graph, nodetype=int, data=(("weight", float),))
+    graph = nx.read_weighted_edgelist(args.graph, nodetype=int)
     
     if args.algorithm == "prim":
         mst = nx.minimum_spanning_tree(graph, algorithm="prim")
