@@ -21,6 +21,16 @@ AdjacencyList::AdjacencyList(size_t vertexCount, size_t edgeCount, bool directed
  * Clears the memory of the adjacency list
  */
 AdjacencyList::~AdjacencyList() {
+    clear();
+    delete[] m_list;
+}
+
+
+/**
+ * Clears the graph representation by deleting all edges but keeping
+ * the list intact for regenerting the graph with the same number of vertices and edges
+ */
+void AdjacencyList::clear() {
     for (size_t i = 0; i < m_numVertices; i++) {
         Edge* current = m_list[i];
         while (current != nullptr) {
@@ -28,8 +38,8 @@ AdjacencyList::~AdjacencyList() {
             current = current->next;
             delete del;
         }
+        m_list[i] = nullptr;
     }
-    delete[] m_list;
 }
 
 

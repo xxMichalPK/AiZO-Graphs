@@ -19,6 +19,8 @@ class AdjacencyList : public GraphRepr {
         AdjacencyList(size_t vertexCount, size_t edgeCount, bool directed = false);
         ~AdjacencyList();
 
+        virtual void clear() override;
+
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) override;
         virtual bool checkEdge(size_t startVertex, size_t endVertex) override;
 

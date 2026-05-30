@@ -18,6 +18,7 @@ class GraphRepr {
     
     public:
         virtual ~GraphRepr() = default;
+        virtual void clear() = 0;
 
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) = 0;
         virtual bool checkEdge(size_t startVertex, size_t endVertex) = 0;

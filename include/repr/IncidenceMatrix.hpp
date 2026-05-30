@@ -15,6 +15,8 @@ class IncidenceMatrix : public GraphRepr {
         IncidenceMatrix(size_t vertexCount, size_t edgeCount, bool directed = false);
         ~IncidenceMatrix();
 
+        virtual void clear() override;
+
         virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) override;
         virtual bool checkEdge(size_t startVertex, size_t endVertex) override;
 

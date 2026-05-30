@@ -32,6 +32,19 @@ IncidenceMatrix::~IncidenceMatrix() {
 
 
 /**
+ * Clears the graph representation by setting all weights to 0
+ */
+void IncidenceMatrix::clear() {
+    for (size_t i = 0; i < m_numVertices; i++) {
+        for (size_t j = 0; j < m_numEdges; j++) {
+            m_matrix[i][j] = 0;
+        }
+    }
+    m_currentEdgeIndex = 0;
+}
+
+
+/**
  * Adds an edge to the graph representation
  * 
  * @param startVertex start of the edge
