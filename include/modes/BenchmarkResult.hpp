@@ -12,8 +12,8 @@ class BenchmarkResult {
         size_t maxDuration = 0;
         size_t runCount = 0;
 
-        std::string algorithmId;
-        std::string representationId;
+        std::string algorithmId = "";
+        std::string representationId = "";
 
     public:
         BenchmarkResult() = default;
@@ -33,14 +33,17 @@ class BenchmarkResult {
         size_t min() const { return minDuration; }
         size_t max() const { return maxDuration; }
 
-        void setAlgorithmId(const std::string id) { algorithmId = id; }
-        void setRepresentationId(const std::string id) { representationId = id; }
+        void setAlgorithmId(const std::string& id) { algorithmId = id; }
+        void setRepresentationId(const std::string& id) { representationId = id; }
 
         const std::string& getAlgorithmId() const { return algorithmId; }
         const std::string& getRepresentationId() const { return representationId; }
 
         bool operator==(const BenchmarkResult& other) const {
             return algorithmId == other.algorithmId && representationId == other.representationId;
+        }
+        bool operator!=(const BenchmarkResult& other) const {
+            return algorithmId != other.algorithmId || representationId != other.representationId;
         }
 
 };
