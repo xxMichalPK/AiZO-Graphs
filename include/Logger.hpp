@@ -12,6 +12,10 @@
 #define LOG_COLOR_YELLOW "\033[0;33m"
 #define LOG_COLOR_WHITE "\033[0;37m"
 
+#define LOG_LINE_START "\r"
+#define LOG_LINE_CLEAR "\033[K"
+#define LOG_LINE_UP "\033[F"
+
 class Logger {
     private:
         static Logger* m_instance;
@@ -47,6 +51,10 @@ class Logger {
 
         template<typename Type, typename... Args>
         static void log(logType_t type, Type&& arg1, Args&&... arg2);
+
+        template<typename... Args>
+        static void logProgress(size_t current, size_t total, Args&&... args);
+
         void logBenchmark(const std::string& representationName, const std::string& algorithmName, size_t executionTime);
         void logBenchmark(const std::string& representationName, const std::string& algorithmName, size_t averageTime, size_t minTime, size_t maxTime);
         void logBenchmark(size_t executionTime);
@@ -104,6 +112,15 @@ void Logger::logln(logType_t type, Type&& arg1, Args&&... arg2) {
 
     // Print the other arguments recursively
     Logger::logln(Logger::NONE, arg2...);
+}
+
+template<typename... Args>
+void Logger::logProgress(size_t current, size_t total, Args&&... args) {
+    size_t percentage = total > 0 ? (current * 100) / total : 0;
+    std::cout << LOG_LINE_START << LOG_LINE_UP << LOG_LINE_CLEAR;
+    std::cout << "[" << LOG_COLOR_BLUE << std::setw(4) << percentage << "%" << LOG_COLOR_RESET << " ] ";
+    Logger::logln(Logger::NONE, args...);
+    std::cout.flush();
 }
 
 #endif // LOGGER_HPP
