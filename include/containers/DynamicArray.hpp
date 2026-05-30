@@ -13,6 +13,7 @@ class DynamicArray : public IndexedContainer<T> {
     public:
         DynamicArray(size_t initialSize);
         DynamicArray(size_t initialSize, T defaultValue);
+        DynamicArray(const DynamicArray<T> &other);
         DynamicArray() : DynamicArray(10) {}
         ~DynamicArray();
 
@@ -25,6 +26,9 @@ class DynamicArray : public IndexedContainer<T> {
         virtual void set(size_t index, T element) override;
         virtual void removeAt(size_t index) override;
         virtual bool contains(T element) override;
+
+        bool operator==(const DynamicArray<T> &other) const;
+        DynamicArray<T>& operator=(const DynamicArray<T> &other);
     
     protected:
         void resize(size_t newSize);
@@ -56,6 +60,15 @@ DynamicArray<T>::DynamicArray(size_t initialSize, T defaultValue) : m_currentSiz
         m_data[i] = defaultValue;
     }
     this->m_elementCount = m_currentSize;
+}
+
+template<typename T>
+DynamicArray<T>::DynamicArray(const DynamicArray<T>& other) : m_currentSize(other.m_currentSize) {
+    m_data = new T[m_currentSize]();
+    for (size_t i = 0; i < other.m_elementCount; i++) {
+        m_data[i] = other.m_data[i];
+    }
+    this->m_elementCount = other.m_elementCount;
 }
 
 
@@ -246,6 +259,49 @@ bool DynamicArray<T>::contains(T element) {
         if (m_data[i] == element) return true;
     }
     return false;
+}
+
+
+/**
+ * Checks if this dynamic array is equal to another dynamic array
+ * 
+ * @param other the dynamic array to compare with
+ * 
+ * @return true if the arrays are equal (have the same size and elements), false otherwise
+ */
+template<typename T>
+bool DynamicArray<T>::operator==(const DynamicArray<T> &other) const {
+    if (this->m_elementCount != other.m_elementCount) return false;
+
+    for (size_t i = 0; i < this->m_elementCount; i++) {
+        if (this->m_data[i] != other.m_data[i]) return false;
+    }
+    return true;
+}
+
+
+/**
+ * Assigns the contents of another dynamic array to this dynamic array
+ * 
+ * @param other the dynamic array to assign from
+ * 
+ * @return a reference to this dynamic array after assignment
+ */
+template<typename T>
+DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T> &other) {
+    if (this == &other) return *this;
+
+    delete[] m_data;
+    
+    m_currentSize = other.m_currentSize;
+    m_data = new T[m_currentSize]();
+
+    for (size_t i = 0; i < other.m_elementCount; i++) {
+        m_data[i] = other.m_data[i];
+    }
+
+    this->m_elementCount = other.m_elementCount;
+    return *this;
 }
 
 #endif // DYNAMICARRAY_HPP
