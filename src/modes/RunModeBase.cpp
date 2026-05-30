@@ -260,3 +260,36 @@ void RunModeBase::exportGraphImages(DynamicArray<GraphRepr*>* representations) {
     }
 #endif
 }
+
+
+size_t RunModeBase::getRequestedRepresentationCount() {
+    switch (Parameters::structure) {
+        case Parameters::Structures::adjacencyList:
+        case Parameters::Structures::incidenceMatrix:
+            return 1;
+        case Parameters::Structures::allStructures:
+            return 2;
+        default:
+            break;
+    }
+    return 0;
+}
+
+
+size_t RunModeBase::getRequestedAlgorithmCount() {
+    switch (Parameters::algorithm) {
+        case Parameters::Algorithms::prim:
+        case Parameters::Algorithms::kruskal:
+        case Parameters::Algorithms::dijkstra:
+        case Parameters::Algorithms::bellmanFord:
+        case Parameters::Algorithms::fordFulkerson:
+            return 1;
+        case Parameters::Algorithms::allAlgorithms:
+            if (Parameters::problem == Parameters::Problems::mst) return 2;
+            if (Parameters::problem == Parameters::Problems::sp) return 2;
+            if (Parameters::problem == Parameters::Problems::mf) return 1;
+        default:
+            break;
+    }
+    return 0;
+}

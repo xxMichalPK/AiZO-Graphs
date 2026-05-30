@@ -25,6 +25,9 @@ class RunModeBase {
         static void deleteAlgorithms(DynamicArray<GraphAlgorithmBase*>* algorithms);
     
         static void exportGraphImages(DynamicArray<GraphRepr*>* representations);
+
+        static size_t getRequestedRepresentationCount();
+        static size_t getRequestedAlgorithmCount();
         
     private:
         static bool confirmMatrixSize(size_t vertexCount, size_t edgeCount);
