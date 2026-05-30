@@ -68,6 +68,11 @@ int DijkstraSP::run() {
         for (size_t i = 0; i < neighbors.size(); i++) {
             size_t neighbor = neighbors.get(i);
             intmax_t edgeWeight = m_graph.getEdgeWeight(currentVertex, neighbor);
+            if (edgeWeight < 0) {
+                Logger::logln(Logger::ERROR, "Negative edge weight detected from vertex ", currentVertex, " to vertex ", neighbor);
+                return 1;
+            }
+            
             intmax_t newDistance = currentDistance + edgeWeight;
 
             // Check if we found a shorter path to the neighbor

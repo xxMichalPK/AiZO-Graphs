@@ -51,8 +51,8 @@ int BenchmarkMode::run() {
             GraphRepr &representation = *graphs->get(ri);
             DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(representation);
             if (algorithms == nullptr || algorithms->size() == 0) {
-                Logger::logln(Logger::WARNING, "Failed to create algorithms for representation ", representation.name());
-                continue;
+                Logger::logln(Logger::ERROR, "Failed to create algorithms for representation ", representation.name());
+                return 1;
             }
 
 
@@ -64,8 +64,8 @@ int BenchmarkMode::run() {
                 int success = alg.run();
                 timer.stop();
                 if (success != 0) {
-                    Logger::logln(Logger::WARNING, "Benchmark failed for algorithm ", alg.name(), " on representation ", representation.name());
-                    continue;
+                    Logger::logln(Logger::ERROR, "Benchmark failed for ", alg.name(), " on ", representation.name());
+                    return 1;
                 }
 
                 Logger::getInstance()->logBenchmark(representation.id(), alg.id(), timer.getDuration());

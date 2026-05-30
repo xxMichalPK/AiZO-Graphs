@@ -101,7 +101,7 @@ intmax_t IncidenceMatrix::getEdgeWeight(size_t startVertex, size_t endVertex) {
     }
 
     for (size_t i = 0; i < m_numEdges; i++) {
-        if ((m_matrix[startVertex][i] != 0) && (m_matrix[endVertex][i] != 0)) return m_matrix[startVertex][i];
+        if ((m_matrix[startVertex][i] > 0) && (m_matrix[endVertex][i] != 0)) return m_matrix[startVertex][i];
     }
     return 0;
 }
@@ -142,10 +142,10 @@ DynamicArray<size_t> IncidenceMatrix::getAdjacentVertices(size_t vertex) {
 
         // Get the adjacent vertex for this edge
         for (size_t adjacentVertex = 0; adjacentVertex < m_numVertices; adjacentVertex++) {
-            if (adjacentVertex != vertex && m_matrix[adjacentVertex][edgeIndex] != 0) {
-                adjacentVertices.push(adjacentVertex);
-                break;
-            }
+            if (adjacentVertex == vertex || m_matrix[adjacentVertex][edgeIndex] == 0) continue;
+            
+            adjacentVertices.push(adjacentVertex);
+            break;
         }
     }
     return adjacentVertices;

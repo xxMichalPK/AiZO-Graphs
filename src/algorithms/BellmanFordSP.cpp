@@ -47,6 +47,11 @@ int BellmanFordSP::run() {
             size_t u = edge.second().first();
             size_t v = edge.second().second();
 
+            // Even though Bellman-Ford supports negative weights, check if we really wanted them to appear
+            if (weight < 0) {
+                Logger::logln(Logger::WARNING, "Negative edge weight detected: ", weight, " on edge (", u, ", ", v, "). Check if you want that...");
+            }
+
             if (distance.get(u) != INTMAX_MAX && distance.get(v) > distance.get(u) + weight) {
                 distance.set(v, distance.get(u) + weight);
                 previous.set(v, u);
