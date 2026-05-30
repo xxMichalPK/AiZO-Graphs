@@ -36,68 +36,122 @@ int BenchmarkMode::run() {
     GraphGenerator::initialize();
 
     // Run the main benchmark loop
+    size_t currentRun = 1;
+    size_t totalRuns = Parameters::iterations * getRequestedRepresentationCount() * getRequestedAlgorithmCount();
     for (int i = 0; i < Parameters::iterations; i++) {
-        // Generate new graphs for each iteration
-        for (size_t gi = 0; gi < graphs->size(); gi++) {
-            graphs->get(gi)->clear();
-        }
-        if (!GraphGenerator::generate(*graphs, Parameters::vertexCount, edgeCount, directed)) {
-            Logger::logln(Logger::ERROR, "Failed to generate graph for iteration ", i + 1);
-            return 1;
-        }
-
-        for (size_t ri = 0; ri < graphs->size(); ri++) {
-            DynamicArray<BenchmarkResult> reprResults = results.get(ri);
-            GraphRepr &representation = *graphs->get(ri);
-            DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(representation);
-            if (algorithms == nullptr || algorithms->size() == 0) {
-                Logger::logln(Logger::ERROR, "Failed to create algorithms for representation ", representation.name());
-                return 1;
-            }
-
-
-            for (size_t ai = 0; ai < algorithms->size(); ai++) {
-                GraphAlgorithmBase &alg = *algorithms->get(ai);
-
-                Timer timer;
-                timer.start();
-                int success = alg.run();
-                timer.stop();
-                if (success != 0) {
-                    Logger::logln(Logger::ERROR, "Benchmark failed for ", alg.name(), " on ", representation.name());
-                    return 1;
-                }
-
-                Logger::getInstance()->logBenchmark(representation.id(), alg.id(), timer.getDuration());
-
-                // Store the benchmark result
-                BenchmarkResult result = reprResults.get(ai);
-                result.append(timer.getDuration());
-                result.setAlgorithmId(alg.id());
-                result.setRepresentationId(representation.id());
-                reprResults.set(ai, result);
-
-                Logger::logln(Logger::INFO, "Iteration ", i + 1, "/", Parameters::iterations, ": Algorithm ", alg.name(),
-                              " on representation ", representation.name(), " took ", timer.getDuration(), "us");
-            }
-
-            results.set(ri, reprResults);
-            deleteAlgorithms(algorithms);
-        }
+        // Run the benchmark for single iteration and continue on success
+        if (benchmarkIteration(graphs, results, currentRun, totalRuns)) continue;
+        
+        // If it failed, log the error and exit
+        Logger::logln(Logger::ERROR, "Benchmark iteration ", i + 1, " failed!");
+        deleteRepresentations(graphs);
+        return 1;
     }
 
-    for (size_t r1 = 0; r1 < results.size(); r1++) {
-        const DynamicArray<BenchmarkResult> &reprResults = results.get(r1);
-
-        for (size_t r2 = 0; r2 < reprResults.size(); r2++) {
-            const BenchmarkResult &result = reprResults.get(r2);
-            Logger::getInstance()->logBenchmark(result.getRepresentationId(), result.getAlgorithmId(), result.avg(), result.min(), result.max());
-        }
-    }
+    // Log the summary
+    Logger::logln(Logger::OK, "Benchmark completed! Logging summary...");
+    logSummary(results);
 
     // Clean up
     deleteRepresentations(graphs);
     return 0;
+}
+
+
+/**
+ * Benchmarks a single iteration of representation-algorithm combinations and updates the benchmark results
+ * 
+ * @param graphs the graph representations to be benchmarked on
+ * @param results the benchmark results to be updated with the new measurements
+ * @param currentRun the current run number
+ * @param totalRuns the total number of runs
+ * 
+ * @returns true if the benchmark was successful, false otherwise
+ */
+bool BenchmarkMode::benchmarkIteration(DynamicArray<GraphRepr*>* graphs, DynamicArray<DynamicArray<BenchmarkResult>>& results, size_t& currentRun, size_t totalRuns) {
+    // Regenerate the graphs for the current iteration
+    if (!regenerateGraphs(graphs)) {
+        Logger::logln(Logger::ERROR, "Failed to regenerate graphs for iteration ", currentRun / Parameters::iterations + 1);
+        return false;
+    }
+
+    // Run the benchmark for each representation and update results
+    for (size_t ri = 0; ri < graphs->size(); ri++) {
+        GraphRepr &representation = *graphs->get(ri);
+        
+        // Benchmark current representation and update results
+        DynamicArray<BenchmarkResult> reprResults = results.get(ri);
+        if (!benchmarkRepresentation(representation, reprResults, currentRun, totalRuns)) return false;
+        results.set(ri, reprResults);
+    }
+    return true;
+}
+
+
+/**
+ * Benchmarks all algorithms on a single representation and updates the benchmark results
+ * 
+ * @param representation the graph representation to be benchmarked on
+ * @param results the benchmark results to be updated with the new measurements
+ * @param currentRun the current run number
+ * @param totalRuns the total number of runs
+ * 
+ * @returns true if the benchmark was successful, false otherwise
+ */
+bool BenchmarkMode::benchmarkRepresentation(GraphRepr& representation, DynamicArray<BenchmarkResult>& results, size_t& currentRun, size_t totalRuns) {
+    DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(representation);
+    if (algorithms == nullptr || algorithms->size() == 0) {
+        Logger::logln(Logger::ERROR, "Failed to create algorithms for representation ", representation.name());
+        return false;
+    }
+
+    // Run the benchmark for each algorithm on the current representation
+    for (size_t ai = 0; ai < algorithms->size(); ai++) {
+        GraphAlgorithmBase &algorithm = *algorithms->get(ai);
+        // Log the progress of the benchmark
+        Logger::logProgress(currentRun, totalRuns, "Running ", algorithm.name(), " on ", representation.name(), " (", currentRun, "/", totalRuns, ")");
+        
+        // Run the benchmark and update results
+        BenchmarkResult result = results.get(ai);
+        if (!benchmarkAlgorithm(algorithm, representation, result)) {
+            deleteAlgorithms(algorithms);   
+            return false;
+        }
+        results.set(ai, result);
+        currentRun++;
+    }
+
+    deleteAlgorithms(algorithms);
+    return true;
+}
+
+
+/**
+ * Benchmarks a single iteration of one algorithm on one representation and updates the benchmark results
+ * 
+ * @param algorithm the algorithm to be benchmarked
+ * @param representation the graph representation to be benchmarked on
+ * @param result the benchmark result to be updated with the new measurement
+ * 
+ * @returns true if the benchmark was successful, false otherwise
+ */
+bool BenchmarkMode::benchmarkAlgorithm(GraphAlgorithmBase& algorithm, GraphRepr& representation, BenchmarkResult& result) {
+    Timer timer;
+    timer.start();
+    int success = algorithm.run();
+    timer.stop();
+    if (success != 0) {
+        Logger::logln(Logger::ERROR, "Benchmark failed for ", algorithm.name(), " on ", representation.name());
+        return false;
+    }
+
+    Logger::getInstance()->logBenchmark(representation.id(), algorithm.id(), timer.getDuration());
+
+    // Store the benchmark result
+    result.append(timer.getDuration());
+    result.setAlgorithmId(algorithm.id());
+    result.setRepresentationId(representation.id());
+    return true;
 }
 
 
@@ -145,6 +199,23 @@ DynamicArray<GraphRepr*>* BenchmarkMode::createGraphs(size_t edgeCount, bool dir
 }
 
 
+bool BenchmarkMode::regenerateGraphs(DynamicArray<GraphRepr*>* graphs) {
+    size_t edgeCount = graphs->get(0)->getEdgeCount();
+    bool directed = isDirected();
+
+    // Clear existing data from the graphs
+    for (size_t gi = 0; gi < graphs->size(); gi++) {
+        graphs->get(gi)->clear();
+    }
+
+    // Generate new graphs with the same parameters
+    if (!GraphGenerator::generate(*graphs, Parameters::vertexCount, edgeCount, directed)) {
+        Logger::logln(Logger::ERROR, "Failed to generate graph");
+        return false;
+    }
+    return true;
+}
+
 
 /**
  * Calculates the number of edges in a graph based on the provided graph density
@@ -165,4 +236,18 @@ size_t BenchmarkMode::calculateEdgeCount(size_t vertexCount, int density) {
     }
 
     return (size_t)((d_density * vertexCount * (vertexCount - 1)) / 2.);
+}
+
+
+void BenchmarkMode::logSummary(const DynamicArray<DynamicArray<BenchmarkResult>>& results) {
+    for (size_t r1 = 0; r1 < results.size(); r1++) {
+        const DynamicArray<BenchmarkResult> &reprResults = results.get(r1);
+
+        for (size_t r2 = 0; r2 < reprResults.size(); r2++) {
+            const BenchmarkResult &result = reprResults.get(r2);
+            Logger::getInstance()->logBenchmark(result.getRepresentationId(), result.getAlgorithmId(), result.avg(), result.min(), result.max());
+            Logger::logln(Logger::OK, "Summary for ", result.getAlgorithmId(), " on ", result.getRepresentationId(), ": avg = ", result.avg(),
+                          "us, min = ", result.min(), "us, max = ", result.max(), "us");
+        }
+    }
 }
