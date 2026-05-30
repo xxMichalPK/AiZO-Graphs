@@ -1,4 +1,5 @@
 #include "BenchmarkMode.hpp"
+#include "BenchmarkResult.hpp"
 #include "Parameters.h"
 
 #include "Logger.hpp"
@@ -13,129 +14,126 @@
  * @returns 0 on success, other value on failure
  */
 int BenchmarkMode::run() {
-    // Validate parameters
-    if (Parameters::vertexCount <= 0 || Parameters::density <= 0) {
-        Logger::logln(Logger::ERROR, "Incorrect vertex number or density specified!");
-        return 1;
-    }
-
-    if (Parameters::resultsFile.empty()) {
-        Logger::logln(Logger::ERROR, "No results file provided!");
-        return 1;
-    }
-
+    if (!validateParameters()) return 1;
+    
     // Set the log file for benchmark results
     Logger::getInstance()->setLogFile(Parameters::resultsFile);
-
-    // Create and generate the graph
-    DynamicArray<GraphRepr*>* representations = createAndGenerateGraphs();
+    
+    // Calculate the number of edges based on the required density and vertex count
+    size_t edgeCount = calculateEdgeCount(Parameters::vertexCount, Parameters::density);
+    
+    // Create representations
+    bool directed = isDirected();
+    DynamicArray<GraphRepr*>* representations = createGraphs(edgeCount, directed);
     if (representations == nullptr || representations->size() == 0) return 1;
 
-    // Perform benchmarks for all representations and algorithms
-    for (size_t ri = 0; ri < representations->size(); ri++) {
-        GraphRepr& currentRepr = *representations->get(ri);
-
-        // Create all requested algorithms
-        DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(currentRepr);
-        if (algorithms == nullptr) {
-            Logger::logln(Logger::ERROR, "Failed to create algorithms for ", currentRepr.name());
-            return 1;
-        }
-
-        // Run benchmarks for all algorithms
-        for (size_t ai = 0; ai < algorithms->size(); ai++) {
-            GraphAlgorithmBase& algorithm = *algorithms->get(ai);
-
-            // Banchmark the algorithm on the current representation and check the result
-            bool success = benchmarkAlgorithm(algorithm, currentRepr);
-            if (!success) {
-                Logger::logln(Logger::ERROR, "Failed to benchmark ", algorithm.name(), " on ", currentRepr.name());
-                return 1;
+    // Run the main benchmark loop
+    DynamicArray<DynamicArray<BenchmarkResult>*> results(representations->size(), nullptr);
+    for (int i = 0; i < Parameters::iterations; i++) {
+        for (size_t ri = 0; ri < representations->size(); ri++) {
+            GraphRepr &repr = *representations->get(ri);
+            DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(repr);
+            if (algorithms == nullptr || algorithms->size() == 0) {
+                Logger::logln(Logger::WARNING, "Failed to create algorithms for representation ", repr.name());
+                continue;
             }
-        }
 
-        // Safely delete all algorithms
-        deleteAlgorithms(algorithms);
+            // Create a results array for the current representation if it doesn't exist
+            if (results.get(ri) == nullptr) {
+                results.set(ri, new DynamicArray<BenchmarkResult>(algorithms->size(), {}));
+            }
+            DynamicArray<BenchmarkResult>* reprResults = results.get(ri);
+
+            for (size_t ai = 0; ai < algorithms->size(); ai++) {
+                GraphAlgorithmBase &alg = *algorithms->get(ai);
+
+                Timer timer;
+                timer.start();
+                int success = alg.run();
+                timer.stop();
+                if (success != 0) {
+                    Logger::logln(Logger::WARNING, "Benchmark failed for algorithm ", alg.name(), " on representation ", repr.name());
+                    continue;
+                }
+
+                Logger::getInstance()->logBenchmark(repr.id(), alg.id(), timer.getDuration());
+
+                // Store the benchmark result
+                BenchmarkResult result = reprResults->get(ai);
+                result.append(timer.getDuration());
+                result.setAlgorithmId(alg.id());
+                result.setRepresentationId(repr.id());
+                reprResults->set(ai, result);
+                
+                Logger::logln(Logger::INFO, "Iteration ", i + 1, "/", Parameters::iterations, ": Algorithm ", alg.name(),
+                              " on representation ", repr.name(), " took ", timer.getDuration(), "us");
+            }
+
+            deleteAlgorithms(algorithms);
+        }
     }
 
-    // If it's supported and the graph is small export it as an image
-    exportGraphImages(representations);
+    for (size_t r1 = 0; r1 < results.size(); r1++) {
+        DynamicArray<BenchmarkResult>* reprResults = results.get(r1);
+        if (reprResults == nullptr) continue;
 
-    // Cleanup representations and return
+        for (size_t r2 = 0; r2 < reprResults->size(); r2++) {
+            const BenchmarkResult &result = reprResults->get(r2);
+            Logger::getInstance()->logBenchmark(result.getRepresentationId(), result.getAlgorithmId(), result.avg(), result.min(), result.max());
+        }
+
+        delete reprResults;
+    }
+
+    // Clean up
     deleteRepresentations(representations);
     return 0;
 }
 
 
 /**
- * Benchmarks the specified algorithm on the specified graph representation
+ * Helper function that validates the provided benchmark parameters
  * 
- * @param algorithm the algorithm to benchmark
- * @param representation the graph representation on which to benchmark the algorithm
- * 
- * @returns true if the benchmark was successful, false otherwise
+ * @returns true if all parameters are valid, false otherwise
  */
-bool BenchmarkMode::benchmarkAlgorithm(GraphAlgorithmBase& algorithm, GraphRepr& representation) {
-    Timer timer;
-
-    size_t totalDuration = 0;
-    size_t minDuration = SIZE_MAX;
-    size_t maxDuration = 0;
-
-    GraphAlgorithmResult* initialResult = nullptr;
-
-    const std::string& algName = algorithm.name();
-    const std::string& reprName = representation.name();
-
-    // Loop for the specified number of iterations
-    for (int i = 0; i < Parameters::iterations; i++) {
-        timer.start();
-        int runResult = algorithm.run();
-        timer.stop();
-        if (runResult != 0) {
-            Logger::logln(Logger::ERROR, algName, " failed to run on ", reprName);
-            return false;
-        }
-
-        GraphAlgorithmResult& algResult = algorithm.result();
-        if (initialResult == nullptr) {
-            initialResult = &algResult;
-        } else if (initialResult->cost() != algResult.cost()) {
-            Logger::logln(Logger::ERROR, algName, " produced different results on iteration ", i);
-            return false;
-        }
-
-        size_t duration = timer.getDuration();
-        Logger::getInstance()->logBenchmark(representation.id(), algorithm.id(), duration);
-
-        totalDuration += duration;
-        minDuration = duration < minDuration ? duration : minDuration;
-        maxDuration = duration > maxDuration ? duration : maxDuration;
+bool BenchmarkMode::validateParameters() {
+    if (Parameters::vertexCount <= 0 || Parameters::density <= 0) {
+        Logger::logln(Logger::ERROR, "Incorrect vertex number or density specified!");
+        return false;
     }
 
-    Logger::logln(Logger::OK, algName, " ran successfully on ", reprName, ". ", *initialResult);
-    Logger::logln(Logger::INFO, "Average execution time: ", totalDuration / Parameters::iterations, "us");
-    Logger::logln(Logger::INFO, "Minimum execution time: ", minDuration, "us");
-    Logger::logln(Logger::INFO, "Maximum execution time: ", maxDuration, "us");
-
-    // Write the benchmark results to the log file
-    Logger::getInstance()->logBenchmark(representation.id(), algorithm.id(), totalDuration / Parameters::iterations, minDuration, maxDuration);
-
+    if (Parameters::resultsFile.empty()) {
+        Logger::logln(Logger::ERROR, "No results file provided!");
+        return false;
+    }
     return true;
 }
 
 
+// /**
+//  * Benchmarks the specified algorithm on the specified graph representation
+//  * 
+//  * @param algorithm the algorithm to benchmark
+//  * @param representation the graph representation on which to benchmark the algorithm
+//  * 
+//  * @returns true if the benchmark was successful, false otherwise
+//  */
+// bool BenchmarkMode::benchmarkAlgorithm(GraphAlgorithmBase& algorithm, GraphRepr& representation) {
+//     Timer timer;
+
+
+//     return true;
+// }
+
+
 /**
- * Creates and generates data for all requested graph representations
+ * Creates all requested graph representations
  *
  * @returns a dynamic array of graph representations, or nullptr if something went wrong
  */
-DynamicArray<GraphRepr*>* BenchmarkMode::createAndGenerateGraphs() {
-    bool directed = isDirected();
+DynamicArray<GraphRepr*>* BenchmarkMode::createGraphs(size_t edgeCount, bool directed) {
+    // Log information about the graph to be created
     const char* directedStr = directed ? "A directed" : "An undirected";
-
-    // Calculate the number of edges based on the required density and vertex count
-    size_t edgeCount = calculateEdgeCount(Parameters::vertexCount, Parameters::density);
     Logger::logln(Logger::INFO, directedStr, " graph with ", Parameters::vertexCount, " vertices and density ",
                                 Parameters::density, " should have ", edgeCount, " edges.");
     
@@ -149,17 +147,9 @@ DynamicArray<GraphRepr*>* BenchmarkMode::createAndGenerateGraphs() {
     Logger::logln(Logger::OK, "Created representation(s) for a graph with ",
                   Parameters::vertexCount, " vertices and ", edgeCount, " edges");
 
-
-    // Generate graph data
-    bool success = GraphGenerator::generate(*representations, Parameters::vertexCount, edgeCount, directed);
-    if (!success) {
-        Logger::logln(Logger::ERROR, "Failed to generate a graph with provided parameters!");
-        return nullptr;
-    }
-    Logger::logln(Logger::OK, "Generated random graph data into representation(s)");
     return representations;
 }
-    
+
 
 
 /**

@@ -11,9 +11,9 @@ class BenchmarkMode : public RunModeBase {
         static int run();
     
     private:
+        static bool validateParameters();
         static size_t calculateEdgeCount(size_t vertexCount, int density);
-        static bool benchmarkAlgorithm(GraphAlgorithmBase& algorithm, GraphRepr& representation);
-        static DynamicArray<GraphRepr*>* createAndGenerateGraphs();
+        static DynamicArray<GraphRepr*>* createGraphs(size_t edgeCount, bool directed);
 };
 
 #endif // BENCHMARKMODE_HPP
