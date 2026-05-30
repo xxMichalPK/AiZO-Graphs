@@ -139,3 +139,23 @@ Basically in order to actually run the algorithms we have to implement some stru
 - [✅] Add all missing comments
 - [✅] Define a standard result output structure
 - [✅] Add result printing to a file
+
+---
+
+## 2026-05-29 - Python testing and benchmark mode
+
+### Tasks
+
+- [✅] Add simple result testing in python using networkx
+- [✅] Implement a basic benchmark run mode
+
+---
+
+## 2026-05-30 - Full benchmark mode redesign
+
+### Tasks
+
+- [✅] Reimplement benchmark mode to adhere to the help run mode
+- [✅] Add progress logging to Logger class
+- [✅] Improve overall logging
+- [✅] Bugfix negative weights appearing in incidence matrix
