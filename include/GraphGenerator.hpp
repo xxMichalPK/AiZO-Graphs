@@ -3,10 +3,12 @@
 
 #include "DynamicArray.hpp"
 #include "GraphRepr.hpp"
+#include <ctime>
 
 class GraphGenerator {
     public:
         GraphGenerator() = delete;
+        static void initialize(unsigned int seed = std::time(nullptr));
         static bool generate(DynamicArray<GraphRepr*> &representations, size_t vertexCount, size_t edgeCount, bool directed = false);
     
     private:

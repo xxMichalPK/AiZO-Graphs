@@ -4,6 +4,15 @@
 #include <random>
 
 /**
+ * Initializes the random seed for graph generation
+ * 
+ * @param seed the seed to use for random number generation, defaults to the current time
+ */
+void GraphGenerator::initialize(unsigned int seed) {
+    std::srand(seed);
+}
+
+/**
  * Generates a connected graph based on provided arguments and parsed parameters
  * 
  * @param representations a dynamic array of graph representations to fill with data
@@ -36,8 +45,6 @@ bool GraphGenerator::generateDirected(DynamicArray<GraphRepr*> &representations,
                                     edgeCount, " edges!");
         return false;
     }
-
-    std::srand(std::time(nullptr));
 
     // In a directed graph we have to connect all the points (maybe other algorithm in the future)
     size_t prevStart = 0;
@@ -110,7 +117,6 @@ bool GraphGenerator::generateUndirected(DynamicArray<GraphRepr*> &representation
         freeVertices.insert(i);
     }
 
-    std::srand(std::time(nullptr));
     // Insert the starting vertex manually
     int vertexIdx = std::rand() % freeVertices.size();
     size_t vertexValue = freeVertices.get(vertexIdx);
