@@ -35,7 +35,8 @@ class PriorityQueue : public BaseContainer<T> {
         void resize(size_t newSize);
 
         void swap(size_t idx1, size_t idx2);
-        void minHeapify(size_t parentIdx, bool moveBack = false);
+        void heapifyUp(size_t nodeIdx);
+        void heapifyDown(size_t nodeIdx);
 
 };
 
@@ -122,64 +123,53 @@ void PriorityQueue<T>::resize(size_t newSize) {
 }
 
 /**
- * Restores the min-heap property using the Floyd algorithm
+ * Restores the min-heap property after inserting a new element into the priority queue
  * 
- * @param parentIdx the index of the parent to check
- * @param moveBack whether to call the function recurrently for the index before the parentIdx or not
+ * @param nodeIdx the index of the node to start the min-heapify from
  */
 template<typename T>
-void PriorityQueue<T>::minHeapify(size_t parentIdx, bool moveBack) {
-    size_t leftIdx = leftChild(parentIdx);
-    if (leftIdx >= this->m_elementCount) return;
+void PriorityQueue<T>::heapifyUp(size_t nodeIdx) {
+    // If we ar on the root node we can return
+    if (nodeIdx == 0) return;
+    
+    size_t parentIdx = parent(nodeIdx);
 
-    // In theory we can have a left child but not a right one so we need to have some flag
-    bool rightPresent = true;
-    size_t rightIdx = rightChild(parentIdx);
-    if (rightIdx >= this->m_elementCount) rightPresent = false;
+    // Check if the parent is smaller than the current node if yes we can return
+    if (m_data[parentIdx] <= m_data[nodeIdx]) return;
 
-    // Check if any child is smaller than the parent
-    T parentValue = m_data[parentIdx];
-    T leftChildValue = m_data[leftIdx];
-    T rightChildValue = rightPresent ? m_data[rightIdx] : T();
+    // If not we need to swap and call minHeapify again for the parent
+    swap(parentIdx, nodeIdx);
+    heapifyUp(parentIdx);
+}
 
-    // Start by checking the left side
-    if (leftChildValue < parentValue) {
-        // Left is smallest, check right
-        if (rightPresent && rightChildValue < leftChildValue) {
-            // Right is smallest so swap the right child
-            swap(parentIdx, rightIdx);
-            minHeapify(rightIdx);
-        } else {
-            // Swap the left child
-            swap(parentIdx, leftIdx);
-            minHeapify(leftIdx);
-        }
+/**
+ * Restores the min-heap property after removing an element from the priority queue
+ * 
+ * @param nodeIdx the index of the node to start the min-heapify from
+ */
+template<typename T>
+void PriorityQueue<T>::heapifyDown(size_t nodeIdx) {
+    size_t leftChildIdx = leftChild(nodeIdx);
+    size_t rightChildIdx = rightChild(nodeIdx);
 
-        // If this was not the root run the heapify method again (if we should)
-        if (moveBack && parentIdx != 0) {
-            minHeapify(parentIdx - 1, true);
-        }
-        return;
+    // If we are on a leaf node we can return
+    if (leftChildIdx >= this->m_elementCount) return;
+
+    // We need to find the smallest of the current node and its children
+    size_t smallestIdx = nodeIdx;
+    if (m_data[leftChildIdx] < m_data[smallestIdx]) {
+        smallestIdx = leftChildIdx;
+    }
+    if (rightChildIdx < this->m_elementCount && m_data[rightChildIdx] < m_data[smallestIdx]) {
+        smallestIdx = rightChildIdx;
     }
 
-    // Now the same applies to the right
-    if (rightPresent && rightChildValue < parentValue) {
-        // Left is smallest, check right
-        if (leftChildValue < rightChildValue) {
-            // Swap the left child
-            swap(parentIdx, leftIdx);
-            minHeapify(leftIdx);
-        } else {
-            // Right is smallest so swap the right child
-            swap(parentIdx, rightIdx);
-            minHeapify(rightIdx);
-        }
-    }
+    // If the smallest is the current node we can return
+    if (smallestIdx == nodeIdx) return;
 
-    // If this was not the root run the heapify method again (if we should)
-    if (moveBack && parentIdx != 0) {
-        minHeapify(parentIdx - 1, true);
-    }
+    // If not we need to swap and call minHeapify again for the smallest
+    swap(smallestIdx, nodeIdx);
+    heapifyDown(smallestIdx);
 }
 
 /**
@@ -192,7 +182,8 @@ void PriorityQueue<T>::push(T element) {
     // Check if we have space to insert the new element
     if (this->m_elementCount >= m_memorySize) {
         // If not resize it to 2 times the size
-        resize(m_memorySize * 2);
+        size_t newSize = m_memorySize == 0 ? 1 : m_memorySize * 2;
+        resize(newSize);
     }
 
     // Put the element into the array
@@ -200,9 +191,7 @@ void PriorityQueue<T>::push(T element) {
     this->m_elementCount++;
 
     // Now the fun part, we need to restore the heap property
-    // We need to get the last parent
-    size_t initialParentIdx = parent(this->m_elementCount - 1); // This is the last inserted element's parent
-    minHeapify(initialParentIdx, true);
+    heapifyUp(this->m_elementCount - 1);
     // So that should be it, we'll see...
 }
 
@@ -222,9 +211,8 @@ void PriorityQueue<T>::pop() {
     // Clear the element completely
     m_data[this->m_elementCount] = T();
 
-    // Restore the heap property
-    size_t initialParentIdx = parent(this->m_elementCount - 1);
-    minHeapify(initialParentIdx, true);
+    // Restore the heap property by calling heapifyDown from the root node
+    heapifyDown(0);
 }
 
 /**
@@ -252,9 +240,8 @@ T PriorityQueue<T>::getBack() {
     // but we can cheat by just looking for the max one
 
     // ATTENTION: This is only for the min-heap idk if I'll implement a max one but have that in mind
-    T maxVal = T();
-    size_t lastParentIdx = parent(this->m_elementCount - 1);
-    for (size_t i = lastParentIdx; i < this->m_elementCount; i++) {
+    T maxVal = m_data[0];
+    for (size_t i = 1; i < this->m_elementCount; i++) {
         if (m_data[i] <= maxVal) continue;
         maxVal = m_data[i];
     }
