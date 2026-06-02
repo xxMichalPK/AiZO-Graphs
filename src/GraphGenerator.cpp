@@ -9,6 +9,7 @@
  * @param seed the seed to use for random number generation, defaults to the current time
  */
 void GraphGenerator::initialize(unsigned int seed) {
+    Logger::logln(Logger::INFO, "Initializing graph generator with seed ", seed);
     std::srand(seed);
 }
 

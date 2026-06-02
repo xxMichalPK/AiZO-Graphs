@@ -33,7 +33,11 @@ int BenchmarkMode::run() {
     );
 
     // Initialize the graph generator
-    GraphGenerator::initialize();
+    uint64_t generatorSeed = static_cast<uint64_t>(std::time(nullptr));
+    if (Parameters::seed != -1) {
+        generatorSeed = static_cast<uint64_t>(Parameters::seed);
+    }
+    GraphGenerator::initialize((unsigned int)generatorSeed);
 
     // Run the main benchmark loop
     size_t currentRun = 1;
@@ -51,6 +55,8 @@ int BenchmarkMode::run() {
     // Log the summary
     Logger::logln(Logger::OK, "Benchmark completed! Logging summary...");
     logSummary(results);
+
+    exportGraphImages(graphs);
 
     // Clean up
     deleteRepresentations(graphs);
