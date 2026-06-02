@@ -117,6 +117,8 @@ void Logger::logBenchmarkCommon(std::ofstream& logFile) {
         logFile << m_argv[i];
         if (i < m_argc - 1) logFile << " ";
     }
+
+    logFile << "," << (uint64_t)Parameters::seed;
 }
 
 /**
@@ -128,7 +130,7 @@ void Logger::writeBenchmarkHeader(std::ofstream& logFile) {
     // Check if the file is open or has content, if not write the header
     if (!logFile.is_open() || logFile.tellp() != 0) return;
 
-    logFile << "DATE,TIME,ARGUMENTS,REPRESENTATION,ALGORITHM,VERTICES,DENSITY,TYPE,EXECUTION TIME (us),AVERAGE (us),MIN (us),MAX (us)\n";
+    logFile << "DATE,TIME,ARGUMENTS,SEED,REPRESENTATION,ALGORITHM,VERTICES,DENSITY,TYPE,EXECUTION TIME (us),AVERAGE (us),MIN (us),MAX (us)\n";
 }
 
 /**

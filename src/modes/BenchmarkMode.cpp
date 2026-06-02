@@ -36,6 +36,9 @@ int BenchmarkMode::run() {
     uint64_t generatorSeed = static_cast<uint64_t>(std::time(nullptr));
     if (Parameters::seed != -1) {
         generatorSeed = static_cast<uint64_t>(Parameters::seed);
+    } else {
+        // Save the generated seed for logging purposes
+        Parameters::seed = (int64_t)generatorSeed;
     }
     GraphGenerator::initialize((unsigned int)generatorSeed);
 
