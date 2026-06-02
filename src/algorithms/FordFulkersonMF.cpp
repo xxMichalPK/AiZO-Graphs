@@ -61,8 +61,6 @@ int FordFulkersonMF::run() {
         return 1;
     }
 
-    m_residualGraph->exportToGraphviz("residual_graph_initial.dot");
-
     m_result.maxFlow = 0;
 
     size_t vertexCount = m_residualGraph->getVertexCount();
@@ -115,13 +113,14 @@ intmax_t FordFulkersonMF::dfsSolve(size_t vertex, intmax_t flow, DynamicArray<si
     // Get the neighbors of the vertex
     DynamicArray<size_t> neighbors = m_residualGraph->getAdjacentVertices(vertex);
     for (size_t i = 0; i < neighbors.size(); i++) {
-        size_t neighbor = neighbors.get(i);
+        const size_t& neighbor = neighbors.get(i);
+        const size_t& neighborToken = visited.get(neighbor);
 
         // Check if the neighbor is not visited and there is available capacity
         intmax_t capacity = m_residualGraph->getEdgeWeight(vertex, neighbor);
-        if (capacity > 0 && visited.get(neighbor) != m_visitedToken) {
+        if (capacity > 0 && neighborToken != m_visitedToken) {
             // Get the minimum flow and calculate the bottleneck flow
-            intmax_t minFlow = std::min(flow, capacity);
+            intmax_t minFlow = flow < capacity ? flow : capacity;
             intmax_t bottleneck = dfsSolve(neighbor, minFlow, visited);
 
             // If there's a bottleneck, update the flow in the graph
