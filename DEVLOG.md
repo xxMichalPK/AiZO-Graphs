@@ -167,3 +167,13 @@ Basically in order to actually run the algorithms we have to implement some stru
 ### Tasks
 
 - [✅] Finally fix the bad priority queue implementation
+
+---
+
+## 2026-06-02 - Library update and Ford-Fulkerson refinement
+
+### Tasks
+
+- [✅] Create a PR for new version of libparameters
+- [✅] Integrate user-provided seeds into benchmark mode
+- [❌] Implement a BFS-based Ford-Fulkerson (the DFS approach is horrible)
