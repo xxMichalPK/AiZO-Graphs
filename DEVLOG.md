@@ -176,4 +176,14 @@ Basically in order to actually run the algorithms we have to implement some stru
 
 - [✅] Create a PR for new version of libparameters
 - [✅] Integrate user-provided seeds into benchmark mode
-- [❌] Implement a BFS-based Ford-Fulkerson (the DFS approach is horrible)
+- [⏩] Implement a BFS-based Ford-Fulkerson (the DFS approach is horrible)
+
+---
+
+## 2026-06-02 - Ford-Fulkerson improvements
+
+### Tasks
+
+- [✅] Implement Edmonds-Karp optimization (BFS Ford-Fulkerson)
+- [❌] Implement stack
+- [❌] Refine DFS version to use iteration and prevent recursion segfaults

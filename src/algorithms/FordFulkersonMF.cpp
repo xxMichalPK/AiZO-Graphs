@@ -4,8 +4,12 @@
 #include "FordFulkersonMF.hpp"
 #include "AdjacencyList.hpp"
 #include "IncidenceMatrix.hpp"
+#include "Queue.hpp"
 
 #include "Logger.hpp"
+
+
+#define USE_EDMONDS_KARP_OPTIMIZATION 1
 
 
 /**
@@ -33,6 +37,19 @@ FordFulkersonMF::FordFulkersonMF(GraphRepr& graph) : GraphAlgorithmBase("Ford-Fu
         intmax_t weight = edges.get(i).first();
         size_t startVertex = edges.get(i).second().first();
         size_t endVertex = edges.get(i).second().second();
+
+        // There's an edge case if the original graph contains edges in both directions
+        // If this happens try to work around it by changing the residual weight
+        if (m_residualGraph->checkEdge(startVertex, endVertex)) {
+            intmax_t existingWeight = m_residualGraph->getEdgeWeight(startVertex, endVertex);
+            if (existingWeight == 0) {
+                m_residualGraph->setEdgeWeight(startVertex, endVertex, weight);
+            } else {
+                Logger::logln(Logger::WARNING, "Duplicate edge found in the original graph: ", startVertex, " -> ", endVertex,
+                                               ". Expect problems!");
+            }
+            continue;
+        }
 
         // Add the edge to the residual graph with the same capacity
         m_residualGraph->addEdge(startVertex, endVertex, weight);
@@ -64,7 +81,6 @@ int FordFulkersonMF::run() {
     m_result.maxFlow = 0;
 
     size_t vertexCount = m_residualGraph->getVertexCount();
-    DynamicArray<size_t> visited(vertexCount, 0);
 
     int source = Parameters::vertexStart;
     if (source < 0 || (size_t)source >= vertexCount) {
@@ -80,11 +96,30 @@ int FordFulkersonMF::run() {
 
     // Run the Ford-Fulkerson algorithm using DFS
     intmax_t flow = 0;
+#if !USE_EDMONDS_KARP_OPTIMIZATION
+    DynamicArray<size_t> visited(vertexCount, 0);
     do {
         flow = dfsSolve(source, sink, INTMAX_MAX, visited);
         m_result.maxFlow += flow;
         m_visitedToken++;
     } while (flow > 0);
+#else
+    DynamicArray<size_t> parent(vertexCount, SIZE_MAX);
+    while ((flow = bfsSolve(source, sink, parent)) > 0) {
+        m_result.maxFlow += flow;
+
+        size_t current = sink;
+        while (current != (size_t)source) {
+            size_t previous = parent.get(current);
+            intmax_t forward = m_residualGraph->getEdgeWeight(previous, current);
+            intmax_t reverse = m_residualGraph->getEdgeWeight(current, previous);
+
+            m_residualGraph->setEdgeWeight(previous, current, forward - flow);
+            m_residualGraph->setEdgeWeight(current, previous, reverse + flow);
+            current = previous;
+        }
+    }
+#endif
 
     m_resultReady = true;
     return 0;
@@ -136,6 +171,60 @@ intmax_t FordFulkersonMF::dfsSolve(size_t source, size_t sink, intmax_t flow, Dy
 
     return 0;
 }
+
+
+/**
+ * Performs a breadth-first search to find an augmenting path in the residual graph and returns the bottleneck flow of that path
+ * 
+ * @param source the source vertex
+ * @param sink the sink vertex
+ * @param flow the current flow being sent through the path
+ * @param visited an array to keep track of visited vertices during the BFS
+ * 
+ * @returns the bottleneck flow of the augmenting path found, or 0 if no augmenting path is found
+ */
+intmax_t FordFulkersonMF::bfsSolve(size_t source, size_t sink, DynamicArray<size_t>& parent) {
+    const size_t vertexCount = m_residualGraph->getVertexCount();
+
+    // SIZE_MAX means "unvisited"
+    for (size_t i = 0; i < vertexCount; i++) {
+        parent.set(i, SIZE_MAX);
+    }
+
+    Queue<Pair<size_t, intmax_t>> queue;
+
+    parent.set(source, source);
+    queue.push({source, INTMAX_MAX});
+
+    while (!queue.isEmpty()) {
+        Pair<size_t, intmax_t> current = queue.getFront();
+        queue.pop();
+
+        size_t vertex = current.first();
+        intmax_t flow = current.second();
+
+        DynamicArray<size_t> neighbors = m_residualGraph->getAdjacentVertices(vertex);
+        for (size_t i = 0; i < neighbors.size(); i++) {
+            size_t neighbor = neighbors.get(i);
+
+            intmax_t capacity = m_residualGraph->getEdgeWeight(vertex, neighbor);
+
+            if (capacity <= 0) continue;
+            if (parent.get(neighbor) != SIZE_MAX) continue;
+
+            parent.set(neighbor, vertex);
+
+            intmax_t newFlow = flow < capacity ? flow : capacity;
+
+            if (neighbor == sink) return newFlow;
+
+            queue.push({neighbor, newFlow});
+        }
+    }
+
+    return 0;
+}
+
 
 /**
  * Returns the result of the algorithm
