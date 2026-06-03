@@ -5,6 +5,7 @@
 #include "AdjacencyList.hpp"
 #include "IncidenceMatrix.hpp"
 #include "Queue.hpp"
+#include "Stack.hpp"
 
 #include "Logger.hpp"
 
@@ -96,16 +97,13 @@ int FordFulkersonMF::run() {
 
     // Run the Ford-Fulkerson algorithm using DFS
     intmax_t flow = 0;
-#if !USE_EDMONDS_KARP_OPTIMIZATION
-    DynamicArray<size_t> visited(vertexCount, 0);
-    do {
-        flow = dfsSolve(source, sink, INTMAX_MAX, visited);
-        m_result.maxFlow += flow;
-        m_visitedToken++;
-    } while (flow > 0);
-#else
     DynamicArray<size_t> parent(vertexCount, SIZE_MAX);
+
+#if !USE_EDMONDS_KARP_OPTIMIZATION
+    while ((flow = dfsSolve(source, sink, parent)) > 0) {    
+#else
     while ((flow = bfsSolve(source, sink, parent)) > 0) {
+#endif
         m_result.maxFlow += flow;
 
         size_t current = sink;
@@ -119,7 +117,6 @@ int FordFulkersonMF::run() {
             current = previous;
         }
     }
-#endif
 
     m_resultReady = true;
     return 0;
@@ -128,44 +125,63 @@ int FordFulkersonMF::run() {
 
 /**
  * Performs a depth-first search to find an augmenting path in the residual graph and returns the bottleneck flow of that path
- * Based on: https://www.youtube.com/watch?v=Xu8jjJnwvxE
  * 
  * @param source the source vertex
  * @param sink the sink vertex
- * @param flow the current flow being sent through the path
- * @param visited an array to keep track of visited vertices during the DFS
+ * @param parent an array to keep track of the parent vertices during the DFS
  * 
  * @returns the bottleneck flow of the augmenting path found, or 0 if no augmenting path is found
  */
-intmax_t FordFulkersonMF::dfsSolve(size_t source, size_t sink, intmax_t flow, DynamicArray<size_t>& visited) {
-    // Check if the vertex is the sink, if yes, return the current flow
-    if (source == sink) {
-        return flow;
+intmax_t FordFulkersonMF::dfsSolve(size_t source, size_t sink, DynamicArray<size_t>& parent) {
+    const size_t vertexCount = m_residualGraph->getVertexCount();
+
+    // Restore parents to their unvisited state
+    for (size_t i = 0; i < vertexCount; i++) {
+        parent.set(i, SIZE_MAX);
     }
 
-    // Mark the vertex as visited
-    visited.set(source, m_visitedToken);
+    // Create the stack for DFS and push the source vertex onto it
+    Stack<size_t> stack;
+    stack.push(source);
+    parent.set(source, source);
 
-    // Get the neighbors of the vertex
-    DynamicArray<size_t> neighbors = m_residualGraph->getAdjacentVertices(source);
-    for (size_t i = 0; i < neighbors.size(); i++) {
-        const size_t& neighbor = neighbors.get(i);
-        const size_t& neighborToken = visited.get(neighbor);
+    while (!stack.isEmpty()) {
+        // Get and remove the top vertex from the stack
+        size_t vertex = stack.getFront();
+        stack.pop();
 
-        // Check if the neighbor is not visited and there is available capacity
-        intmax_t capacity = m_residualGraph->getEdgeWeight(source, neighbor);
-        if (capacity > 0 && neighborToken != m_visitedToken) {
-            // Get the minimum flow and calculate the bottleneck flow
-            intmax_t minFlow = flow < capacity ? flow : capacity;
-            intmax_t bottleneck = dfsSolve(neighbor, sink, minFlow, visited);
+        // Get the neighbors and find the path to the sink
+        DynamicArray<size_t> neighbors = m_residualGraph->getAdjacentVertices(vertex);
+        for (size_t i = 0; i < neighbors.size(); i++) {
+            size_t neighbor = neighbors.get(i);
 
-            // If there's a bottleneck, update the flow in the graph
-            if (bottleneck > 0) {
-                intmax_t residualCapacity = m_residualGraph->getEdgeWeight(neighbor, source);
-                m_residualGraph->setEdgeWeight(source, neighbor, capacity - bottleneck);
-                m_residualGraph->setEdgeWeight(neighbor, source, residualCapacity + bottleneck);
+            // Skip already visited vertices
+            if (parent.get(neighbor) != SIZE_MAX) continue;
+
+            // Get the capacity of the edge
+            intmax_t capacity = m_residualGraph->getEdgeWeight(vertex, neighbor);
+            if (capacity <= 0) continue;
+
+            // Set the parent of the neighbor to the current vertex
+            parent.set(neighbor, vertex);
+
+            // Check if we've reached the sink, if yes we need to reconstruct the flow
+            if (neighbor == sink) {
+                // reconstruct bottleneck flow
+                intmax_t bottleneck = INTMAX_MAX;
+
+                size_t current = sink;
+                while (current != source) {
+                    size_t prev = parent.get(current);
+                    intmax_t cap = m_residualGraph->getEdgeWeight(prev, current);
+                    bottleneck = cap < bottleneck ? cap : bottleneck;
+                    current = prev;
+                }
                 return bottleneck;
             }
+
+            // Push the neighbor onto the stack for the DFS search to continue
+            stack.push(neighbor);
         }
     }
 
@@ -178,46 +194,53 @@ intmax_t FordFulkersonMF::dfsSolve(size_t source, size_t sink, intmax_t flow, Dy
  * 
  * @param source the source vertex
  * @param sink the sink vertex
- * @param flow the current flow being sent through the path
- * @param visited an array to keep track of visited vertices during the BFS
+ * @param parent an array to keep track of the parent vertices during the BFS
  * 
  * @returns the bottleneck flow of the augmenting path found, or 0 if no augmenting path is found
  */
 intmax_t FordFulkersonMF::bfsSolve(size_t source, size_t sink, DynamicArray<size_t>& parent) {
     const size_t vertexCount = m_residualGraph->getVertexCount();
 
-    // SIZE_MAX means "unvisited"
+    // Restore parents to their unvisited state
     for (size_t i = 0; i < vertexCount; i++) {
         parent.set(i, SIZE_MAX);
     }
 
+    // Create the queue for BFS and push the source vertex onto it with an "infinite" flow
     Queue<Pair<size_t, intmax_t>> queue;
-
     parent.set(source, source);
     queue.push({source, INTMAX_MAX});
 
     while (!queue.isEmpty()) {
+        // Get the front vertex and flow from the queue and remove it
         Pair<size_t, intmax_t> current = queue.getFront();
         queue.pop();
 
         size_t vertex = current.first();
         intmax_t flow = current.second();
 
+        // Get the neighbors and find the path to the sink
         DynamicArray<size_t> neighbors = m_residualGraph->getAdjacentVertices(vertex);
         for (size_t i = 0; i < neighbors.size(); i++) {
             size_t neighbor = neighbors.get(i);
 
+            // Get the edge capacity from the vertex to the neighbor
             intmax_t capacity = m_residualGraph->getEdgeWeight(vertex, neighbor);
 
+            // Skip already visited vertices and edges with no capacity
             if (capacity <= 0) continue;
             if (parent.get(neighbor) != SIZE_MAX) continue;
 
+            // Set the parent of the neighbor to the current vertex
             parent.set(neighbor, vertex);
 
+            // Get the minimum flow on the path
             intmax_t newFlow = flow < capacity ? flow : capacity;
 
+            // If the neighbor is the sink return the flow of the path found
             if (neighbor == sink) return newFlow;
 
+            // Otherwise push the neighbor to the queue with the new flow
             queue.push({neighbor, newFlow});
         }
     }

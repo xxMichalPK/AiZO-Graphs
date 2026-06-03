@@ -185,5 +185,5 @@ Basically in order to actually run the algorithms we have to implement some stru
 ### Tasks
 
 - [✅] Implement Edmonds-Karp optimization (BFS Ford-Fulkerson)
-- [❌] Implement stack
-- [❌] Refine DFS version to use iteration and prevent recursion segfaults
+- [✅] Implement stack
+- [✅] Refine DFS version to use iteration and prevent recursion segfaults

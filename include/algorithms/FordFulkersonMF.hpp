@@ -10,7 +10,6 @@ class FordFulkersonMF : public GraphAlgorithmBase {
         GraphRepr& m_graph;
         GraphRepr* m_residualGraph = nullptr;
         MFResult m_result {};
-        size_t m_visitedToken = 1;
 
     public:
         FordFulkersonMF(GraphRepr& graph);
@@ -21,7 +20,7 @@ class FordFulkersonMF : public GraphAlgorithmBase {
         using GraphAlgorithmBase::resultReady;
     
     private:
-        intmax_t dfsSolve(size_t source, size_t sink, intmax_t flow, DynamicArray<size_t>& visited);
+        intmax_t dfsSolve(size_t source, size_t sink, DynamicArray<size_t>& parent);
         intmax_t bfsSolve(size_t source, size_t sink, DynamicArray<size_t>& parent);
 };
 
