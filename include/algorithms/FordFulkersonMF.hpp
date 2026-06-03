@@ -21,7 +21,7 @@ class FordFulkersonMF : public GraphAlgorithmBase {
         using GraphAlgorithmBase::resultReady;
     
     private:
-        intmax_t dfsSolve(size_t vertex, intmax_t flow, DynamicArray<size_t>& visited);
+        intmax_t dfsSolve(size_t source, size_t sink, intmax_t flow, DynamicArray<size_t>& visited);
 };
 
 #endif // FORDFULKERSONMF_HPP

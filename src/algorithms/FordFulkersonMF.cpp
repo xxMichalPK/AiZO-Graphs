@@ -81,7 +81,7 @@ int FordFulkersonMF::run() {
     // Run the Ford-Fulkerson algorithm using DFS
     intmax_t flow = 0;
     do {
-        flow = dfsSolve(source, INTMAX_MAX, visited);
+        flow = dfsSolve(source, sink, INTMAX_MAX, visited);
         m_result.maxFlow += flow;
         m_visitedToken++;
     } while (flow > 0);
@@ -95,39 +95,40 @@ int FordFulkersonMF::run() {
  * Performs a depth-first search to find an augmenting path in the residual graph and returns the bottleneck flow of that path
  * Based on: https://www.youtube.com/watch?v=Xu8jjJnwvxE
  * 
- * @param vertex the current vertex being explored
+ * @param source the source vertex
+ * @param sink the sink vertex
  * @param flow the current flow being sent through the path
  * @param visited an array to keep track of visited vertices during the DFS
  * 
  * @returns the bottleneck flow of the augmenting path found, or 0 if no augmenting path is found
  */
-intmax_t FordFulkersonMF::dfsSolve(size_t vertex, intmax_t flow, DynamicArray<size_t>& visited) {
+intmax_t FordFulkersonMF::dfsSolve(size_t source, size_t sink, intmax_t flow, DynamicArray<size_t>& visited) {
     // Check if the vertex is the sink, if yes, return the current flow
-    if (vertex == (size_t)Parameters::vertexEnd) {
+    if (source == sink) {
         return flow;
     }
 
     // Mark the vertex as visited
-    visited.set(vertex, m_visitedToken);
+    visited.set(source, m_visitedToken);
 
     // Get the neighbors of the vertex
-    DynamicArray<size_t> neighbors = m_residualGraph->getAdjacentVertices(vertex);
+    DynamicArray<size_t> neighbors = m_residualGraph->getAdjacentVertices(source);
     for (size_t i = 0; i < neighbors.size(); i++) {
         const size_t& neighbor = neighbors.get(i);
         const size_t& neighborToken = visited.get(neighbor);
 
         // Check if the neighbor is not visited and there is available capacity
-        intmax_t capacity = m_residualGraph->getEdgeWeight(vertex, neighbor);
+        intmax_t capacity = m_residualGraph->getEdgeWeight(source, neighbor);
         if (capacity > 0 && neighborToken != m_visitedToken) {
             // Get the minimum flow and calculate the bottleneck flow
             intmax_t minFlow = flow < capacity ? flow : capacity;
-            intmax_t bottleneck = dfsSolve(neighbor, minFlow, visited);
+            intmax_t bottleneck = dfsSolve(neighbor, sink, minFlow, visited);
 
             // If there's a bottleneck, update the flow in the graph
             if (bottleneck > 0) {
-                intmax_t residualCapacity = m_residualGraph->getEdgeWeight(neighbor, vertex);
-                m_residualGraph->setEdgeWeight(vertex, neighbor, capacity - bottleneck);
-                m_residualGraph->setEdgeWeight(neighbor, vertex, residualCapacity + bottleneck);
+                intmax_t residualCapacity = m_residualGraph->getEdgeWeight(neighbor, source);
+                m_residualGraph->setEdgeWeight(source, neighbor, capacity - bottleneck);
+                m_residualGraph->setEdgeWeight(neighbor, source, residualCapacity + bottleneck);
                 return bottleneck;
             }
         }
