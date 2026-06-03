@@ -2,6 +2,7 @@
 #define BENCHMARKMODE_HPP
 
 #include <cstddef>
+
 #include "RunModeBase.hpp"
 #include "BenchmarkResult.hpp"
 

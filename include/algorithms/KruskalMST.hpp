@@ -1,8 +1,9 @@
 #ifndef KRUSKALMST_HPP
 #define KRUSKALMST_HPP
 
-#include "GraphRepr.hpp"
 #include "GraphAlgorithmBase.hpp"
+
+#include "GraphRepr.hpp"
 #include "MSTResult.hpp"
 
 class KruskalMST : public GraphAlgorithmBase {

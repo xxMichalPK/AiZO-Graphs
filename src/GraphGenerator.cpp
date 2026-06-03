@@ -1,6 +1,7 @@
 #include "GraphGenerator.hpp"
-#include "DynamicArray.hpp"
+
 #include "Logger.hpp"
+
 #include <random>
 
 /**

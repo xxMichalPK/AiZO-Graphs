@@ -1,8 +1,9 @@
 #ifndef BELLMANFORDSP_HPP
 #define BELLMANFORDSP_HPP
 
-#include "GraphRepr.hpp"
 #include "GraphAlgorithmBase.hpp"
+
+#include "GraphRepr.hpp"
 #include "SPResult.hpp"
 
 class BellmanFordSP : public GraphAlgorithmBase {

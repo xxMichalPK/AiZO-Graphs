@@ -1,12 +1,10 @@
 #include "BenchmarkMode.hpp"
-#include "BenchmarkResult.hpp"
+
 #include "Parameters.h"
 
-#include "Logger.hpp"
-
-#include "AdjacencyList.hpp"
 #include "GraphGenerator.hpp"
 #include "Timer.hpp"
+#include "Logger.hpp"
 
 /**
  * Runs the benchmark
@@ -208,6 +206,13 @@ DynamicArray<GraphRepr*>* BenchmarkMode::createGraphs(size_t edgeCount, bool dir
 }
 
 
+/**
+ * Regenerates the graphs with the same parameters but new random data for the next benchmark iteration
+ * 
+ * @param graphs the graph representations to be regenerated
+ * 
+ * @returns true if the graphs were successfully regenerated, false otherwise
+ */
 bool BenchmarkMode::regenerateGraphs(DynamicArray<GraphRepr*>* graphs) {
     size_t edgeCount = graphs->get(0)->getEdgeCount();
     bool directed = isDirected();
@@ -248,6 +253,11 @@ size_t BenchmarkMode::calculateEdgeCount(size_t vertexCount, int density) {
 }
 
 
+/**
+ * Logs the summary of benchmark results for all representations and algorithms
+ * 
+ * @param results the benchmark results to be logged
+ */
 void BenchmarkMode::logSummary(const DynamicArray<DynamicArray<BenchmarkResult>>& results) {
     for (size_t r1 = 0; r1 < results.size(); r1++) {
         const DynamicArray<BenchmarkResult> &reprResults = results.get(r1);

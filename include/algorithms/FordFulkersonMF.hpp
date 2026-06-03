@@ -1,8 +1,9 @@
 #ifndef FORDFULKERSONMF_HPP
 #define FORDFULKERSONMF_HPP
 
-#include "GraphRepr.hpp"
 #include "GraphAlgorithmBase.hpp"
+
+#include "GraphRepr.hpp"
 #include "MFResult.hpp"
 
 class FordFulkersonMF : public GraphAlgorithmBase {

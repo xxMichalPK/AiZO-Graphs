@@ -1,8 +1,9 @@
 #include "Logger.hpp"
-#include "Timer.hpp"
+
 #include "Parameters.h"
+#include "Timer.hpp"
+
 #include <fstream>
-#include <iostream>
 
 Logger* Logger::m_instance = nullptr;
 

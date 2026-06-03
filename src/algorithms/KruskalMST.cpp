@@ -1,6 +1,8 @@
 #include "KruskalMST.hpp"
+
 #include "DisjointSet.hpp"
 #include "MergeSort.hpp"
+
 #include "Logger.hpp"
 
 /**

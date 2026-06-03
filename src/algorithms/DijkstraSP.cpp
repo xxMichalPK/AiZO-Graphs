@@ -1,8 +1,11 @@
-#include "Parameters.h"
 #include "DijkstraSP.hpp"
+
+#include "Parameters.h"
+
+#include "Pair.hpp"
 #include "DynamicArray.hpp"
 #include "PriorityQueue.hpp"
-#include "Pair.hpp"
+
 #include "Logger.hpp"
 
 /**

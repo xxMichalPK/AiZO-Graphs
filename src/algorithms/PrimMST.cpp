@@ -1,7 +1,9 @@
 #include "PrimMST.hpp"
+
+#include "Pair.hpp"
 #include "DynamicArray.hpp"
 #include "PriorityQueue.hpp"
-#include "Pair.hpp"
+
 #include "Logger.hpp"
 
 /**

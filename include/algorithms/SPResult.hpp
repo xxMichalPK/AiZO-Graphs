@@ -3,7 +3,7 @@
 
 #include "GraphAlgorithmResult.hpp"
 #include "DynamicArray.hpp"
-#include <climits>
+
 #include <iostream>
 
 class SPResult : public GraphAlgorithmResult {

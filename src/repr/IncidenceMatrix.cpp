@@ -1,4 +1,5 @@
 #include "IncidenceMatrix.hpp"
+
 #include "Logger.hpp"
 
 /**

@@ -1,8 +1,9 @@
 #include "ReportBuilder.hpp"
+
 #include "Parameters.h"
 #include "RunModeBase.hpp"
+
 #include "Logger.hpp"
-#include "SPResult.hpp"
 
 /**
  * Builds a report file with the results of the graph algorithm

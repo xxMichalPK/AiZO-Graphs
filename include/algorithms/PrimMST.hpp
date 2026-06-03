@@ -1,8 +1,9 @@
 #ifndef PRIMMST_HPP
 #define PRIMMST_HPP
 
-#include "GraphRepr.hpp"
 #include "GraphAlgorithmBase.hpp"
+
+#include "GraphRepr.hpp"
 #include "MSTResult.hpp"
 
 class PrimMST : public GraphAlgorithmBase {

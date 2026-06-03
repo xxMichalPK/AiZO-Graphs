@@ -1,29 +1,18 @@
-#include <filesystem>
-#include <fstream>
-
 #include "SingleFileMode.hpp"
 
 #include "Parameters.h"
-#include "DataParser.hpp"
 
+// Graph related stuff
 #include "GraphRepr.hpp"
-#include "AdjacencyList.hpp"
-#include "IncidenceMatrix.hpp"
-
 #include "GraphAlgorithmBase.hpp"
-#include "PrimMST.hpp"
-#include "KruskalMST.hpp"
-#include "DijkstraSP.hpp"
-#include "BellmanFordSP.hpp"
-#include "FordFulkersonMF.hpp"
-
 #include "GraphAlgorithmResult.hpp"
-#include "MSTResult.hpp"
-#include "SPResult.hpp"
 
+// Utilities
 #include "Logger.hpp"
+#include "DataParser.hpp"
 #include "ReportBuilder.hpp"
 #include "Timer.hpp"
+
 
 /**
  * Runs program in the single file mode

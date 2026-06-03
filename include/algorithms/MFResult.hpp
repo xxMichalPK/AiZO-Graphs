@@ -2,7 +2,7 @@
 #define MFRESULT_HPP
 
 #include "GraphAlgorithmResult.hpp"
-#include <climits>
+
 #include <iostream>
 
 class MFResult : public GraphAlgorithmResult {

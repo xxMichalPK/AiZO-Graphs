@@ -1,8 +1,9 @@
 #ifndef DIJKSTRASP_HPP
 #define DIJKSTRASP_HPP
 
-#include "GraphRepr.hpp"
 #include "GraphAlgorithmBase.hpp"
+
+#include "GraphRepr.hpp"
 #include "SPResult.hpp"
 
 class DijkstraSP : public GraphAlgorithmBase {

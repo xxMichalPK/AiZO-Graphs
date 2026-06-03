@@ -2,13 +2,17 @@
 #define RUNMODEBASE_HPP
 
 #include <string>
+
 #include "Parameters.h"
-#include "Logger.hpp"
+
 #include "DynamicArray.hpp"
 #include "AdjacencyList.hpp"
 #include "IncidenceMatrix.hpp"
-#include "GraphAlgorithmBase.hpp"
+
 #include "GraphRepr.hpp"
+#include "GraphAlgorithmBase.hpp"
+
+#include "Logger.hpp"
 
 class RunModeBase {
     public:

@@ -1,6 +1,6 @@
 #include "AdjacencyList.hpp"
+
 #include "Logger.hpp"
-#include <iostream>
 
 /**
  * Constructs an object of the adjacency list representation of the graph

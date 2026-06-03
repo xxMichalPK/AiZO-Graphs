@@ -23,16 +23,30 @@ class Stack : public BaseContainer<T> {
         void resize(size_t newSize);
 };
 
+
+/**
+ * Creates a stack with the specified initial capacity
+ */
 template<typename T>
 Stack<T>::Stack(size_t initialCapacity) : m_capacity(initialCapacity) {
     m_data = new T[m_capacity];
 }
 
+
+/**
+ * Frees memory allocated for the stack
+ */
 template<typename T>
 Stack<T>::~Stack() {
     delete[] m_data;
 }
 
+
+/**
+ * Resizes the stack to the new capacity
+ * 
+ * @param newSize The new capacity of the stack
+ */
 template<typename T>
 void Stack<T>::resize(size_t newSize) {
     if (newSize <= m_capacity) return;
@@ -46,6 +60,12 @@ void Stack<T>::resize(size_t newSize) {
     m_capacity = newSize;
 }
 
+
+/**
+ * Adds an element to the top of the stack
+ * 
+ * @param element The element to add
+ */
 template<typename T>
 void Stack<T>::push(T element) {
     if (this->m_elementCount >= m_capacity) {
@@ -57,6 +77,10 @@ void Stack<T>::push(T element) {
     this->m_elementCount++;
 }
 
+
+/**
+ * Removes the top element from the stack
+ */
 template<typename T>
 void Stack<T>::pop() {
     if (this->isEmpty()) {
@@ -66,6 +90,12 @@ void Stack<T>::pop() {
     this->m_elementCount--;
 }
 
+
+/**
+ * Returns the top element of the stack without removing it
+ * 
+ * @returns The top element of the stack
+ */
 template<typename T>
 T Stack<T>::getFront() {
     if (this->isEmpty()) {
@@ -75,6 +105,12 @@ T Stack<T>::getFront() {
     return m_data[this->m_elementCount - 1];
 }
 
+
+/**
+ * Returns the bottom element of the stack without removing it
+ * 
+ * @returns The bottom element of the stack
+ */
 template<typename T>
 T Stack<T>::getBack() {
     if (this->isEmpty()) {

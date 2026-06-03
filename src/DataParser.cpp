@@ -1,6 +1,7 @@
 #include "DataParser.hpp"
+
 #include "Logger.hpp"
-#include <iostream>
+
 #include <fstream>
 
 /**
@@ -59,7 +60,7 @@ bool DataParser::loadGraph(const std::filesystem::path& filename, GraphRepr& gra
         }
 
         // Validate if the vertices are in order as specified in the instruction
-        if (start < lastStartVertex) { //! Was (start < lastStartVertex) || (start > lastStartVertex + 1) ASK ABOUT IT!
+        if (start < lastStartVertex) {
             Logger::logln(Logger::ERROR, "Edges are not in the correct order.");
             return false;
         }

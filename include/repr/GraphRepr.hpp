@@ -5,8 +5,9 @@
 #include <cstdint>
 #include <string>
 #include <fstream>
-#include "DynamicArray.hpp"
+
 #include "Pair.hpp"
+#include "DynamicArray.hpp"
 
 class GraphRepr {
     private:

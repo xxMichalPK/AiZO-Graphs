@@ -2,7 +2,6 @@
 #define REPORTBUILDER_HPP
 
 #include <string>
-#include <fstream>
 
 #include "GraphRepr.hpp"
 #include "GraphAlgorithmResult.hpp"

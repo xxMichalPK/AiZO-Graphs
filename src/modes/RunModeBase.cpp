@@ -1,5 +1,6 @@
 #include "RunModeBase.hpp"
 
+// Algorithms
 #include "PrimMST.hpp"
 #include "KruskalMST.hpp"
 
@@ -250,6 +251,10 @@ std::string RunModeBase::getSelectedProblemName() {
 }
 
 
+/**
+ * If the graphviz support is enabled and the graph is small enough it exports
+ * it as an image using the graphviz tool
+ */
 void RunModeBase::exportGraphImages(DynamicArray<GraphRepr*>* representations) {
 #if GRAPHVIZ_SUPPORT
     if (Parameters::vertexCount <= 10) {
@@ -262,6 +267,11 @@ void RunModeBase::exportGraphImages(DynamicArray<GraphRepr*>* representations) {
 }
 
 
+/**
+ * Returns the number of requested graph representations based on the provided parameters
+ * 
+ * @returns the number of requested graph representations
+ */
 size_t RunModeBase::getRequestedRepresentationCount() {
     switch (Parameters::structure) {
         case Parameters::Structures::adjacencyList:
@@ -276,6 +286,11 @@ size_t RunModeBase::getRequestedRepresentationCount() {
 }
 
 
+/**
+ * Returns the number of requested algorithms based on the provided parameters
+ * 
+ * @returns the number of requested algorithms
+ */
 size_t RunModeBase::getRequestedAlgorithmCount() {
     switch (Parameters::algorithm) {
         case Parameters::Algorithms::prim:

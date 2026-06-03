@@ -1,8 +1,6 @@
 #ifndef SINGLEFILEMODE_HPP
 #define SINGLEFILEMODE_HPP
 
-#include "DynamicArray.hpp"
-#include "GraphRepr.hpp"
 #include "RunModeBase.hpp"
 
 class SingleFileMode : public RunModeBase {

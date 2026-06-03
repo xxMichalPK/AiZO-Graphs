@@ -1,12 +1,16 @@
-#include <algorithm>
+#include "FordFulkersonMF.hpp"
 
 #include "Parameters.h"
-#include "FordFulkersonMF.hpp"
+
+// Representations
 #include "AdjacencyList.hpp"
 #include "IncidenceMatrix.hpp"
+
+// Containers
 #include "Queue.hpp"
 #include "Stack.hpp"
 
+// Utilities
 #include "Logger.hpp"
 
 
