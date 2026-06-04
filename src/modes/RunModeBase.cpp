@@ -78,14 +78,14 @@ void RunModeBase::deleteRepresentations(DynamicArray<GraphRepr*>* representation
 
 /**
  * With large vertex and edge counts, the matrix can swallow all the RAM and crash so ask the user to confirm
- * the size when it exceeds 16GB
+ * the size when it exceeds 4GB
  */
 bool RunModeBase::confirmMatrixSize(size_t vertexCount, size_t edgeCount) {
     const size_t edgeSize = sizeof(intmax_t);
     const size_t totalSize = vertexCount * edgeCount * edgeSize;
     const size_t totalSizeGB = totalSize / (1024ull * 1024 * 1024);
 
-    if (totalSizeGB < 16) return true;
+    if (totalSizeGB < 4) return true;
 
     Logger::log(Logger::WARNING, "The matrix representation is about to use ", totalSizeGB, " GB of RAM. Do you want to continue? (y/n): ");
     char response;
@@ -259,8 +259,13 @@ void RunModeBase::exportGraphImages(DynamicArray<GraphRepr*>* representations) {
 #if GRAPHVIZ_SUPPORT
     if (Parameters::vertexCount <= 10) {
         for (size_t i = 0; i < representations->size(); i++) {
+            GraphRepr* representation = representations->get(i);
+            // Don't export graphs that have more than 10 vertices because
+            // the image is unreadable + it can crash the PC because of running out of memory
+            if (representation->getVertexCount() > 10) continue;
+
             std::string graphName = "graph_repr" + std::to_string(i) + ".dot";
-            representations->get(i)->exportToGraphviz(graphName.c_str());
+            representation->exportToGraphviz(graphName.c_str());
         }
     }
 #endif
