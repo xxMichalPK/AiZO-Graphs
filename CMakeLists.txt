@@ -21,6 +21,13 @@ if (NOT CMAKE_BUILD_TYPE)
     SET(CMAKE_BUILD_TYPE Debug)
 endif()
 
+# Enable edmonds-karp optimization by default
+if (NOT NO_MF_OPTIMIZATION)
+    ADD_DEFINITIONS(-DUSE_EDMONDS_KARP_OPTIMIZATION=1)
+else()
+    ADD_DEFINITIONS(-DUSE_EDMONDS_KARP_OPTIMIZATION=0)
+endif()
+
 # Set the PROJECT_SOURCES variable so it can be overridden by the cmakelists in the src directory
 # and the proper sources can be added to the project
 SET(PROJECT_SOURCES "")

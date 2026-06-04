@@ -33,6 +33,22 @@ cmake ..
 cmake --build .
 ```
 
+### 🚀 Optional Configuration: Disable Edmonds-Karp optimization for MF problem
+
+By default the project uses the BFS version of Ford-Fulkerson algorithm (known as Edmonds-Karp algorithm) to speed up the max flow calculations.
+
+To disable the **Edmonds-Karp optimization** and use the standard DFS method, configure CMake with:
+
+```sh
+cmake -DNO_MF_OPTIMIZATION=1 ..
+```
+
+Then build as usual:
+
+```sh
+cmake --build .
+```
+
 ## ▶️ Running the Project
 
 After building, the executable will be located in the `build` directory.

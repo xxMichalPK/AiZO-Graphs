@@ -14,9 +14,6 @@
 #include "Logger.hpp"
 
 
-#define USE_EDMONDS_KARP_OPTIMIZATION 1
-
-
 /**
  * Initializes the Ford-Fulkerson algorithm by creating a residual graph based on the original graph
  * 
