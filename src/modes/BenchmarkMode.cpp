@@ -40,6 +40,9 @@ int BenchmarkMode::run() {
     }
     GraphGenerator::initialize((unsigned int)generatorSeed);
 
+    // Make one empty line for the progress to show properly
+    Logger::logln(Logger::NONE, "");
+
     // Run the main benchmark loop
     size_t currentRun = 1;
     size_t totalRuns = Parameters::iterations * getRequestedRepresentationCount() * getRequestedAlgorithmCount();
