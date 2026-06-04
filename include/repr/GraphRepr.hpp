@@ -1,0 +1,45 @@
+#ifndef GRAPH_REPR_HPP
+#define GRAPH_REPR_HPP
+
+#include <cstddef>
+#include <cstdint>
+#include <string>
+#include <fstream>
+
+#include "Pair.hpp"
+#include "DynamicArray.hpp"
+
+class GraphRepr {
+    private:
+        std::string m_name;
+        std::string m_id;
+
+    protected:
+        GraphRepr(const std::string& name, const std::string& id) : m_name(name), m_id(id) {}
+    
+    public:
+        virtual ~GraphRepr() = default;
+        virtual void clear() = 0;
+
+        virtual void addEdge(size_t startVertex, size_t endVertex, intmax_t weight) = 0;
+        virtual bool checkEdge(size_t startVertex, size_t endVertex) = 0;
+
+        virtual intmax_t getEdgeWeight(size_t startVertex, size_t endVertex) = 0;
+        virtual void setEdgeWeight(size_t startVertex, size_t endVertex, intmax_t weight) = 0;
+
+        virtual size_t getEdgeCount() = 0;
+        virtual size_t getVertexCount() = 0;
+
+        virtual DynamicArray<size_t> getAdjacentVertices(size_t vertex) = 0;
+        virtual DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> getAllEdges() = 0;
+
+        const std::string& name() const { return m_name; }
+        const std::string& id() const { return m_id; }
+        virtual std::string toString() = 0;
+
+        #if GRAPHVIZ_SUPPORT
+            virtual void exportToGraphviz(const char* filename) const = 0;
+        #endif
+};
+
+#endif // GRAPH_REPR_HPP

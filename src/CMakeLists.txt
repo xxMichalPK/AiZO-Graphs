@@ -1,0 +1,21 @@
+SET(PROJECT_SOURCES
+    ${PROJECT_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/DataParser.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Timer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Logger.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/GraphGenerator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ReportBuilder.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/modes/RunModeBase.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/modes/BenchmarkMode.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/modes/SingleFileMode.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repr/IncidenceMatrix.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repr/AdjacencyList.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/containers/DisjointSet.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/PrimMST.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/KruskalMST.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/DijkstraSP.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/BellmanFordSP.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/algorithms/FordFulkersonMF.cpp
+    PARENT_SCOPE
+)

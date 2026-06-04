@@ -1,0 +1,22 @@
+#ifndef KRUSKALMST_HPP
+#define KRUSKALMST_HPP
+
+#include "GraphAlgorithmBase.hpp"
+
+#include "GraphRepr.hpp"
+#include "MSTResult.hpp"
+
+class KruskalMST : public GraphAlgorithmBase {
+    private:
+        GraphRepr& m_graph;
+        MSTResult m_result {};
+
+    public:
+        KruskalMST(GraphRepr& graph) : GraphAlgorithmBase("Kruskal Minimum Spanning Tree", "KRUSKAL"), m_graph(graph) {}
+
+        virtual int run() override;
+        virtual GraphAlgorithmResult& result() override;
+        using GraphAlgorithmBase::resultReady;
+};
+
+#endif // KRUSKALMST_HPP
