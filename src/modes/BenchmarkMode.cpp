@@ -180,6 +180,15 @@ bool BenchmarkMode::validateParameters() {
         Logger::logln(Logger::ERROR, "No results file provided!");
         return false;
     }
+
+    // Fix vertex start and vertex end because we those are single file arguments
+    // but are used in the general implementation
+    if (Parameters::vertexStart < 0) {
+        Parameters::vertexStart = 0;
+    }
+    if (Parameters::vertexEnd < 0) {
+        Parameters::vertexEnd = Parameters::vertexCount - 1;
+    }
     return true;
 }
 
