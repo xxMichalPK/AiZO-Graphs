@@ -110,7 +110,7 @@ int SingleFileMode::run() {
             output << report << "\n\n";
 
             if (shouldLogResults) {
-                Logger::getInstance()->logBenchmark(currentRepr.name(), currentAlg.name(), duration);
+                Logger::getInstance()->logBenchmark(currentRepr.id(), currentAlg.id(), duration);
             }
         }
         deleteAlgorithms(algorithms);
