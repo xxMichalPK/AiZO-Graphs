@@ -119,7 +119,11 @@ void Logger::logBenchmarkCommon(std::ofstream& logFile) {
         if (i < m_argc - 1) logFile << " ";
     }
 
+#if EXPERIMENTAL_PARAMETERS
     logFile << "," << (uint64_t)Parameters::seed;
+#else
+    logFile << "," << "NOT_SUPPORTED";
+#endif
 }
 
 /**

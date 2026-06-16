@@ -28,6 +28,13 @@ else()
     ADD_DEFINITIONS(-DUSE_EDMONDS_KARP_OPTIMIZATION=0)
 endif()
 
+# Disable support for the custom parameter library to adhere to the original requirements
+if (NOT EXPERIMENTAL_PARAMETERS)
+    ADD_DEFINITIONS(-DEXPERIMENTAL_PARAMETERS=0)
+else()
+    ADD_DEFINITIONS(-DEXPERIMENTAL_PARAMETERS=1)
+endif()
+
 # Set the PROJECT_SOURCES variable so it can be overridden by the cmakelists in the src directory
 # and the proper sources can be added to the project
 SET(PROJECT_SOURCES "")

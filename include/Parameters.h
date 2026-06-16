@@ -1,10 +1,9 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#define LIB_VERSION "v.1.4"
+#define LIB_VERSION "v.1.3"
 
 #include <string>
-#include <cstdint>
 
 namespace Parameters
 {
@@ -64,8 +63,6 @@ namespace Parameters
   extern int vertexCount;
   extern int density;
   extern int iterations;
-
-  extern int64_t seed;
 
   //
   // Methods to use.
