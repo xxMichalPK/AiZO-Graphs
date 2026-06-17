@@ -32,12 +32,14 @@ int BenchmarkMode::run() {
 
     // Initialize the graph generator
     uint64_t generatorSeed = static_cast<uint64_t>(std::time(nullptr));
+#if EXPERIMENTAL_PARAMETERS
     if (Parameters::seed != -1) {
         generatorSeed = static_cast<uint64_t>(Parameters::seed);
     } else {
         // Save the generated seed for logging purposes
         Parameters::seed = (int64_t)generatorSeed;
     }
+#endif
     GraphGenerator::initialize((unsigned int)generatorSeed);
 
     // Make one empty line for the progress to show properly
@@ -179,6 +181,15 @@ bool BenchmarkMode::validateParameters() {
     if (Parameters::resultsFile.empty()) {
         Logger::logln(Logger::ERROR, "No results file provided!");
         return false;
+    }
+
+    // Fix vertex start and vertex end because we those are single file arguments
+    // but are used in the general implementation
+    if (Parameters::vertexStart < 0) {
+        Parameters::vertexStart = 0;
+    }
+    if (Parameters::vertexEnd < 0) {
+        Parameters::vertexEnd = Parameters::vertexCount - 1;
     }
     return true;
 }

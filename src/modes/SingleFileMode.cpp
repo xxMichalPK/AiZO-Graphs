@@ -70,6 +70,19 @@ int SingleFileMode::run() {
         return 1;
     }
 
+    bool shouldLogResults = false;
+    if (!Parameters::resultsFile.empty()) {
+        Logger::getInstance()->setLogFile(Parameters::resultsFile);
+        shouldLogResults = true;
+        // Maybe it's a little hacky but set the graph size parameters to log it nicely (I don't have time to do it properly)
+        Parameters::vertexCount = graphSize.vertices;
+        double density = RunModeBase::isDirected() ?
+            (graphSize.edges * 10000) / (graphSize.vertices * (graphSize.vertices - 1)) :
+            (graphSize.edges * 10000) / (graphSize.vertices * (graphSize.vertices - 1) / 2);
+        
+        Parameters::density = (int)density;
+    }
+
     for (size_t i = 0; i < representations->size(); i++) {
         GraphRepr& currentRepr = *representations->get(i);
         DynamicArray<GraphAlgorithmBase*>* algorithms = createAlgorithms(currentRepr);
@@ -95,6 +108,10 @@ int SingleFileMode::run() {
 
             std::string report = ReportBuilder::buildReport(i * algorithms->size() + j + 1, &currentRepr, &currentAlg, &algResult, duration);
             output << report << "\n\n";
+
+            if (shouldLogResults) {
+                Logger::getInstance()->logBenchmark(currentRepr.id(), currentAlg.id(), duration);
+            }
         }
         deleteAlgorithms(algorithms);
     }

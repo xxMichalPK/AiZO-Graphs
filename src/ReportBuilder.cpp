@@ -5,6 +5,10 @@
 
 #include "Logger.hpp"
 
+// Lets say that 500k vertices is the limit for printing the graph
+// lets be real... who's gonna read it anyway?
+#define PRINT_GRAPH_SIZE_LIMIT 500 * 1000
+
 /**
  * Builds a report file with the results of the graph algorithm
  * 
@@ -75,11 +79,20 @@ std::string ReportBuilder::buildMSTReport(GraphRepr* representation, GraphAlgori
     report += "Total cost: " + std::to_string(result->cost()) + "\n";
 
     report += "\n--- GRAPH ---\n\n";
-    report += representation->toString();
+    if (representation->getVertexCount() <= PRINT_GRAPH_SIZE_LIMIT) {
+        report += representation->toString();
+    } else {
+        report += "Graph is too large to display\n";
+    }
     report += "\n";
 
     report += "\n--- MST TREE ---\n\n";
-    report += result->fullResultString() + "\n";
+    // Don't print the tree if it's too large because it takes a lot of time and disk space
+    if (representation->getVertexCount() <= PRINT_GRAPH_SIZE_LIMIT) {
+        report += result->fullResultString() + "\n";
+    } else {
+        report += "MST tree is too large to display\n";
+    }
     return report;
 }
 
@@ -102,10 +115,20 @@ std::string ReportBuilder::buildSPReport(GraphRepr* representation, GraphAlgorit
     report += "Total cost: " + std::to_string(result->cost()) + "\n";
 
     report += "\n--- GRAPH ---\n\n";
-    report += representation->toString();
+    if (representation->getVertexCount() <= PRINT_GRAPH_SIZE_LIMIT) {
+        report += representation->toString();
+    } else {
+        report += "Graph is too large to display\n";
+    }
+    report += "\n";
 
     report += "\n--- SHORTEST PATH ---\n\n";
-    report += result->fullResultString() + "\n";
+    // Don't print the path if it's too large
+    if (representation->getVertexCount() <= PRINT_GRAPH_SIZE_LIMIT) {
+        report += result->fullResultString() + "\n";
+    } else {
+        report += "Shortest path is too large to display\n";
+    }
     return report;
 }
 
@@ -128,7 +151,11 @@ std::string ReportBuilder::buildMFReport(GraphRepr* representation, GraphAlgorit
     report += "Total flow: " + std::to_string(result->cost()) + "\n";
 
     report += "\n--- GRAPH ---\n\n";
-    report += representation->toString();
+    if (representation->getVertexCount() <= PRINT_GRAPH_SIZE_LIMIT) {
+        report += representation->toString();
+    } else {
+        report += "Graph is too large to display\n";
+    }
     report += "\n";
 
     return report;

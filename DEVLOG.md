@@ -6,7 +6,7 @@
 
 **Start date:** 2026-04-24
 
-**End date:** (In progress)
+**End date:** 2026-06-17
 
 **Author:** Michał Pazurek
 
