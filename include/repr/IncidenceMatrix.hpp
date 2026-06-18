@@ -9,6 +9,7 @@ class IncidenceMatrix : public GraphRepr {
         size_t m_numEdges = 0;
         size_t m_currentEdgeIndex = 0;
         intmax_t** m_matrix = nullptr;
+        uint8_t *usageBitmap = nullptr;
         bool m_directed;
 
     public:
@@ -34,6 +35,11 @@ class IncidenceMatrix : public GraphRepr {
         #if GRAPHVIZ_SUPPORT
             virtual void exportToGraphviz(const char* filename) const override;
         #endif
+
+    private:
+        bool edgeExists(size_t edgeIndex, size_t vertex) const;
+        void setEdgeUsed(size_t edgeIndex, size_t vertex);
+        void setEdgeUnused(size_t edgeIndex, size_t vertex);
 };
 
 #endif // INCIDENCE_MATRIX_HPP

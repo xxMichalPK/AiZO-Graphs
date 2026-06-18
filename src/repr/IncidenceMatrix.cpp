@@ -18,6 +18,7 @@ IncidenceMatrix::IncidenceMatrix(size_t vertexCount, size_t edgeCount, bool dire
     for (size_t i = 0; i < m_numVertices; i++) {
         m_matrix[i] = new intmax_t[m_numEdges]();
     }
+    usageBitmap = new uint8_t[m_numEdges*m_numVertices/8 + 1]();
 }
 
 
@@ -29,6 +30,7 @@ IncidenceMatrix::~IncidenceMatrix() {
         delete[] m_matrix[i];
     }
     delete[] m_matrix;
+    delete[] usageBitmap;
 }
 
 
@@ -42,6 +44,10 @@ void IncidenceMatrix::clear() {
         }
     }
     m_currentEdgeIndex = 0;
+
+    // Recreate the usage bitmap
+    delete[] usageBitmap;
+    usageBitmap = new uint8_t[m_numEdges*m_numVertices/8 + 1]();
 }
 
 
@@ -56,13 +62,14 @@ void IncidenceMatrix::addEdge(size_t startVertex, size_t endVertex, intmax_t wei
     // The weights are in range rand(1,k*4/5) so we can use 0 as the indicator of no edge
     // Now the case of undirected or directed graph... If it's undirected, just use the same weight
     // else the negative weight will be used as the end of the edge
+    m_matrix[startVertex][m_currentEdgeIndex] = weight;
     if (!m_directed) { // undirected
-        m_matrix[startVertex][m_currentEdgeIndex] = weight;
         m_matrix[endVertex][m_currentEdgeIndex] = weight;
     } else { // directed
-        m_matrix[startVertex][m_currentEdgeIndex] = weight;
         m_matrix[endVertex][m_currentEdgeIndex] = -weight; // negative weight to indicate the end of the edge
     }
+    setEdgeUsed(m_currentEdgeIndex, startVertex);
+    setEdgeUsed(m_currentEdgeIndex, endVertex);
     m_currentEdgeIndex++;
 }
 
@@ -81,7 +88,9 @@ bool IncidenceMatrix::checkEdge(size_t startVertex, size_t endVertex) {
     }
 
     for (size_t i = 0; i < m_numEdges; i++) {
-        if ((m_matrix[startVertex][i] != 0) && (m_matrix[endVertex][i] != 0)) return true;
+        intmax_t startWeight = m_matrix[startVertex][i];
+        if (!edgeExists(i, startVertex) || !edgeExists(i, endVertex) || startWeight < 0) continue;
+        return true;
     }
     return false;
 }
@@ -102,7 +111,9 @@ intmax_t IncidenceMatrix::getEdgeWeight(size_t startVertex, size_t endVertex) {
     }
 
     for (size_t i = 0; i < m_numEdges; i++) {
-        if ((m_matrix[startVertex][i] > 0) && (m_matrix[endVertex][i] != 0)) return m_matrix[startVertex][i];
+        intmax_t startWeight = m_matrix[startVertex][i];
+        if (!edgeExists(i, startVertex) || !edgeExists(i, endVertex) || startWeight < 0) continue;
+        return startWeight;
     }
     return 0;
 }
@@ -171,12 +182,12 @@ DynamicArray<Pair<intmax_t, Pair<size_t, size_t>>> IncidenceMatrix::getAllEdges(
                 startVertex = vertex;
                 weight = m_matrix[vertex][edgeIndex];
                 startFound = true;
-            } else if (m_matrix[vertex][edgeIndex] != 0) {
+            } else if (edgeExists(edgeIndex, vertex)) {
                 endVertex = vertex;
             }
         }
 
-        if (weight != 0) {
+        if (startFound) {
             edges.push({weight, {startVertex, endVertex}});
         }
     }
@@ -198,15 +209,16 @@ void IncidenceMatrix::setEdgeWeight(size_t startVertex, size_t endVertex, intmax
     }
 
     for (size_t i = 0; i < m_numEdges; i++) {
-        if ((m_matrix[startVertex][i] != 0) && (m_matrix[endVertex][i] != 0)) {
-            m_matrix[startVertex][i] = weight;
-            if (m_directed) {
-                m_matrix[endVertex][i] = -weight; // negative weight to indicate the end of the edge
-            } else {
-                m_matrix[endVertex][i] = weight;
-            }
-            return;
+        intmax_t startWeight = m_matrix[startVertex][i];
+        if (!edgeExists(i, startVertex) || !edgeExists(i, endVertex) || startWeight < 0) continue;
+        
+        m_matrix[startVertex][i] = weight;
+        if (!m_directed) { // undirected
+            m_matrix[endVertex][i] = weight;
+        } else { // directed
+            m_matrix[endVertex][i] = -weight; // negative weight to indicate the end of the edge
         }
+        return;
     }
 }
 
@@ -242,6 +254,26 @@ std::string IncidenceMatrix::toString() {
     return out.str();
 }
 
+bool IncidenceMatrix::edgeExists(size_t edgeIndex, size_t vertex) const {
+    size_t bitIndex = edgeIndex * m_numVertices + vertex;
+    size_t byteIndex = bitIndex / 8;
+    uint8_t bitMask = 1 << (bitIndex % 8);
+    return (usageBitmap[byteIndex] & bitMask) != 0;
+}
+
+void IncidenceMatrix::setEdgeUsed(size_t edgeIndex, size_t vertex) {
+    size_t bitIndex = edgeIndex * m_numVertices + vertex;
+    size_t byteIndex = bitIndex / 8;
+    uint8_t bitMask = 1 << (bitIndex % 8);
+    usageBitmap[byteIndex] |= bitMask;
+}
+
+void IncidenceMatrix::setEdgeUnused(size_t edgeIndex, size_t vertex) {
+    size_t bitIndex = edgeIndex * m_numVertices + vertex;
+    size_t byteIndex = bitIndex / 8;
+    uint8_t bitMask = ~(1 << (bitIndex % 8));
+    usageBitmap[byteIndex] &= bitMask;
+}
 
 #if GRAPHVIZ_SUPPORT
 #include <fstream>
