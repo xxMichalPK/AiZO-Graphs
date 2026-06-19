@@ -2,10 +2,10 @@ import subprocess
 import time
 
 executable_path = "./AiZO-Graphs"
-results_file = "benchmark_results.csv"
+results_file = "benchmark_results_test.csv"
 
 # Use 50 iterations for each test case
-iterations = 2
+iterations = 50
 
 # Original sets
 # 5 sizes to test
@@ -25,13 +25,15 @@ iterations = 2
 
 # Remaining sets
 # 5 sizes to test
-size_set = [700]
+size_set = [100]
 
 # 3 densities
-density_set = [75]
+density_set = [50]
 
 # 3 problems
 problem_set = {
+    "MST": 0,
+    "SP": 1,
     "MF": 2
 }
 

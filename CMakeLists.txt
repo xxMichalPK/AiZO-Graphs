@@ -4,7 +4,7 @@ PROJECT(AiZO-Graphs)
 
 SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-ADD_COMPILE_OPTIONS(-Wall -Wextra -Wpedantic -Werror)
+ADD_COMPILE_OPTIONS(-Wall -Wextra -Wpedantic -Werror -O2)
 
 # Add check for Graphviz for nice graph visualization support
 FIND_PROGRAM(GRAPHVIZ_EXEC dot OPTIONAL)
