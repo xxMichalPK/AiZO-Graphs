@@ -254,6 +254,14 @@ std::string IncidenceMatrix::toString() {
     return out.str();
 }
 
+
+/**
+ * Checks if an edge is defined for a given vertex and edge index
+ * 
+ * @param edgeIndex the index of the edge
+ * @param vertex the vertex to check
+ * @returns true if the edge is defined, false otherwise
+ */
 bool IncidenceMatrix::edgeExists(size_t edgeIndex, size_t vertex) const {
     size_t bitIndex = edgeIndex * m_numVertices + vertex;
     size_t byteIndex = bitIndex / 8;
@@ -261,6 +269,13 @@ bool IncidenceMatrix::edgeExists(size_t edgeIndex, size_t vertex) const {
     return (usageBitmap[byteIndex] & bitMask) != 0;
 }
 
+
+/**
+ * Marks an edge as used for a given vertex and edge index
+ * 
+ * @param edgeIndex the index of the edge
+ * @param vertex the vertex to check
+ */
 void IncidenceMatrix::setEdgeUsed(size_t edgeIndex, size_t vertex) {
     size_t bitIndex = edgeIndex * m_numVertices + vertex;
     size_t byteIndex = bitIndex / 8;
@@ -268,6 +283,13 @@ void IncidenceMatrix::setEdgeUsed(size_t edgeIndex, size_t vertex) {
     usageBitmap[byteIndex] |= bitMask;
 }
 
+
+/**
+ * Marks an edge as unused for a given vertex and edge index
+ * 
+ * @param edgeIndex the index of the edge
+ * @param vertex the vertex to check
+ */
 void IncidenceMatrix::setEdgeUnused(size_t edgeIndex, size_t vertex) {
     size_t bitIndex = edgeIndex * m_numVertices + vertex;
     size_t byteIndex = bitIndex / 8;
